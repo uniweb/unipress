@@ -1,0 +1,50 @@
+{
+  "name": "unipress",
+  "version": "0.0.1",
+  "description": "Compile a content directory into a document (docx, xlsx, PDF) using a Uniweb foundation. Pre-release placeholder.",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "unipress": "src/cli.js"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src",
+    "templates",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "keywords": [
+    "uniweb",
+    "unipress",
+    "cli",
+    "document",
+    "docx",
+    "xlsx",
+    "pdf",
+    "typst",
+    "foundation"
+  ],
+  "author": "Proximify",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uniweb/unipress.git"
+  },
+  "homepage": "https://github.com/uniweb/unipress#readme",
+  "bugs": {
+    "url": "https://github.com/uniweb/unipress/issues"
+  },
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "test": "echo \"no tests yet\" && exit 0",
+    "lint": "echo \"no lint yet\" && exit 0"
+  },
+  "dependencies": {}
+}
