@@ -25,6 +25,7 @@ Commands:
                            --page <route>      keep only the page matching <route>
                            --depth <n>         truncate nested values beyond depth n
                            --foundation <ref>  override document.yml's foundation: field
+                           --no-orchestrate    skip foundation import + initPrerender (raw content only)
   list-templates         List available scaffold templates
 
 Options:
@@ -63,6 +64,7 @@ async function main(argv) {
       page: { type: 'string' },
       depth: { type: 'string' },
       foundation: { type: 'string' },
+      'no-orchestrate': { type: 'boolean' },
       verbose: { type: 'boolean' }
     },
     allowPositionals: true,
@@ -71,14 +73,14 @@ async function main(argv) {
 
   if (values.version) {
     printVersion()
-    return
+    process.exit(0)
   }
 
   const [command, ...rest] = positionals
 
   if (!command || values.help) {
     printHelp()
-    return
+    process.exit(0)
   }
 
   try {
@@ -90,7 +92,8 @@ async function main(argv) {
           summary: values.summary,
           page: values.page ?? null,
           depth: values.depth != null ? Number(values.depth) : null,
-          foundation: values.foundation ?? null
+          foundation: values.foundation ?? null,
+          orchestrate: !values['no-orchestrate']
         })
         break
       case 'compile':
@@ -108,6 +111,11 @@ async function main(argv) {
     }
     process.exit(1)
   }
+
+  // Force-exit so leftover event-loop holders (e.g. asset-processor
+  // workers spawned by @uniweb/build) don't keep the CLI alive after
+  // the command's work is done.
+  process.exit(0)
 }
 
 main(process.argv.slice(2))

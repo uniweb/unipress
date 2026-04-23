@@ -15,6 +15,7 @@
 
 import { loadContent } from '../content-loader.js'
 import { resolveFoundation } from '../foundation-loader.js'
+import { loadAndInit } from '../orchestrator.js'
 
 const SKIP_KEYS = new Set([
   'assets',
@@ -25,10 +26,10 @@ const SKIP_KEYS = new Set([
 
 const TRUNCATED = '__truncated__'
 
-export async function inspect({ dir, full = false, summary = false, page = null, depth = null, foundation: foundationCliRef = null } = {}) {
+export async function inspect({ dir, full = false, summary = false, page = null, depth = null, foundation: foundationCliRef = null, orchestrate = true } = {}) {
   if (!dir) {
     process.stderr.write('error: `inspect` requires a directory argument\n')
-    process.stderr.write('usage: unipress inspect <dir> [--full] [--summary] [--page <route>] [--depth <n>] [--foundation <ref>]\n')
+    process.stderr.write('usage: unipress inspect <dir> [--full] [--summary] [--page <route>] [--depth <n>] [--foundation <ref>] [--no-orchestrate]\n')
     process.exit(1)
   }
 
@@ -54,6 +55,23 @@ export async function inspect({ dir, full = false, summary = false, page = null,
     foundationInfo = { ref: foundationCliRef ?? content.config?.foundation ?? null, error: err.message }
   }
 
+  // Orchestrate (M3b): import the foundation and run initPrerender to
+  // populate the Website graph. Surface a summary, not the raw graph
+  // (which has back-references and isn't JSON-friendly). Orchestration
+  // failures are non-fatal for the same reason resolution failures are.
+  let websiteInfo = null
+  if (orchestrate && foundationInfo.resolvedPath) {
+    try {
+      const { uniweb } = await loadAndInit({
+        content,
+        resolvedPath: foundationInfo.resolvedPath
+      })
+      websiteInfo = summarizeWebsite(uniweb, { route: page })
+    } catch (err) {
+      websiteInfo = { error: err.message }
+    }
+  }
+
   let view = full ? { ...content } : trimSkipKeys(content)
 
   if (page) {
@@ -62,10 +80,46 @@ export async function inspect({ dir, full = false, summary = false, page = null,
     view = summarizePages(view)
   }
 
-  view.__unipress = { sitePath, configFile, foundation: foundationInfo }
+  view.__unipress = { sitePath, configFile, foundation: foundationInfo, website: websiteInfo }
 
   const output = depth !== null ? truncate(view, depth) : view
   process.stdout.write(JSON.stringify(output, replacer, 2) + '\n')
+}
+
+// Summarize the populated Website graph for inspect output. The full
+// graph has cycles (page.website ↔ website.pages, block.page ↔ page)
+// and won't survive JSON.stringify; this returns a tree with no
+// back-refs and the per-block info that matters for "did the graph
+// build correctly" debugging.
+//
+// Page exposes blocks via `bodyBlocks` (and `getPageBlocks()` which
+// merges header/body/footer from the layout). We report bodyBlocks
+// here — header/footer come from layout areas, not page content.
+function summarizeWebsite(uniweb, { route = null } = {}) {
+  const w = uniweb?.activeWebsite
+  if (!w) return { error: 'uniweb.activeWebsite is null' }
+
+  const allPages = w.pages ?? []
+  const pages = (route ? allPages.filter(p => p.route === route) : allPages).map(p => {
+    const blocks = p.bodyBlocks ?? []
+    return {
+      route: p.route,
+      blockCount: blocks.length,
+      blocks: blocks.map(b => ({
+        type: b.type ?? null,
+        hasContent: b.parsedContent != null,
+        childBlockCount: (b.childBlocks ?? []).length,
+        insetCount: (b.insets ?? []).length
+      }))
+    }
+  })
+
+  return {
+    pageCount: allPages.length,
+    activePage: w.activePage?.route ?? null,
+    basePath: w.basePath ?? '/',
+    pages
+  }
 }
 
 function trimSkipKeys(content) {
