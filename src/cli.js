@@ -4,6 +4,7 @@ import { parseArgs } from 'node:util'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { inspect } from './commands/inspect.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf8'))
@@ -19,13 +20,17 @@ Commands:
   compile <dir>          Compile a content directory into a document
   create <dir>           Scaffold a new unipress project from a template
   inspect <dir>          Dump the resolved Website graph as JSON
+                           --full              include web-only fields (assets, icons, ...)
+                           --summary           replace pages[] with route strings only
+                           --page <route>      keep only the page matching <route>
+                           --depth <n>         truncate nested values beyond depth n
+                           --foundation <ref>  override document.yml's foundation: field
   list-templates         List available scaffold templates
 
 Options:
   -h, --help             Show this help
   -v, --version          Show version
-
-Run \`unipress <command> --help\` for command-specific options.
+      --verbose          Include stack traces in error output
 `
 
 function printHelp() {
@@ -47,12 +52,18 @@ function notImplemented(name) {
   process.exit(2)
 }
 
-function main(argv) {
+async function main(argv) {
   const { values, positionals } = parseArgs({
     args: argv,
     options: {
       help: { type: 'boolean', short: 'h' },
-      version: { type: 'boolean', short: 'v' }
+      version: { type: 'boolean', short: 'v' },
+      full: { type: 'boolean' },
+      summary: { type: 'boolean' },
+      page: { type: 'string' },
+      depth: { type: 'string' },
+      foundation: { type: 'string' },
+      verbose: { type: 'boolean' }
     },
     allowPositionals: true,
     strict: false
@@ -63,22 +74,39 @@ function main(argv) {
     return
   }
 
-  const [command] = positionals
+  const [command, ...rest] = positionals
 
   if (!command || values.help) {
     printHelp()
     return
   }
 
-  switch (command) {
-    case 'compile':
-    case 'create':
-    case 'inspect':
-    case 'list-templates':
-      notImplemented(command)
-      break
-    default:
-      unknownCommand(command)
+  try {
+    switch (command) {
+      case 'inspect':
+        await inspect({
+          dir: rest[0],
+          full: values.full,
+          summary: values.summary,
+          page: values.page ?? null,
+          depth: values.depth != null ? Number(values.depth) : null,
+          foundation: values.foundation ?? null
+        })
+        break
+      case 'compile':
+      case 'create':
+      case 'list-templates':
+        notImplemented(command)
+        break
+      default:
+        unknownCommand(command)
+    }
+  } catch (err) {
+    process.stderr.write(`error: ${err.message}\n`)
+    if (values.verbose && err.stack) {
+      process.stderr.write(err.stack + '\n')
+    }
+    process.exit(1)
   }
 }
 

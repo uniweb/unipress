@@ -46,5 +46,11 @@
     "test": "echo \"no tests yet\" && exit 0",
     "lint": "echo \"no lint yet\" && exit 0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@uniweb/build": "workspace:*",
+    "@uniweb/content-reader": "workspace:*",
+    "@uniweb/core": "workspace:*",
+    "@uniweb/semantic-parser": "workspace:*",
+    "js-yaml": "^4.1.0"
+  }
 }
