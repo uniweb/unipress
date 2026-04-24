@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { inspect } from './commands/inspect.js'
+import { compileCommand } from './commands/compile.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf8'))
@@ -18,6 +19,10 @@ Usage:
 
 Commands:
   compile <dir>          Compile a content directory into a document
+                           --format <fmt>      output format (docx | xlsx | typst)
+                                                 overrides format: in document.yml
+                           --foundation <ref>  override document.yml's foundation: field
+                           --out <path>        output file (default: ./<dir>.<ext>)
   create <dir>           Scaffold a new unipress project from a template
   inspect <dir>          Dump the resolved Website graph as JSON
                            --full              include web-only fields (assets, icons, ...)
@@ -64,6 +69,8 @@ async function main(argv) {
       page: { type: 'string' },
       depth: { type: 'string' },
       foundation: { type: 'string' },
+      format: { type: 'string' },
+      out: { type: 'string' },
       'no-orchestrate': { type: 'boolean' },
       verbose: { type: 'boolean' }
     },
@@ -97,6 +104,14 @@ async function main(argv) {
         })
         break
       case 'compile':
+        await compileCommand({
+          dir: rest[0],
+          format: values.format ?? null,
+          foundation: values.foundation ?? null,
+          out: values.out ?? null,
+          verbose: !!values.verbose
+        })
+        break
       case 'create':
       case 'list-templates':
         notImplemented(command)
