@@ -19,7 +19,7 @@ Usage:
 
 Commands:
   compile <dir>          Compile a content directory into a document
-                           --format <fmt>      output format (pdf | typst | docx | xlsx)
+                           --format <fmt>      output format (pdf | typst | docx | xlsx | epub)
                                                  overrides format: in document.yml
                                                  pdf compiles via typst source bundle
                            --foundation <ref>  override document.yml's foundation: field
