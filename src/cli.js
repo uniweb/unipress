@@ -71,6 +71,8 @@ async function main(argv) {
       foundation: { type: 'string' },
       format: { type: 'string' },
       out: { type: 'string' },
+      'typst-binary': { type: 'string' },
+      'keep-temp': { type: 'boolean' },
       'no-orchestrate': { type: 'boolean' },
       verbose: { type: 'boolean' }
     },
