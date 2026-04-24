@@ -73,7 +73,16 @@ const OPTIONAL_EXTERNALS = [
   '@babel/preset-typescript/package.json',
 ]
 
-const args = ['build', ENTRY, '--compile', '--target', target, '--outfile', outPath]
+// `--compile-autoload-package-json` (off by default in bun compile) enables
+// runtime package.json discovery inside the compiled binary. Without it,
+// externally-loaded ESM modules (like a foundation.js fetched into the
+// unipress cache and dynamically imported) can't resolve their bare-
+// specifier imports against the co-located node_modules, even when the
+// symlinks are correctly placed. With it, Node-style resolution works.
+const args = [
+  'build', ENTRY, '--compile', '--target', target, '--outfile', outPath,
+  '--compile-autoload-package-json',
+]
 for (const ext of OPTIONAL_EXTERNALS) {
   args.push('--external', ext)
 }
