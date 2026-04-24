@@ -4,7 +4,7 @@
 // top-level config file to read (document.yml or site.yml).
 
 import { existsSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { resolve, join } from 'node:path'
 import { collectSiteContent } from '@uniweb/build/site'
 import { detectConfigFile, CONFIG_FILE_NAMES } from './document-yml.js'
 import { ContentDirectoryError, DocumentYmlError } from './errors.js'
@@ -23,10 +23,29 @@ export async function loadContent(dir, options = {}) {
     )
   }
 
-  const content = await collectSiteContent(sitePath, {
-    configFile,
-    foundationPath: options.foundationPath
-  })
+  let content
+  try {
+    content = await collectSiteContent(sitePath, {
+      configFile,
+      foundationPath: options.foundationPath
+    })
+  } catch (err) {
+    // js-yaml throws YAMLException with .mark.line/.column. Wrap it in
+    // DocumentYmlError so the CLI reports it with a location hint
+    // instead of a bare stack trace.
+    if (err?.name === 'YAMLException') {
+      const configPath = join(sitePath, configFile)
+      const line = err?.mark?.line != null ? err.mark.line + 1 : null
+      const col = err?.mark?.column != null ? err.mark.column + 1 : null
+      const loc = line != null ? `${configPath}:${line}${col != null ? `:${col}` : ''}` : configPath
+      throw new DocumentYmlError(
+        `malformed YAML in ${configFile}\n` +
+        `at ${loc}\n` +
+        `cause: ${err.reason || err.message}`
+      )
+    }
+    throw err
+  }
 
   return { content, configFile, sitePath }
 }

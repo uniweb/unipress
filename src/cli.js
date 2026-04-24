@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { inspect } from './commands/inspect.js'
 import { compileCommand } from './commands/compile.js'
+import { UnipressError } from './errors.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf8'))
@@ -130,11 +131,26 @@ async function main(argv) {
         unknownCommand(command)
     }
   } catch (err) {
-    process.stderr.write(`error: ${err.message}\n`)
-    if (values.verbose && err.stack) {
-      process.stderr.write(err.stack + '\n')
+    // UnipressError = user-addressable problem (bad args, missing file,
+    // misconfigured foundation). Exit 1. .format() renders the structured
+    // `error:` header + indented `hint:` / `cause:` lines.
+    //
+    // Anything else = internal bug (TypeError, unhandled rejection from
+    // a library we didn't wrap). Exit 2. Always print a `(re-run with
+    // --verbose for a stack trace)` pointer unless verbose is already on.
+    const verbose = !!values.verbose
+    if (err instanceof UnipressError) {
+      process.stderr.write(err.format() + '\n')
+      if (verbose && err.stack) process.stderr.write(err.stack + '\n')
+      process.exit(1)
     }
-    process.exit(1)
+    process.stderr.write(`internal error: ${err?.message ?? err}\n`)
+    if (verbose && err?.stack) {
+      process.stderr.write(err.stack + '\n')
+    } else {
+      process.stderr.write(`    hint: re-run with --verbose for a stack trace\n`)
+    }
+    process.exit(2)
   }
 
   // Defensive force-exit. Originally added because importing a built
