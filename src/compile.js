@@ -29,6 +29,7 @@ import { basename, resolve } from 'node:path'
 import { loadContent } from './content-loader.js'
 import { resolveFoundation } from './foundation-loader.js'
 import { loadAndInit, compileDocumentWithFoundation, getFoundationOutputs } from './orchestrator.js'
+import { loadUnipressConfig } from './config.js'
 import { writeBlobToFile } from './sinks/blob.js'
 import { writePdfViaTypst } from './sinks/typst.js'
 import { DocumentYmlError, CompileError } from './errors.js'
@@ -45,25 +46,45 @@ function pickSink(format) {
 export async function compile({
   dir,
   format: cliFormat = null,
-  foundationRef = null,
-  outPath = null,
-  typstBinaryPath = null,
+  foundationRef: cliFoundationRef = null,
+  outPath: cliOutPath = null,
+  typstBinaryPath: cliTypstBinaryPath = null,
   keepTemp = false,
+  configPath: cliConfigPath = null,
   onProgress = () => {}
 } = {}) {
   onProgress('loading content...')
   const { content, sitePath, configFile } = await loadContent(dir)
   onProgress(`  ${content.pages.length} page(s) from ${sitePath} (${configFile})`)
 
-  const format = cliFormat ?? content.config?.format ?? null
+  // Load unipress.config.js — from --config, then <dir>/unipress.config.js,
+  // else empty. Relative paths inside the config are resolved against the
+  // config file's own directory (see src/config.js).
+  const { config, configPath } = await loadUnipressConfig({
+    contentDir: sitePath,
+    explicitPath: cliConfigPath
+  })
+  if (configPath) onProgress(`  config: ${configPath}`)
+
+  // Precedence chain: CLI > unipress.config.js > document.yml > defaults.
+  const format = cliFormat ?? config.format ?? content.config?.format ?? null
   if (!format) {
+    const hints = ['pass --format <fmt>']
+    if (configPath) hints.push(`set format: in ${configPath}`)
+    hints.push(`set format: in ${configFile}`)
     throw new DocumentYmlError(
-      `no format specified — pass --format <fmt> or set format: in ${configFile}`
+      `no format specified — ${hints.join(' or ')}`
     )
   }
 
+  const foundationRef = cliFoundationRef ?? config.foundation ?? null
+  const typstBinaryPath = cliTypstBinaryPath ?? config.typst?.binary ?? null
+  const typstVersion = config.typst?.version ?? null
+
   onProgress('resolving foundation...')
   const foundationInfo = await resolveFoundation({
+    // Already merged CLI + config.foundation above; document.yml foundation
+    // is the fallback.
     cliRef: foundationRef,
     configRef: content.config?.foundation,
     anchorDir: sitePath
@@ -101,7 +122,9 @@ export async function compile({
 
   // Default output filename: `./<dir-basename>.<ext>`. The foundation
   // declares the extension; fall back to the format name if it didn't.
+  // Precedence: CLI --out > config.out > default.
   const ext = outputSpec.extension ?? format
+  const outPath = cliOutPath ?? config.out ?? null
   const finalOutPath = outPath
     ? resolve(outPath)
     : resolve(`./${basename(sitePath)}.${ext}`)
@@ -124,6 +147,7 @@ export async function compile({
   const result = sink === 'typst'
     ? await writePdfViaTypst(blob, finalOutPath, {
         typstBinaryPath,
+        typstVersion,
         keepTemp,
         onProgress: (msg) => onProgress(`  ${msg}`)
       })

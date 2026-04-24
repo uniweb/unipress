@@ -5,10 +5,10 @@
 
 import { compile } from '../compile.js'
 
-export async function compileCommand({ dir, format = null, foundation = null, out = null, typstBinary = null, keepTemp = false, verbose = false } = {}) {
+export async function compileCommand({ dir, format = null, foundation = null, out = null, config = null, typstBinary = null, keepTemp = false, verbose = false } = {}) {
   if (!dir) {
     process.stderr.write('error: `compile` requires a directory argument\n')
-    process.stderr.write('usage: unipress compile <dir> [--format <fmt>] [--foundation <ref>] [--out <path>] [--typst-binary <path>] [--keep-temp] [--verbose]\n')
+    process.stderr.write('usage: unipress compile <dir> [--format <fmt>] [--foundation <ref>] [--out <path>] [--config <path>] [--typst-binary <path>] [--keep-temp] [--verbose]\n')
     process.exit(1)
   }
 
@@ -21,6 +21,7 @@ export async function compileCommand({ dir, format = null, foundation = null, ou
     format,
     foundationRef: foundation,
     outPath: out,
+    configPath: config,
     typstBinaryPath: typstBinary,
     keepTemp,
     onProgress

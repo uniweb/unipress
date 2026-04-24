@@ -18,7 +18,7 @@ import { dirname, join } from 'node:path'
 import { TypstBinaryError, OutputWriteError } from '../errors.js'
 import { resolveTypstBinary } from '../typst/binary-manager.js'
 
-export async function writePdfViaTypst(blob, outPath, { typstBinaryPath = null, keepTemp = false, onProgress = () => {} } = {}) {
+export async function writePdfViaTypst(blob, outPath, { typstBinaryPath = null, typstVersion = null, keepTemp = false, onProgress = () => {} } = {}) {
   const bytes = Buffer.from(await blob.arrayBuffer())
 
   const workDir = await mkdtemp(join(tmpdir(), 'unipress-typst-'))
@@ -43,6 +43,7 @@ export async function writePdfViaTypst(blob, outPath, { typstBinaryPath = null, 
 
     const binary = await resolveTypstBinary({
       overridePath: typstBinaryPath,
+      ...(typstVersion ? { version: typstVersion } : {}),
       onProgress
     })
 

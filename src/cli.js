@@ -24,6 +24,7 @@ Commands:
                                                  pdf compiles via typst source bundle
                            --foundation <ref>  override document.yml's foundation: field
                            --out <path>        output file (default: ./<dir>.<ext>)
+                           --config <path>     explicit config file (default: <dir>/unipress.config.js)
                            --typst-binary <p>  path to a typst binary (skips managed download)
                            --keep-temp         keep the typst temp dir on failure (for debugging)
   create <dir>           Scaffold a new unipress project from a template
@@ -74,6 +75,7 @@ async function main(argv) {
       foundation: { type: 'string' },
       format: { type: 'string' },
       out: { type: 'string' },
+      config: { type: 'string' },
       'typst-binary': { type: 'string' },
       'keep-temp': { type: 'boolean' },
       'no-orchestrate': { type: 'boolean' },
@@ -114,6 +116,7 @@ async function main(argv) {
           format: values.format ?? null,
           foundation: values.foundation ?? null,
           out: values.out ?? null,
+          config: values.config ?? null,
           typstBinary: values['typst-binary'] ?? null,
           keepTemp: !!values['keep-temp'],
           verbose: !!values.verbose
