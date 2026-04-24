@@ -1,0 +1,18 @@
+# Tenured Biology — saved view.
+#
+# Selects biology-department members who hold tenure. The `where:`
+# value is a where-object (structured JSON predicate). The framework's
+# evaluator walks the object against each member record; backends that
+# accept where-objects can ship the same predicate over the wire.
+#
+# In the academic-metrics demo there is no backend, so the foundation's
+# data handler runs the evaluator against the loaded members collection.
+# Replacing this with a real backend changes the `fetcher:` config in
+# site.yml; this file is unchanged.
+
+name: Tenured Biology
+description: Tenured members of the Department of Biology.
+source: members
+where:
+  department: biology
+  tenured: true

@@ -1,0 +1,45 @@
+# unipress document configuration — academic-metrics scaffold
+#
+# `foundation:` is a catalog id (see unipress list-foundations). At first
+# compile, unipress fetches the foundation from the catalog's source.url
+# into its shared cache and imports it. No npm install required.
+
+name: {{title}}
+{{#if author}}
+author: {{author}}
+{{/if}}
+year: {{year}}
+
+foundation: {{foundation}}
+
+# Default output format. Override on the CLI with --format.
+format: xlsx
+
+# The report page lives under pages/report. Index routes to it.
+index: report
+
+collections:
+  members:
+    path: collections/members
+    # Queryable surface — drives the FilterPanel UI. The framework
+    # decides whether to ship predicates to a backend or evaluate locally
+    # based on `fetcher.supports:` below.
+    queryable:
+      department:
+        type: enum
+        label: Department
+        options: [biology, geology]
+      rank:
+        type: enum
+        label: Rank
+        options: [associate, professor]
+      tenured:
+        type: boolean
+        label: Tenured
+      start_year:
+        type: range
+        label: Start year
+        min: 1820
+        max: 1880
+  queries:
+    path: collections/queries

@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { inspect } from './commands/inspect.js'
 import { compileCommand } from './commands/compile.js'
+import { createCommand, listFoundationsCommand } from './commands/create.js'
 import { UnipressError } from './errors.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -28,7 +29,12 @@ Commands:
                            --config <path>     explicit config file (default: <dir>/unipress.config.js)
                            --typst-binary <p>  path to a typst binary (skips managed download)
                            --keep-temp         keep the typst temp dir on failure (for debugging)
-  create <dir>           Scaffold a new unipress project from a template
+  create <dir>           Scaffold a new unipress project from a catalog foundation
+                           --foundation <id>   catalog entry (interactive picker if omitted)
+                           --title <str>       document title (prompts if omitted)
+                           --author <str>      document author (prompts if omitted)
+                           --force             overwrite non-empty <dir>
+                           --yes               skip prompts (requires --foundation)
   inspect <dir>          Dump the resolved Website graph as JSON
                            --full              include web-only fields (assets, icons, ...)
                            --summary           replace pages[] with route strings only
@@ -36,7 +42,7 @@ Commands:
                            --depth <n>         truncate nested values beyond depth n
                            --foundation <ref>  override document.yml's foundation: field
                            --no-orchestrate    skip foundation import + initPrerender (raw content only)
-  list-templates         List available scaffold templates
+  list-foundations       List the foundations available in the catalog
 
 Options:
   -h, --help             Show this help
@@ -77,6 +83,10 @@ async function main(argv) {
       format: { type: 'string' },
       out: { type: 'string' },
       config: { type: 'string' },
+      title: { type: 'string' },
+      author: { type: 'string' },
+      force: { type: 'boolean' },
+      yes: { type: 'boolean' },
       'typst-binary': { type: 'string' },
       'keep-temp': { type: 'boolean' },
       'no-orchestrate': { type: 'boolean' },
@@ -124,8 +134,17 @@ async function main(argv) {
         })
         break
       case 'create':
-      case 'list-templates':
-        notImplemented(command)
+        await createCommand({
+          dir: rest[0],
+          foundation: values.foundation ?? null,
+          title: values.title ?? null,
+          author: values.author ?? null,
+          force: !!values.force,
+          yes: !!values.yes,
+        })
+        break
+      case 'list-foundations':
+        await listFoundationsCommand()
         break
       default:
         unknownCommand(command)

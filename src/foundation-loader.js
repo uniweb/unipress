@@ -5,11 +5,18 @@
 // be tested without going through React, and lets the orchestrator be
 // tested with a hand-supplied path.
 //
-// Three accepted ref forms (matches plan Section 11):
+// Four accepted ref forms (matches plan Section 11):
 //
-//   1. URL ......... https://registry.uniweb.app/foundations/...   (M9; throws here)
-//   2. Local path .. ./foo, ../foo, /abs/foo, ./foo/dist/foundation.js
-//   3. Package ..... my-foundation, @org/foo
+//   1. URL ............ https://.../foundation.js  — downloaded + cached
+//   2. Local path ..... ./foo, ../foo, /abs/foo, ./foo/dist/foundation.js
+//   3. Catalog id ..... academic-metrics, book, … — looked up in
+//                       foundations.yml, then resolved as URL
+//   4. Package name ... my-foundation, @org/foo
+//
+// Resolution order for a bare name: catalog first, package second. A
+// catalog hit takes precedence because catalog ids are the canonical
+// shortcut; packages are a fallback for foundation devs working inside a
+// workspace with the foundation installed.
 //
 // The chosen entry for a package is its `exports['./dist']` map, NOT the
 // default `.` entry — the default points at source (_entry.generated.js)
@@ -20,12 +27,14 @@ import { existsSync, statSync, readFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { resolve, isAbsolute, join, dirname } from 'node:path'
 import { FoundationResolutionError } from './errors.js'
+import { findCatalogEntry } from './catalog.js'
+import { fetchFoundationToCache } from './foundation-fetch.js'
 
 const URL_PATTERN = /^https?:\/\//
 const PATH_PATTERN = /^(\.\.?[\/\\]|[\/\\]|[A-Za-z]:[\/\\])/
 const DEFAULT_BUILT_ENTRY = 'dist/foundation.js'
 
-export async function resolveFoundationRef(ref, { anchorDir } = {}) {
+export async function resolveFoundationRef(ref, { anchorDir, onProgress = () => {} } = {}) {
   if (!ref || typeof ref !== 'string') {
     throw new FoundationResolutionError(
       `foundation ref is required (got ${ref === undefined ? 'undefined' : JSON.stringify(ref)})`
@@ -33,17 +42,36 @@ export async function resolveFoundationRef(ref, { anchorDir } = {}) {
   }
 
   if (URL_PATTERN.test(ref)) {
-    throw new FoundationResolutionError(
-      `URL foundations are not implemented yet (planned for M9): ${ref}\n` +
-      `hint: for now use a local path (./, /) or an installed package name`
-    )
+    return resolveUrlRef(ref, { onProgress })
   }
 
   if (PATH_PATTERN.test(ref)) {
     return resolvePathRef(ref, anchorDir)
   }
 
+  const catalogEntry = findCatalogEntry(ref)
+  if (catalogEntry) {
+    return resolveCatalogRef(ref, catalogEntry, { onProgress })
+  }
+
   return resolvePackageRef(ref, anchorDir)
+}
+
+async function resolveUrlRef(url, { onProgress }) {
+  const resolvedPath = await fetchFoundationToCache(url, { onProgress })
+  return { ref: url, source: 'url', resolvedPath }
+}
+
+async function resolveCatalogRef(id, entry, { onProgress }) {
+  const url = entry?.source?.url
+  if (!url) {
+    throw new FoundationResolutionError(
+      `catalog entry '${id}' has no source.url\n` +
+      `hint: add a source.url to the entry in foundations.yml, or pass --foundation <path-or-url>`
+    )
+  }
+  const resolvedPath = await fetchFoundationToCache(url, { onProgress })
+  return { ref: id, source: 'catalog', resolvedPath, catalogEntry: entry }
 }
 
 function resolvePathRef(ref, anchorDir) {
@@ -147,7 +175,7 @@ function pickBuiltEntry(exports) {
 // Resolve the foundation ref for a unipress run. CLI flag overrides
 // `document.yml`'s `foundation:` field; otherwise we use what the
 // content config declares.
-export async function resolveFoundation({ cliRef, configRef, anchorDir }) {
+export async function resolveFoundation({ cliRef, configRef, anchorDir, onProgress = () => {} }) {
   const ref = cliRef ?? configRef
   if (!ref) {
     throw new FoundationResolutionError(
@@ -155,5 +183,5 @@ export async function resolveFoundation({ cliRef, configRef, anchorDir }) {
       `hint: set 'foundation:' in document.yml, or pass --foundation <ref>`
     )
   }
-  return resolveFoundationRef(ref, { anchorDir })
+  return resolveFoundationRef(ref, { anchorDir, onProgress })
 }
