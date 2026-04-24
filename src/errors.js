@@ -17,3 +17,4 @@ export class ContentDirectoryError extends UnipressError {}
 export class DocumentYmlError extends UnipressError {}
 export class ConfigValidationError extends UnipressError {}
 export class FoundationResolutionError extends UnipressError {}
+export class CompileError extends UnipressError {}
