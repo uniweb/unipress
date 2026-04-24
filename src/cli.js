@@ -112,9 +112,14 @@ async function main(argv) {
     process.exit(1)
   }
 
-  // Force-exit so leftover event-loop holders (e.g. asset-processor
-  // workers spawned by @uniweb/build) don't keep the CLI alive after
-  // the command's work is done.
+  // Defensive force-exit. Originally added because importing a built
+  // foundation kept a MessagePort alive (react-dom/server got bundled
+  // into a foundation chunk and ran React's scheduler at module-eval).
+  // Fixed at the source in @uniweb/build by externalizing react-dom/*
+  // properly, but kept here as a backstop: foundations published before
+  // the fix still leak, and any future module that creates a long-lived
+  // handle at import-time would do the same. CLIs shouldn't wait for
+  // non-essential handles regardless.
   process.exit(0)
 }
 
