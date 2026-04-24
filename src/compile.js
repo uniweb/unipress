@@ -1,37 +1,56 @@
 // Programmatic entry point for `unipress compile`.
 //
-// Runs the four-step compile pattern (framework/press/docs/guides/compile-pattern.md)
-// against a content directory:
+// Two-step pipeline after content + foundation setup:
 //
-//   1. gather blocks .... load content, resolve + init the foundation, collect
-//                         every page's bodyBlocks into one flat list.
-//   2. build React tree . globalThis.uniweb.childBlockRenderer({ blocks })
-//                         (SSR-safe equivalent of <ChildBlocks> from @uniweb/kit,
-//                         installed by initPrerender — no JSX loader needed).
-//   3. compile .......... foundation.compileSubtree(tree, format, options).
-//                         Reached via the foundation, NOT imported from
-//                         @uniweb/press — see kb/framework/plans/unipress-framing.md
-//                         §23 #3 (dual-Press-instance trap).
-//   4. sink ............. write the returned Blob to disk.
+//   1. Load content, resolve the foundation, run initPrerender to
+//      populate the Website graph. (loadContent + resolveFoundation +
+//      loadAndInit — unchanged from M4.)
+//   2. Call foundation.compileDocument(website, { format, foundation,
+//      ...hostHints }) — the foundation looks up outputs[format],
+//      assembles adapter options, gathers blocks, and routes through
+//      the right Press adapter. Returns a Blob.
+//   3. Sink the Blob. Pdf output runs the typst binary on the source
+//      bundle; everything else writes bytes directly.
 //
-// Progress is fanned out through a single `onProgress` callback so verbose
-// output is consistent across the pipeline (load, resolve, init, gather,
-// compile, sink).
+// Block gathering, tree building, and adapter-options assembly used to
+// live here (M4–M8a). As of M8a they live inside compileDocument on the
+// Press side, keyed off the foundation's `outputs:` declaration. This
+// module used to maintain PRESS_FORMAT_BY_OUTPUT and EXT_BY_FORMAT
+// tables for the `pdf` → `typst` aliasing and the default filename
+// extension — both are gone. Foundations declare their own aliasing via
+// `outputs[format].via` and default extensions via
+// `outputs[format].extension`.
+//
+// Progress is fanned out through a single `onProgress` callback so
+// verbose output is consistent across the pipeline (load, resolve,
+// init, compile, sink).
 
 import { basename, resolve } from 'node:path'
 import { loadContent } from './content-loader.js'
 import { resolveFoundation } from './foundation-loader.js'
-import { loadAndInit, compileWithFoundation } from './orchestrator.js'
+import { loadAndInit, compileDocumentWithFoundation, getFoundationOutputs } from './orchestrator.js'
 import { writeBlobToFile } from './sinks/blob.js'
-import { DocumentYmlError } from './errors.js'
+import { writePdfViaTypst } from './sinks/typst.js'
+import { DocumentYmlError, CompileError } from './errors.js'
 
-// Typst compiles to a source bundle zip on disk today; the Typst→PDF sink
-// (M8) will change the default extension for that format.
-const EXT_BY_FORMAT = {
-  typst: 'zip'
+// Sink selection. `pdf` is special-cased because the Press output (via
+// the typst adapter) is a source-bundle zip, not a PDF — unipress
+// finishes the job by running the typst binary. Every other format is a
+// direct byte write.
+function pickSink(format) {
+  if (format === 'pdf') return 'typst'
+  return 'blob'
 }
 
-export async function compile({ dir, format: cliFormat = null, foundationRef = null, outPath = null, onProgress = () => {} } = {}) {
+export async function compile({
+  dir,
+  format: cliFormat = null,
+  foundationRef = null,
+  outPath = null,
+  typstBinaryPath = null,
+  keepTemp = false,
+  onProgress = () => {}
+} = {}) {
   onProgress('loading content...')
   const { content, sitePath, configFile } = await loadContent(dir)
   onProgress(`  ${content.pages.length} page(s) from ${sitePath} (${configFile})`)
@@ -42,10 +61,6 @@ export async function compile({ dir, format: cliFormat = null, foundationRef = n
       `no format specified — pass --format <fmt> or set format: in ${configFile}`
     )
   }
-
-  const finalOutPath = outPath
-    ? resolve(outPath)
-    : resolve(`./${basename(sitePath)}.${EXT_BY_FORMAT[format] ?? format}`)
 
   onProgress('resolving foundation...')
   const foundationInfo = await resolveFoundation({
@@ -63,24 +78,63 @@ export async function compile({ dir, format: cliFormat = null, foundationRef = n
   })
   const website = uniweb.activeWebsite
 
-  onProgress('gathering blocks...')
-  const allBlocks = website.pages.flatMap(p => p.bodyBlocks ?? [])
-  onProgress(`  ${allBlocks.length} block(s) across ${website.pages.length} page(s)`)
+  // Validate the format early so users get a helpful "declared outputs:
+  // …" message before anything downstream fails. Press's compileDocument
+  // would throw an equivalent error — we front-load it so the error
+  // class is the one unipress uses for CLI output.
+  const outputs = getFoundationOutputs(foundation)
+  if (!outputs) {
+    throw new CompileError(
+      `foundation declares no outputs — cannot compile.\n` +
+      `hint: foundation's default export must include an outputs: { … } map. ` +
+      `See framework/docs/reference/foundation-config.md#document-outputs.`
+    )
+  }
+  const outputSpec = outputs[format]
+  if (!outputSpec) {
+    const declared = Object.keys(outputs).join(', ') || '(none)'
+    throw new CompileError(
+      `foundation does not declare 'outputs.${format}' — cannot compile.\n` +
+      `available formats: ${declared}`
+    )
+  }
 
-  onProgress(`compiling to ${format}...`)
-  const tree = globalThis.uniweb.childBlockRenderer({ blocks: allBlocks })
-  const blob = await compileWithFoundation(foundation, tree, format, {})
+  // Default output filename: `./<dir-basename>.<ext>`. The foundation
+  // declares the extension; fall back to the format name if it didn't.
+  const ext = outputSpec.extension ?? format
+  const finalOutPath = outPath
+    ? resolve(outPath)
+    : resolve(`./${basename(sitePath)}.${ext}`)
+
+  // Host hints for the foundation's getOptions. For pdf, pass
+  // mode: 'sources' so the foundation returns a typst source bundle the
+  // typst sink can then compile locally. Other formats receive no
+  // extra hints for now — foundations decide their own defaults.
+  const hostHints = format === 'pdf' ? { mode: 'sources' } : {}
+
+  onProgress(`compiling to ${format}${outputSpec.via ? ` (via ${outputSpec.via})` : ''}...`)
+  const blob = await compileDocumentWithFoundation(foundation, website, {
+    format,
+    ...hostHints
+  })
   onProgress(`  blob: ${blob.size} bytes, type=${blob.type || '(none)'}`)
 
   onProgress(`writing ${finalOutPath}...`)
-  const result = await writeBlobToFile(blob, finalOutPath)
+  const sink = pickSink(format)
+  const result = sink === 'typst'
+    ? await writePdfViaTypst(blob, finalOutPath, {
+        typstBinaryPath,
+        keepTemp,
+        onProgress: (msg) => onProgress(`  ${msg}`)
+      })
+    : await writeBlobToFile(blob, finalOutPath)
   onProgress(`  wrote ${result.bytes} bytes`)
 
   return {
     outPath: result.outPath,
     bytes: result.bytes,
     format,
-    blockCount: allBlocks.length,
+    pressFormat: outputSpec.via ?? format,
     pageCount: website.pages.length,
     foundation: foundationInfo
   }

@@ -6,11 +6,18 @@
 // the loaded foundation module and the content object; we get back a
 // configured `uniweb` instance whose `activeWebsite` is fully populated.
 //
-// Compile-time dispatch goes through `foundation.compileSubtree` — a re-export
-// the foundation's build adds when the foundation itself imports @uniweb/press.
-// This keeps Press a single instance: the foundation has its own bundled copy,
-// and unipress reaches it via the foundation rather than importing its own
-// (which would create a dual-React-context trap that drops every registration).
+// Compile-time dispatch goes through `foundation.compileDocument` (and its
+// lower-level sibling `compileSubtree`) — re-exports the foundation's build
+// adds when the foundation itself imports @uniweb/press. This keeps Press a
+// single instance: the foundation has its own bundled copy, and unipress
+// reaches it via the foundation rather than importing its own (which would
+// create a dual-React-context trap that drops every registration).
+//
+// compileDocument is the high-level "compile this website through this
+// foundation" entry point — it looks up `foundation.outputs[format]`,
+// calls the foundation's getOptions to assemble adapter options, and
+// dispatches. unipress hands it the Website + format + host hints;
+// compileDocument does the rest.
 //
 // React-instance note (gotcha #2): @uniweb/runtime/ssr (built bundle) imports
 // React as an external; the foundation does the same. Both must resolve to the
@@ -47,16 +54,38 @@ export async function loadAndInit({ content, resolvedPath, extensions = [], onPr
   return { foundation, uniweb }
 }
 
-// Compile a React tree to a format Blob, using the foundation's bundled Press.
-// Throws CompileError if the foundation doesn't expose compileSubtree — that
-// means either the foundation has no document outputs (didn't import @uniweb/press)
-// or it was built with an older @uniweb/build that predates the re-export.
-export async function compileWithFoundation(foundation, tree, format, options = {}) {
-  if (typeof foundation?.compileSubtree !== 'function') {
+// Compile a populated Website into a Blob, using the foundation's
+// bundled Press via the host-shareable compileDocument re-export.
+// Throws CompileError if compileDocument isn't present — that means
+// the foundation either doesn't depend on @uniweb/press, or was built
+// with a pre-M8a @uniweb/build that only re-exported compileSubtree.
+export async function compileDocumentWithFoundation(foundation, website, options = {}) {
+  if (typeof foundation?.compileDocument !== 'function') {
     throw new CompileError(
-      `foundation does not expose compileSubtree — cannot compile to '${format}'\n` +
-      `hint: foundation must import @uniweb/press and be rebuilt with a current @uniweb/build`
+      `foundation does not expose compileDocument — cannot compile to '${options.format}'\n` +
+      `hint: foundation must import @uniweb/press and be rebuilt with a current @uniweb/build ` +
+      `(@uniweb/build@57498ef or later re-exports compileDocument alongside compileSubtree)`
     )
   }
-  return foundation.compileSubtree(tree, format, options)
+  try {
+    return await foundation.compileDocument(website, { ...options, foundation })
+  } catch (err) {
+    // Wrap Press's errors in CompileError so the CLI's top-level handler
+    // surfaces them with consistent formatting.
+    if (err instanceof CompileError) throw err
+    throw new CompileError(err.message || String(err))
+  }
+}
+
+// Read the foundation's outputs declaration from either the built or
+// source shape. Used by compile.js for pre-compile validation and for
+// reading the default extension per format.
+export function getFoundationOutputs(foundation) {
+  if (!foundation) return null
+  return (
+    foundation.default?.capabilities?.outputs ??
+    foundation.default?.outputs ??
+    foundation.outputs ??
+    null
+  )
 }

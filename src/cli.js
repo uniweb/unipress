@@ -19,10 +19,13 @@ Usage:
 
 Commands:
   compile <dir>          Compile a content directory into a document
-                           --format <fmt>      output format (docx | xlsx | typst)
+                           --format <fmt>      output format (pdf | typst | docx | xlsx)
                                                  overrides format: in document.yml
+                                                 pdf compiles via typst source bundle
                            --foundation <ref>  override document.yml's foundation: field
                            --out <path>        output file (default: ./<dir>.<ext>)
+                           --typst-binary <p>  path to a typst binary (skips managed download)
+                           --keep-temp         keep the typst temp dir on failure (for debugging)
   create <dir>           Scaffold a new unipress project from a template
   inspect <dir>          Dump the resolved Website graph as JSON
                            --full              include web-only fields (assets, icons, ...)
@@ -111,6 +114,8 @@ async function main(argv) {
           format: values.format ?? null,
           foundation: values.foundation ?? null,
           out: values.out ?? null,
+          typstBinary: values['typst-binary'] ?? null,
+          keepTemp: !!values['keep-temp'],
           verbose: !!values.verbose
         })
         break
