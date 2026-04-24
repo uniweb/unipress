@@ -1,11 +1,16 @@
 // Load a unipress content directory into a Uniweb content object.
 //
-// Wraps `@uniweb/build/site`'s `collectSiteContent`, but tells it which
-// top-level config file to read (document.yml or site.yml).
+// Wraps `collectSiteContent`, but tells it which top-level config file to
+// read (document.yml or site.yml).
+//
+// Imports from `@uniweb/build/content` — the sharp/Vite/React-free entry
+// designed for Bun-compiled binaries. `@uniweb/build/site` pulls in the
+// image asset-processor (which eagerly loads sharp's native binding and
+// blows up in a `bun build --compile` binary).
 
 import { existsSync } from 'node:fs'
 import { resolve, join } from 'node:path'
-import { collectSiteContent } from '@uniweb/build/site'
+import { collectSiteContent } from '@uniweb/build/content'
 import { detectConfigFile, CONFIG_FILE_NAMES } from './document-yml.js'
 import { ContentDirectoryError, DocumentYmlError } from './errors.js'
 

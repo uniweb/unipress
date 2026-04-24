@@ -1,16 +1,14 @@
 #!/usr/bin/env node
 
 import { parseArgs } from 'node:util'
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
-import { dirname, join } from 'node:path'
 import { inspect } from './commands/inspect.js'
 import { compileCommand } from './commands/compile.js'
 import { createCommand, listFoundationsCommand } from './commands/create.js'
 import { UnipressError } from './errors.js'
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf8'))
+// Import assertion inlines package.json at bundle time. Required for
+// `bun build --compile`: reading the file at runtime fails because the
+// compiled binary's virtual filesystem (/$bunfs) doesn't hold it.
+import pkg from '../package.json' with { type: 'json' }
 
 const HELP = `unipress ${pkg.version}
 

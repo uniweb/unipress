@@ -1,0 +1,113 @@
+# ─────────────────────────────────────────────────────────
+# unipress — cross-platform standalone binaries
+#
+# Builds macOS (arm64), Linux (x64), and Windows (x64) standalone
+# binaries via `bun build --compile`. Publishes to a GitHub Release
+# tagged at the unipress version.
+#
+# Trigger:
+#   - tag push matching `unipress@*`   (automatic)
+#   - workflow_dispatch                (manual re-run)
+#
+# Bun pin: 1.3.9. Bump via the workflow + scripts/build-binaries.js
+# in the same PR so local + CI stay in sync.
+#
+# What's NOT here (all deferred by design — revisit when a real user
+# complains or when a feature flag ships):
+#   - macOS / Linux arm64 coverage beyond darwin-arm64
+#   - Code signing (macOS Dev ID, Windows Authenticode)
+#   - Notarization
+#   - Homebrew formula / curl-installer script
+#   - Auto-bundling the Typst binary (unipress downloads it on first use)
+#   - npm publish (blocked by the `unipress` similar-name dispute — §23 #13)
+# ─────────────────────────────────────────────────────────
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'unipress@*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            target: bun-darwin-arm64
+            artifact: unipress-darwin-arm64
+            ext: ''
+          - platform: ubuntu-22.04
+            target: bun-linux-x64
+            artifact: unipress-linux-x64
+            ext: ''
+          - platform: windows-latest
+            target: bun-windows-x64
+            artifact: unipress-windows-x64.exe
+            ext: '.exe'
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.9'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Compile standalone binary
+        shell: bash
+        run: node scripts/build-binaries.js --target ${{ matrix.target }} --out dist-bin
+
+      - name: Checksum
+        shell: bash
+        run: |
+          cd dist-bin
+          if command -v sha256sum >/dev/null 2>&1; then
+            sha256sum "${{ matrix.artifact }}" > "${{ matrix.artifact }}.sha256"
+          else
+            shasum -a 256 "${{ matrix.artifact }}" > "${{ matrix.artifact }}.sha256"
+          fi
+          cat "${{ matrix.artifact }}.sha256"
+
+      - name: Upload to release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          if [ -z "$TAG" ] || [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            # For manual re-runs outside a tag, read version from package.json.
+            VERSION=$(node -e "console.log(require('./package.json').version)")
+            TAG="unipress@${VERSION}"
+          fi
+          echo "Uploading to release ${TAG}"
+          # `gh release create` is idempotent with --clobber via upload;
+          # create the draft release if it doesn't exist yet.
+          gh release view "${TAG}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1 || \
+            gh release create "${TAG}" --draft --title "${TAG}" --repo "${GITHUB_REPOSITORY}"
+          gh release upload "${TAG}" \
+            "dist-bin/${{ matrix.artifact }}" \
+            "dist-bin/${{ matrix.artifact }}.sha256" \
+            --clobber --repo "${GITHUB_REPOSITORY}"
