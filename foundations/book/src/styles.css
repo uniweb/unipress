@@ -1,0 +1,89 @@
+/* press-book foundation styles. Imported by the site via `#foundation/styles`. */
+@import "tailwindcss";
+@import "@uniweb/kit/theme-tokens.css";
+
+/* Tell Tailwind v4 which files to scan for class tokens. Required because
+   Tailwind's default content detection only scans the site; utilities used
+   inside this foundation's JSX (e.g. `text-heading text-4xl font-bold`) go
+   missing without these @source directives. */
+@source "./sections/**/*.{js,jsx}";
+@source "./layouts/**/*.{js,jsx}";
+@source "./components/**/*.{js,jsx}";
+@source "../node_modules/@uniweb/kit/src/**/*.{js,jsx}";
+
+/* Uniweb's context class names → Tailwind's dark: variant so sections
+   with `theme: dark` in frontmatter get dark tokens automatically. */
+@custom-variant dark (&:is(.context-dark *, .scheme-dark *));
+
+:root {
+  --max-content-width: 48rem;
+  --header-height: 3.5rem;
+}
+
+/* Prose enhancements for book content — matches the print pipeline's
+   typography rhythm. Applied via className="prose-book". */
+@layer components {
+  .prose-book {
+    line-height: 1.7;
+    font-size: 1.0625rem;
+    color: var(--body);
+  }
+
+  .prose-book p {
+    margin: 0 0 1em;
+  }
+
+  .prose-book h2 {
+    margin: 2.5em 0 0.75em;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--heading);
+    letter-spacing: -0.01em;
+  }
+
+  .prose-book h3 {
+    margin: 2em 0 0.5em;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--heading);
+  }
+
+  .prose-book pre {
+    background: var(--surface-2, var(--muted));
+    border-radius: 6px;
+    padding: 1em 1.15em;
+    overflow-x: auto;
+    font-size: 0.9em;
+    line-height: 1.55;
+    margin: 1.25em 0;
+  }
+
+  .prose-book code {
+    background: var(--surface-2, var(--muted));
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    font-size: 0.92em;
+  }
+
+  .prose-book pre code {
+    background: transparent;
+    padding: 0;
+  }
+
+  .prose-book ul,
+  .prose-book ol {
+    margin: 1em 0 1em 1.5em;
+  }
+
+  .prose-book li {
+    margin: 0.35em 0;
+  }
+
+  .prose-book blockquote {
+    border-left: 3px solid var(--border);
+    margin: 1.25em 0;
+    padding: 0.25em 0 0.25em 1em;
+    color: var(--subtle);
+    font-style: italic;
+  }
+}
