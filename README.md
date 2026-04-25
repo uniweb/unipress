@@ -1,20 +1,34 @@
 # unipress
 
-Compile a directory of markdown and YAML into a document — PDF, Typst source bundle, EPUB, HTML for Paged.js, DOCX, XLSX — using a [Uniweb](https://uniweb.io) foundation for composition and presentation.
+**Compile a directory of markdown into a document — typeset PDF, EPUB, Word, Excel, Paged.js HTML, Typst source — using a foundation that knows the conventions of the kind of document you're writing.**
 
 ```bash
-unipress compile ./my-book --format pdf --out book.pdf
-unipress compile ./my-book --format typst --out book.zip
-unipress compile ./my-book --format epub --out book.epub
+unipress create my-book
+unipress compile my-book
 ```
 
-One content directory. One CLI. Any format the foundation declares.
+Two commands. The first scaffolds a starter project; the second produces the file.
 
-## What is it?
+## What it makes
 
-A **unipress project** is a content directory — markdown pages, a `document.yml` config, a `theme.yml`, optional `collections/` and `assets/`. No `package.json`, no bundler, no build workflow. Authors ship content; unipress turns it into a single file.
+| Format | What it's for |
+|---|---|
+| **PDF** | The finished, typeset document. Real typography, real pagination, ready to print or share. Built on [Typst](https://typst.app), the modern typesetting system. |
+| **EPUB** | The format Kindles and other ebook readers use. |
+| **Word (`.docx`)** | When a journal, committee, or collaborator needs a Word file. |
+| **Excel (`.xlsx`)** | When the document is structured data — a directory, a dataset, a registry — rather than prose. |
+| **Paged.js HTML** | Browser-paginated HTML you can print to PDF or post on the web. |
+| **Typst source** | The `.typ` files unipress feeds the compiler. Useful if you want to take the typesetting further yourself, or hand off to a designer. |
 
-The directory references a Uniweb **foundation** — a component system that decides what section types exist, how data flows, and how the document is laid out. The same foundation can drive both a website (with `uniweb`) and a downloadable document (with `unipress`).
+Equations work in the standard LaTeX style — `$E = mc^2$` for inline, `$$...$$` for displayed. Tables, lists, footnotes, code blocks, and images all behave the way you'd expect from markdown.
+
+## Two ways to use it
+
+**For authors.** unipress is a tool. Pick a template, write markdown, compile. The template knows the conventions for its kind of document — typography, structure, the bits that make a book look like a book and a directory look like a directory. You handle the content; the template handles everything else.
+
+**For developers.** unipress is an engine. A *foundation* is a component system that declares what section types exist (`type: Chapter`, `type: Bibliography`), where data comes from (`data:` declarations), and what output formats it can emit (`outputs: { docx, xlsx, pdf, custom-format }`). Authors write markdown against your vocabulary; unipress runs your foundation against their content. Same content directory, multiple outputs your foundation chooses to support — typeset book, accessible EPUB, regulatory report, structured data feed. The same foundation can also drive a [Uniweb](https://uniweb.io) website, so the work is never single-purpose.
+
+Foundations consume [`@uniweb/press`](https://github.com/uniweb/press) for the bytes-emitting work. Press is the output layer (Word, Excel, Typst today; more formats shipping); the foundation is your vocabulary.
 
 ## Install
 
@@ -24,50 +38,62 @@ npm i -g @uniweb/unipress
 
 The package is scoped, but the executable is unscoped: after install, invoke as `unipress`.
 
-## Quick-start
+Standalone binaries (no Node required) are also published on [the releases page](https://github.com/uniweb/unipress/releases) — pick the asset that matches your platform and put it on your `PATH`.
 
-### 1. Pick a template
+## Pick a template
 
-Run `unipress list-templates` to see what's available. Five built-in templates ship with the binary:
+Five built-in templates ship with the binary. Run `unipress list-templates` for the picker.
 
-| Template      | Foundation        | Outputs                          | Use case                                              |
-|---------------|-------------------|----------------------------------|-------------------------------------------------------|
-| `book`        | `@uniweb/book`    | pdf, typst, pagedjs, epub        | Trade book, long-form prose                           |
-| `monograph`   | `@uniweb/book`    | pdf, typst, pagedjs, epub        | Scholarly monograph (royal-octavo, classical type)    |
-| `report`      | `@uniweb/book`    | pdf, typst, pagedjs, epub        | Technical report (trade-7x10, block paragraphs)       |
-| `data-report` | `@uniweb/data`    | xlsx, docx                       | Aggregate metrics across structured records          |
-| `directory`   | `@uniweb/data`    | xlsx, docx                       | Flat records listing with filterable surface          |
+| Template | Foundation | Outputs | Use case |
+|---|---|---|---|
+| `book` | `@uniweb/book` | pdf, typst, pagedjs, epub | Trade book, long-form prose |
+| `monograph` | `@uniweb/book` | pdf, typst, pagedjs, epub | Scholarly monograph (royal-octavo, classical typography) |
+| `report` | `@uniweb/book` | pdf, typst, pagedjs, epub | Technical report (trade-7x10, block paragraphs) |
+| `data-report` | `@uniweb/data` | xlsx, docx | Aggregate metrics across structured records |
+| `directory` | `@uniweb/data` | xlsx, docx | Flat records listing with a filterable surface |
 
 Per-template guides: [`docs/templates/`](./docs/templates/).
 
-### 2. Scaffold
+More templates land as more foundations ship — `cv`, `resume`, `paper`, `thesis` are on the roadmap for upcoming releases.
+
+## Write your first document
 
 ```bash
-unipress create my-book --template book --title "My Book" --author "Jane Doe"
+unipress create my-book --template book --title "My Book" --author "Your Name"
 cd my-book
 ```
 
-The result is a content-only directory — no `package.json`, no `node_modules`. The scaffolded `document.yml` pins the foundation to a specific version (e.g., `@uniweb/book@0.1.0`); on first compile, unipress fetches the foundation from the registry and caches it.
+The result is a content-only directory — markdown pages, a `document.yml`, optional `theme.yml` and `assets/`. **No `package.json`, no `node_modules`.** Edit the markdown — that's your content. Numbered filenames (`01-intro.md`, `02-chapter-one.md`) keep chapter order predictable.
 
-### 3. Compile
+When you're ready to produce the document:
 
 ```bash
-unipress compile . --format pdf --out my-book.pdf
+unipress compile . --format pdf
 ```
 
-unipress reads the foundation's declared `outputs.pdf` spec, assembles adapter options (meta, preamble, template, cover assets — the foundation decides what), walks the content through the foundation's section types, and hands off to the Typst binary for the final PDF.
+Or any of the formats the foundation declares (`--format epub`, `--format pagedjs`). Write, compile, look at the result, revise, compile again — that's the loop.
 
-First PDF run downloads Typst 0.14.2 to `~/Library/Caches/unipress/typst/0.14.2/` (or the XDG cache dir on Linux). Subsequent runs reuse the cached binary.
+The first PDF run downloads Typst 0.14.2 to `~/Library/Caches/unipress/typst/0.14.2/` (or the XDG cache dir on Linux). Subsequent runs reuse the cached binary.
 
-### Custom foundations
+## Custom foundations
 
-Any Uniweb foundation that declares an `outputs: { … }` map on its default export can drive unipress. Point `document.yml`'s `foundation:` at:
+Any foundation that declares an `outputs: { … }` map on its default export can drive unipress. Point `document.yml`'s `foundation:` at:
 
-- a registry ref (`@<namespace>/<name>@<version>`) — fetched from `UNIWEB_REGISTRY_URL` or the production default,
-- a full `https://…` URL,
-- a local filesystem path to a built foundation directory.
+- a registry ref: `@<namespace>/<name>@<version>` — fetched from the Uniweb registry, cached locally,
+- a URL: `https://…/foundation.js`,
+- a local filesystem path: `./foundation`, `/abs/path`, etc.
 
-See `docs/templates/book.md` and `docs/templates/data-report.md` for the field surfaces of the bundled foundations, or [foundation authors' guide](https://github.com/uniweb/docs/blob/main/reference/foundation-config.md) for building your own.
+The local-path form is the everyday dev loop — point unipress at a foundation directory you're iterating on, no publish step needed:
+
+```bash
+unipress compile my-doc --foundation ../my-foundation
+```
+
+For the foundation contract — the `outputs:` map, the `getOptions(website, hostHints)` function, what bytes a foundation can emit — see the [foundation authors' guide](https://github.com/uniweb/docs/blob/main/reference/foundation-config.md#document-outputs). Foundations are distributed via the [Uniweb registry](https://uniweb.io), not npm.
+
+---
+
+Below this point is reference material — useful when you want to do something beyond the basics, or when something doesn't behave as expected.
 
 ## CLI reference
 
@@ -110,39 +136,38 @@ unipress --help
 unipress --version
 ```
 
-Exit codes:
-- `0` — success.
-- `1` — user-addressable error (bad args, missing file, misconfigured foundation).
-- `2` — internal error (re-run with `--verbose` for a stack trace).
+Exit codes: `0` success, `1` user-addressable error, `2` internal error (re-run with `--verbose` for a stack trace).
 
 ## Configuration
 
 ### `document.yml`
 
-The content-directory-level config, with the same shape as Uniweb's `site.yml`. unipress adds a few fields:
+The content-directory-level config. Fields unipress reads:
 
 | Field | Purpose |
 |---|---|
 | `name` | Document name (used as a title fallback). |
-| `foundation` | Registry ref (`@ns/name@ver`), URL, or local path to the foundation's built `foundation.js`. |
+| `foundation` | Registry ref (`@ns/name@ver`), URL, or local path to the foundation. |
 | `format` | Default output format. Overridable by CLI `--format` or `unipress.config.js`. |
-| `pages:` | Reading order (same semantics as `site.yml`). |
-| `book:`, `report:`, `collections:` … | Foundation-specific config blocks. Read by the foundation's `outputs[format].getOptions`. |
+| `pages:` | Reading order (same semantics as a Uniweb site's `site.yml`). |
+| `book:`, `report:`, `collections:` … | Foundation-specific config blocks. The foundation's `getOptions` reads these. |
+
+`site.yml` is also accepted as a fallback for compatibility with existing Uniweb site directories.
 
 ### `unipress.config.js`
 
-Optional ESM file for overrides awkward in YAML (imports, computed values, format-specific options). Auto-discovered at `<dir>/unipress.config.js` or explicit via `--config <path>`.
+Optional ESM file for things awkward in YAML — imports, computed values, format-specific overrides. Auto-discovered at `<dir>/unipress.config.js` or explicit via `--config <path>`.
 
 ```js
 import { defineUnipressConfig } from '@uniweb/unipress'
 
 export default defineUnipressConfig({
-  out: './dist/my-book.pdf',            // overrides --out default
-  format: 'pdf',                         // overrides document.yml format
+  out: './dist/my-book.pdf',           // overrides --out default
+  format: 'pdf',                        // overrides document.yml format
 
   typst: {
-    version: '0.14.2',                   // override the pinned Typst version
-    binary: '/usr/local/bin/typst',      // skip the managed download
+    version: '0.14.2',                  // override the pinned Typst version
+    binary: '/usr/local/bin/typst',     // skip the managed download
   },
 })
 ```
@@ -157,41 +182,32 @@ Relative paths in the config (`out`, `foundation`, `typst.binary`) resolve again
 CLI flags > unipress.config.js > document.yml > defaults
 ```
 
-Applied per-field: `--format` wins over `config.format` wins over `document.yml`'s `format:` wins over "no format → error."
-
-## What foundations need to support unipress
-
-For a foundation to be compilable by unipress (or by any headless host), it must:
-
-1. **Depend on `@uniweb/press`.** The foundation's build re-exports `compileDocument` and `compileSubtree` so unipress can reach the foundation's bundled Press.
-2. **Declare `outputs:` on its default export.** Each entry tells Press which adapter to use (`via:` redirect), which file extension to default to, and how to assemble format-specific adapter options (`getOptions(website, hostHints)`).
-
-```js
-// foundation/src/foundation.js
-import { buildTypstOptions } from './compile-options.js'
-
-export default {
-  outputs: {
-    typst: { extension: 'zip', getOptions: buildTypstOptions },
-    pdf:   { extension: 'pdf', via: 'typst', getOptions: buildTypstOptions },
-  },
-}
-```
-
-Full contract: [Document Outputs in the Uniweb framework docs](https://github.com/uniweb/docs/blob/main/reference/foundation-config.md#document-outputs).
+Applied per-field.
 
 ## Typst binary
 
 `--format pdf` requires a Typst binary. unipress pins `0.14.2` and manages the download:
 
-- **Cache location**: `$UNIPRESS_CACHE_DIR` > `$XDG_CACHE_HOME/unipress` > `~/Library/Caches/unipress` (macOS) > `~/.cache/unipress` (fallback). Binary path: `<cache>/typst/<version>/typst`.
-- **Override**: pass `--typst-binary <path>` or set `typst.binary` in `unipress.config.js`.
-- **Checksum verified**: each download is SHA-256-checked against the digest pinned in `src/typst/versions.js` (sourced from GitHub's release-assets API).
+- **Cache location:** `$UNIPRESS_CACHE_DIR` > `$XDG_CACHE_HOME/unipress` > `~/Library/Caches/unipress` (macOS) > `~/.cache/unipress` (fallback). Binary path: `<cache>/typst/<version>/typst`.
+- **Override:** pass `--typst-binary <path>` or set `typst.binary` in `unipress.config.js`.
+- **Checksum verified:** each download is SHA-256-checked against the digest pinned in `src/typst/versions.js`.
+
+## Where things stand
+
+unipress is **pre-1.0**. The CLI is stable enough to write real documents with — the `book` template, in particular, is well-tested. Future versions may change small things, but `document.yml` files and project folders from today should keep working: scaffolded projects pin a specific foundation version, and registry artifacts are immutable.
+
+**Heads-up for v0.2:** the bundled catalog points at a local registry (`http://localhost:4001/...`) until the foundations publish to the production Uniweb registry. To compile against a bundled template today, either pass `--foundation <path>` pointing at a built foundation directory, or run a local foundation registry (publish a built foundation with `uniweb publish --local` and serve `.unicloud/registry/` on port 4001). A follow-up release switches the catalog to production URLs once `@uniweb/book` and `@uniweb/data` ship there.
 
 ## Troubleshooting
 
-See [`docs/troubleshooting.md`](./docs/troubleshooting.md) for common errors and fixes.
+See [`docs/troubleshooting.md`](./docs/troubleshooting.md) for common errors and fixes — every named error class maps to a cause and a concrete next step.
+
+## See also
+
+- [`@uniweb/press`](https://github.com/uniweb/press) — the output layer foundations consume to produce Word/Excel/Typst/EPUB. Foundation authors interact with it directly.
+- [`@uniweb/build`](https://github.com/uniweb/build) — the framework's content-collection pipeline. unipress consumes the sharp-free `/content` entry.
+- [Uniweb](https://uniweb.io) — the larger framework. Foundations originate here; unipress brings them to the command line.
 
 ## License
 
-Apache-2.0 © Proximify
+Apache-2.0 — see [LICENSE](./LICENSE).
