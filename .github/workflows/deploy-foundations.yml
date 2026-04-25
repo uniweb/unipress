@@ -141,6 +141,15 @@ jobs:
           mkdir -p _gh-pages/foundations
           cp -R _staging/foundations/. _gh-pages/foundations/
 
+          # Disable Jekyll. GitHub Pages defaults to Jekyll processing,
+          # which silently excludes any file or directory starting with
+          # an underscore — including the foundation's `_entry.generated-*.js`
+          # entry chunk and `_commonjs-dynamic-modules-*.js`. Both 404 from
+          # the published URL even though they're committed on gh-pages.
+          # The marker file disables Jekyll entirely so every file ships
+          # verbatim. Idempotent — re-creating it on each deploy is fine.
+          touch _gh-pages/.nojekyll
+
           # Write a top-level index for human visitors. Listing what's
           # currently deployed; lets anyone confirm a foundation is live
           # without having to guess paths.
