@@ -92,16 +92,6 @@ function filenameFrom(src, role) {
     return seg || role + '.png'
 }
 
-// URL construction for the EPUB adapter, which expects a cover URL (not
-// bytes). Only used by buildEpubOptions; the typst path uses loadAsset
-// instead. EPUB-side cover bytes-loading is a separate cleanup.
-function resolveFetchUrl(src, basePath) {
-    if (/^https?:\/\//i.test(src) || src.startsWith('data:')) return src
-    const prefixed = (basePath || '') + (src.startsWith('/') ? src : '/' + src)
-    if (typeof window === 'undefined') return prefixed
-    return window.location.origin + prefixed
-}
-
 /**
  * Build typography with CSS-variable fallback for the browser case. Lets
  * web theme choices flow into the compiled PDF without the author
@@ -177,18 +167,18 @@ export async function buildPagedjsOptions(website) {
 
 /**
  * EPUB output: shares the 'html' input shape with Paged.js. The adapter
- * reads the cover URL from adapterOptions.cover.
+ * reads the cover spec from `adapterOptions.cover` and uses the host-
+ * supplied `loadAsset` to turn it into bytes — same abstraction the typst
+ * path uses, so the foundation doesn't need to branch on environment.
  */
-export async function buildEpubOptions(website) {
+export async function buildEpubOptions(website, { loadAsset } = {}) {
     const bookCfg = website?.config?.book || {}
     const coverSrc = bookCfg.covers?.front ?? bookCfg.coverImage
-    const coverUrl = coverSrc
-        ? resolveFetchUrl(coverSrc, website?.basePath)
-        : undefined
     return {
         adapterOptions: {
             meta: buildBookMeta(website),
-            cover: coverUrl,
+            cover: coverSrc,
+            loadAsset,
         },
     }
 }

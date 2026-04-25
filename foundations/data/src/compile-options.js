@@ -52,6 +52,7 @@ export function buildDocxOptions(website, hostHints = {}) {
     adapterOptions: {
       ...buildMeta(website, hostHints),
       paragraphStyles: hostHints.paragraphStyles ?? DOCX_PARAGRAPH_STYLES,
+      loadAsset: hostHints.loadAsset,
     },
   }
 }
