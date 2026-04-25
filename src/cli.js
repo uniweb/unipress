@@ -3,7 +3,7 @@
 import { parseArgs } from 'node:util'
 import { inspect } from './commands/inspect.js'
 import { compileCommand } from './commands/compile.js'
-import { createCommand, listFoundationsCommand } from './commands/create.js'
+import { createCommand, listTemplatesCommand } from './commands/create.js'
 import { UnipressError } from './errors.js'
 // Import assertion inlines package.json at bundle time. Required for
 // `bun build --compile`: reading the file at runtime fails because the
@@ -27,20 +27,20 @@ Commands:
                            --config <path>     explicit config file (default: <dir>/unipress.config.js)
                            --typst-binary <p>  path to a typst binary (skips managed download)
                            --keep-temp         keep the typst temp dir on failure (for debugging)
-  create <dir>           Scaffold a new unipress project from a catalog foundation
-                           --foundation <id>   catalog entry (interactive picker if omitted)
+  create <dir>           Scaffold a new unipress project from a template
+                           --template <id>     template to use (interactive picker if omitted)
                            --title <str>       document title (prompts if omitted)
                            --author <str>      document author (prompts if omitted)
                            --force             overwrite non-empty <dir>
-                           --yes               skip prompts (requires --foundation)
-  inspect <dir>          Dump the resolved Website graph as JSON
+                           --yes               skip prompts (requires --template)
+  inspect <dir>          Dump the parsed content as JSON
                            --full              include web-only fields (assets, icons, ...)
                            --summary           replace pages[] with route strings only
                            --page <route>      keep only the page matching <route>
                            --depth <n>         truncate nested values beyond depth n
-                           --foundation <ref>  override document.yml's foundation: field
-                           --no-orchestrate    skip foundation import + initPrerender (raw content only)
-  list-foundations       List the foundations available in the catalog
+                           --foundation <ref>  override the foundation in document.yml (a name or URL)
+                           --no-orchestrate    skip running the foundation; show only the parsed content
+  list-templates         List the templates available
 
 Options:
   -h, --help             Show this help
@@ -78,6 +78,7 @@ async function main(argv) {
       page: { type: 'string' },
       depth: { type: 'string' },
       foundation: { type: 'string' },
+      template: { type: 'string' },
       format: { type: 'string' },
       out: { type: 'string' },
       config: { type: 'string' },
@@ -132,17 +133,25 @@ async function main(argv) {
         })
         break
       case 'create':
+        if (values.foundation != null) {
+          process.stderr.write(`error: --foundation is not valid for 'create'; use --template instead\n`)
+          process.exit(1)
+        }
         await createCommand({
           dir: rest[0],
-          foundation: values.foundation ?? null,
+          template: values.template ?? null,
           title: values.title ?? null,
           author: values.author ?? null,
           force: !!values.force,
           yes: !!values.yes,
         })
         break
+      case 'list-templates':
+        await listTemplatesCommand()
+        break
       case 'list-foundations':
-        await listFoundationsCommand()
+        process.stderr.write(`error: 'list-foundations' has been renamed to 'list-templates'\n`)
+        process.exit(1)
         break
       default:
         unknownCommand(command)

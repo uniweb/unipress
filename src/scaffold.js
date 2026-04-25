@@ -25,7 +25,7 @@ export async function scaffold({ templateName, targetDir, vars, force = false, o
   if (!files) {
     throw new TemplateError(
       `template not found: '${templateName}'\n` +
-      `hint: run 'unipress list-foundations' to see available foundations and their scaffolds`
+      `hint: run 'unipress list-templates' to see available templates`
     )
   }
   if (existsSync(targetDir) && (await readdir(targetDir)).length > 0 && !force) {

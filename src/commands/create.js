@@ -1,9 +1,10 @@
 // `unipress create <dir>` — scaffold a content directory from a catalog
-// foundation's associated template.
+// template. A template pins a foundation and ships starter content; the
+// foundation it pins is the runtime artifact unipress loads at compile.
 //
 // Flow:
-//   1. If --foundation is not given and not --yes, interactively pick from
-//      the catalog. If --yes without --foundation, fail.
+//   1. If --template is not given and not --yes, interactively pick from
+//      the catalog. If --yes without --template, fail.
 //   2. Look up the catalog entry — resolves to a scaffold name.
 //   3. Collect scaffold vars (title, author, year) via prompts unless
 //      --yes is set (then defaults are used; flags override).
@@ -27,18 +28,18 @@ function err(line) {
   process.stderr.write(line + '\n')
 }
 
-async function pickFoundation() {
+async function pickTemplate() {
   const entries = listCatalog()
   if (entries.length === 0) {
     throw new TemplateError(
-      `catalog is empty — no foundations available for scaffolding\n` +
-      `hint: pass --foundation <ref> to bypass the catalog, or edit foundations.yml`
+      `catalog is empty — no templates available for scaffolding\n` +
+      `hint: edit foundations.yml to add a template entry`
     )
   }
   const response = await prompts({
     type: 'select',
     name: 'id',
-    message: 'Pick a foundation',
+    message: 'Pick a template',
     choices: entries.map((e) => ({
       title: e.name || e.id,
       description: e.description ? String(e.description).trim().replace(/\s+/g, ' ') : undefined,
@@ -46,7 +47,7 @@ async function pickFoundation() {
     })),
   })
   if (!response.id) {
-    throw new TemplateError('no foundation selected — aborting')
+    throw new TemplateError('no template selected — aborting')
   }
   return response.id
 }
@@ -72,49 +73,49 @@ async function collectVars({ flagTitle, flagAuthor, interactive }) {
   }
 }
 
-export async function createCommand({ dir, foundation, title, author, force = false, yes = false }) {
+export async function createCommand({ dir, template, title, author, force = false, yes = false }) {
   if (!dir) {
     throw new TemplateError(
-      `usage: unipress create <dir> [--foundation <id>] [--title <t>] [--author <a>]`
+      `usage: unipress create <dir> [--template <id>] [--title <t>] [--author <a>]`
     )
   }
   const targetDir = resolve(dir)
 
-  let foundationId = foundation
-  if (!foundationId) {
+  let templateId = template
+  if (!templateId) {
     if (yes) {
       throw new TemplateError(
-        `--yes requires --foundation (no interactive selection when --yes is set)`
+        `--yes requires --template (no interactive selection when --yes is set)`
       )
     }
-    foundationId = await pickFoundation()
+    templateId = await pickTemplate()
   }
 
-  const entry = findCatalogEntry(foundationId)
+  const entry = findCatalogEntry(templateId)
   if (!entry) {
     throw new TemplateError(
-      `foundation '${foundationId}' is not in the catalog\n` +
-      `hint: run 'unipress list-foundations' to see available entries`
+      `template '${templateId}' is not in the catalog\n` +
+      `hint: run 'unipress list-templates' to see available entries`
     )
   }
 
-  const templateName = entry.scaffold
-  if (!templateName) {
+  const scaffoldName = entry.scaffold
+  if (!scaffoldName) {
     throw new TemplateError(
-      `catalog entry '${foundationId}' has no scaffold declared\n` +
+      `catalog entry '${templateId}' has no scaffold declared\n` +
       `hint: add 'scaffold: <name>' to the entry in foundations.yml`
     )
   }
 
   const vars = await collectVars({ flagTitle: title, flagAuthor: author, interactive: !yes })
-  vars.foundation = foundationId
+  vars.foundation = templateId
 
   log(`scaffolding ${targetDir}`)
-  log(`  foundation: ${entry.name || entry.id} (id: ${entry.id})`)
-  log(`  template:   ${templateName}`)
+  log(`  template:  ${entry.name || entry.id} (id: ${entry.id})`)
+  log(`  scaffold:  ${scaffoldName}`)
 
   await scaffold({
-    templateName,
+    templateName: scaffoldName,
     targetDir,
     vars,
     force,
@@ -133,7 +134,7 @@ export async function createCommand({ dir, foundation, title, author, force = fa
   log(`      it will be fetched + cached on the first compile. See foundations.yml.`)
 }
 
-export async function listFoundationsCommand() {
+export async function listTemplatesCommand() {
   const entries = listCatalog()
   if (entries.length === 0) {
     err('catalog is empty')
