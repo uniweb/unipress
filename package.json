@@ -14,10 +14,10 @@
   },
   "files": [
     "src",
-    "documents",
     "docs",
     "README.md",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "RELEASING.md"
   ],
   "keywords": [
     "uniweb",
