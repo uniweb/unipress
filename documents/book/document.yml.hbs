@@ -8,7 +8,12 @@ book:
   author: "{{author}}"
   language: en
   rights: "© {{year}} {{author}}. All rights reserved."
+
+  # Trim size. Common values:
+  #   trade-6x9  (default), trade-7x10, crown-octavo, royal-octavo, a5
   trim: trade-6x9
+
+  # Front matter and structure.
   structure:
     titlePage: true
     copyrightPage: true
@@ -16,7 +21,27 @@ book:
     tocDepth: 2
     frontMatterNumbering: roman
 
+  # Optional cover artwork. The placeholder ships with the scaffold so the
+  # first compile produces a non-empty file; replace `images/wrap.png` with
+  # your own front-cover image when you have one.
+  covers:
+    front: images/wrap.png
+
+  # Optional typography overrides. Defaults work for most books — uncomment
+  # to customize.
+  #
+  # typography:
+  #   bodySize: 11pt
+  #   leading: 0.72em
+  #   firstLineIndent: 1.4em
+  #   bodyFont: ["EB Garamond", "Garamond", "Georgia"]
+  #   headingFont: ["EB Garamond", "Garamond", "Georgia"]
+
+# Reading order. Files in pages/ are sorted by name; the explicit list
+# below makes the order predictable. Add new chapters by creating
+# pages/<name>.md and adding the base name (without `.md`) here.
 pages:
-  - 01-preface
-  - 02-chapter-one
-  - 03-chapter-two
+  - 01-welcome
+  - 02-formatting
+  - 03-where-next
+  - 99-colophon

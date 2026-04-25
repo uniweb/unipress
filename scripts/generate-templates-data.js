@@ -45,6 +45,27 @@ function walk(dir) {
   return results
 }
 
+// File extensions treated as binary. Anything in this set is read as a
+// Buffer and embedded as { encoding: 'base64', content: <base64> }.
+// Everything else is read as utf8 and embedded as a plain string. Keep
+// this list conservative — adding an extension is harmless, but treating
+// a text file as binary would block Handlebars substitution + line-ending
+// normalization on systems that touch utf8 differently.
+const BINARY_EXTENSIONS = new Set([
+  '.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif', '.ico',
+  '.pdf',
+  '.zip', '.tar', '.gz',
+  '.woff', '.woff2', '.ttf', '.otf', '.eot',
+  '.mp3', '.wav', '.ogg',
+  '.mp4', '.webm', '.mov',
+])
+
+function isBinaryPath(path) {
+  const dot = path.lastIndexOf('.')
+  if (dot < 0) return false
+  return BINARY_EXTENSIONS.has(path.slice(dot).toLowerCase())
+}
+
 // Match a top-level YAML `foundation: <value>` line. Captures the value
 // (stripped of quotes + trailing comment). Multiline values not supported
 // (foundation refs are always single-line).
@@ -98,6 +119,11 @@ function collectTemplates() {
     const files = {}
     for (const abs of walk(root)) {
       const rel = relative(root, abs).split('\\').join('/')
+      if (isBinaryPath(rel)) {
+        const buf = readFileSync(abs)
+        files[rel] = { encoding: 'base64', content: buf.toString('base64') }
+        continue
+      }
       let content = readFileSync(abs, 'utf8')
       if (rel === 'document.yml.hbs' || rel === 'document.yml') {
         content = rewriteFoundationRef(content, abs)
