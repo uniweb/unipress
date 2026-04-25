@@ -6,7 +6,7 @@ If you're starting a new book, replace the contents of these chapter files with 
 
 If you want a different look — a different page size, different fonts, a different cover treatment — open `document.yml` and look at the settings the book template exposes. Most visual aspects are configurable without leaving the template.
 
-If you have your own cover artwork, replace `assets/front.png` and `assets/back.png` with your own files. The template will use yours instead of the placeholders.
+If you have your own cover artwork, replace `assets/front.jpg` and `assets/back.jpg` with your own files (any common image format works — adjust the `book.covers.front` and `.back` paths in `document.yml` if you change the extension). The template will use yours instead of the placeholders.
 
 If the book template isn't quite right for what you're writing — if you're producing an academic monograph, a thesis, a paper, or a report — try one of the other templates. Run `unipress list-templates` to see what's available.
 

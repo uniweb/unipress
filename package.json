@@ -48,11 +48,11 @@
     "lint": "echo \"no lint yet\" && exit 0"
   },
   "dependencies": {
-    "@uniweb/build": "^0.10.3",
-    "@uniweb/content-reader": "^1.1.4",
-    "@uniweb/core": "^0.7.2",
-    "@uniweb/runtime": "^0.8.3",
-    "@uniweb/semantic-parser": "^1.1.10",
+    "@uniweb/build": "workspace:*",
+    "@uniweb/content-reader": "workspace:*",
+    "@uniweb/core": "workspace:*",
+    "@uniweb/runtime": "workspace:*",
+    "@uniweb/semantic-parser": "workspace:*",
     "handlebars": "^4.7.8",
     "js-yaml": "^4.1.0",
     "prompts": "^2.4.2",
