@@ -28,9 +28,9 @@ Equations work in the standard LaTeX style — `$E = mc^2$` for inline, `$$...$$
 
 **For developers.** unipress is an engine. A *foundation* you write declares what section types exist (`type: Chapter`, `type: Bibliography`), where their data comes from (markdown content, file-based or API-backed collections, [Loom](https://github.com/uniweb/loom) expressions templating against hierarchical data), and what output formats it can emit (`outputs: { docx, xlsx, pdf, custom-format }`). Authors mix prose with structured records and computed values in the same document; unipress runs your foundation against their content and produces whatever your foundation declares — typeset book, accessible EPUB, regulatory report, structured data feed. The same foundation can also drive a [Uniweb](https://uniweb.io) website, so the work is never single-purpose.
 
-Foundations consume [`@uniweb/press`](https://github.com/uniweb/press) for the bytes-emitting work. Press is the output layer (Word, Excel, Typst today; more formats shipping); the foundation is your vocabulary.
+Foundations consume [@uniweb/press](https://github.com/uniweb/press) for the bytes-emitting work. Press is the output layer (Word, Excel, Typst today; more formats shipping); the foundation is your vocabulary.
 
-→ For the deeper pitch — mixed prose-and-data, Loom templating, custom output adapters — see [`docs/for-developers.md`](./docs/for-developers.md).
+→ For the deeper pitch — mixed prose-and-data, Loom templating, custom output adapters — see [docs/for-developers.md](./docs/for-developers.md).
 
 ## Install
 
@@ -54,7 +54,7 @@ Five built-in templates ship with the binary. Run `unipress list-templates` for 
 | `data-report` | `@uniweb/data` | xlsx, docx | Aggregate metrics across structured records |
 | `directory` | `@uniweb/data` | xlsx, docx | Flat records listing with a filterable surface |
 
-Per-template guides: [`docs/templates/`](./docs/templates/).
+Per-template guides: [docs/templates/](./docs/templates/).
 
 More templates land as more foundations ship — `cv`, `resume`, `paper`, `thesis` are on the roadmap for upcoming releases.
 
@@ -202,12 +202,12 @@ unipress is **pre-1.0**. The CLI is stable enough to write real documents with �
 
 ## Troubleshooting
 
-See [`docs/troubleshooting.md`](./docs/troubleshooting.md) for common errors and fixes — every named error class maps to a cause and a concrete next step.
+See [docs/troubleshooting.md](./docs/troubleshooting.md) for common errors and fixes — every named error class maps to a cause and a concrete next step.
 
 ## See also
 
-- [`@uniweb/press`](https://github.com/uniweb/press) — the output layer foundations consume to produce Word/Excel/Typst/EPUB. Foundation authors interact with it directly.
-- [`@uniweb/build`](https://github.com/uniweb/build) — the framework's content-collection pipeline. unipress consumes the sharp-free `/content` entry.
+- [@uniweb/press](https://github.com/uniweb/press) — the output layer foundations consume to produce Word/Excel/Typst/EPUB. Foundation authors interact with it directly.
+- [@uniweb/build](https://github.com/uniweb/build) — the framework's content-collection pipeline. unipress consumes the sharp-free `/content` entry.
 - [Uniweb](https://uniweb.io) — the larger framework. Foundations originate here; unipress brings them to the command line.
 
 ## License
