@@ -26,9 +26,11 @@ Equations work in the standard LaTeX style — `$E = mc^2$` for inline, `$$...$$
 
 **For authors.** unipress is a tool. Pick a template, write markdown, compile. The template knows the conventions for its kind of document — typography, structure, the bits that make a book look like a book and a directory look like a directory. You handle the content; the template handles everything else.
 
-**For developers.** unipress is an engine. A *foundation* is a component system that declares what section types exist (`type: Chapter`, `type: Bibliography`), where data comes from (`data:` declarations), and what output formats it can emit (`outputs: { docx, xlsx, pdf, custom-format }`). Authors write markdown against your vocabulary; unipress runs your foundation against their content. Same content directory, multiple outputs your foundation chooses to support — typeset book, accessible EPUB, regulatory report, structured data feed. The same foundation can also drive a [Uniweb](https://uniweb.io) website, so the work is never single-purpose.
+**For developers.** unipress is an engine. A *foundation* you write declares what section types exist (`type: Chapter`, `type: Bibliography`), where their data comes from (markdown content, file-based or API-backed collections, [Loom](https://github.com/uniweb/loom) expressions templating against hierarchical data), and what output formats it can emit (`outputs: { docx, xlsx, pdf, custom-format }`). Authors mix prose with structured records and computed values in the same document; unipress runs your foundation against their content and produces whatever your foundation declares — typeset book, accessible EPUB, regulatory report, structured data feed. The same foundation can also drive a [Uniweb](https://uniweb.io) website, so the work is never single-purpose.
 
 Foundations consume [`@uniweb/press`](https://github.com/uniweb/press) for the bytes-emitting work. Press is the output layer (Word, Excel, Typst today; more formats shipping); the foundation is your vocabulary.
+
+→ For the deeper pitch — mixed prose-and-data, Loom templating, custom output adapters — see [`docs/for-developers.md`](./docs/for-developers.md).
 
 ## Install
 
