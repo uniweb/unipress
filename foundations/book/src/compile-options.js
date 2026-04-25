@@ -52,49 +52,54 @@ export function buildBookMeta(website) {
 }
 
 /**
- * Fetch cover image bytes so Typst can read them from the bundle's local
- * filesystem (Typst 0.13+ still requires local file resolution for #image).
+ * Load cover image bytes for inclusion in the Typst source bundle (Typst
+ * 0.13+ resolves #image() against the local filesystem at compile time).
  *
- * Skipped outside a window context (e.g., unipress during Node-side
- * compile): no fetch, no cover, compile still succeeds — the template
- * handles missing covers gracefully. A later milestone can add a
- * filesystem-reading variant when unipress needs inline covers.
+ * Uses the host-supplied loadAsset helper threaded in by Press's
+ * compileDocument — fs in Node (unipress), fetch in the browser.
+ * Foundation stays environment-agnostic; bytes-loading lives in the
+ * host that knows its own runtime.
+ *
+ * A cover that fails to load is not a compile-blocker — the template
+ * handles missing covers gracefully.
  */
-async function gatherCovers(coversFromConfig, basePath) {
+async function gatherCovers(coversFromConfig, loadAsset) {
     const bundlePaths = {}
     const assets = {}
-    if (!coversFromConfig) return { bundlePaths, assets }
-    if (typeof fetch !== 'function') return { bundlePaths, assets }
+    if (!coversFromConfig || typeof loadAsset !== 'function') {
+        return { bundlePaths, assets }
+    }
 
     for (const role of ['front', 'back']) {
         const src = coversFromConfig?.[role]
         if (!src) continue
-        const url = resolveFetchUrl(src, basePath)
         try {
-            const res = await fetch(url)
-            if (!res.ok) continue
-            const buf = new Uint8Array(await res.arrayBuffer())
+            const bytes = await loadAsset(src)
+            if (!bytes) continue
             const bundlePath = 'covers/' + filenameFrom(src, role)
             bundlePaths[role] = bundlePath
-            assets[bundlePath] = buf
+            assets[bundlePath] = bytes
         } catch {
-            // A cover we can't fetch is not a compile-blocker — skip it.
+            // Skip — log nothing; a missing cover isn't a compile failure.
         }
     }
     return { bundlePaths, assets }
-}
-
-function resolveFetchUrl(src, basePath) {
-    if (/^https?:\/\//i.test(src) || src.startsWith('data:')) return src
-    const prefixed = (basePath || '') + (src.startsWith('/') ? src : '/' + src)
-    if (typeof window === 'undefined') return prefixed
-    return window.location.origin + prefixed
 }
 
 function filenameFrom(src, role) {
     const cleaned = String(src).split(/[?#]/)[0]
     const seg = cleaned.split('/').filter(Boolean).pop()
     return seg || role + '.png'
+}
+
+// URL construction for the EPUB adapter, which expects a cover URL (not
+// bytes). Only used by buildEpubOptions; the typst path uses loadAsset
+// instead. EPUB-side cover bytes-loading is a separate cleanup.
+function resolveFetchUrl(src, basePath) {
+    if (/^https?:\/\//i.test(src) || src.startsWith('data:')) return src
+    const prefixed = (basePath || '') + (src.startsWith('/') ? src : '/' + src)
+    if (typeof window === 'undefined') return prefixed
+    return window.location.origin + prefixed
 }
 
 /**
@@ -124,14 +129,14 @@ function resolveTypographyWithCssFallback(typographyFromConfig) {
  * compileDocument's rest-options; defaults are sources-mode with no
  * endpoint (works for unipress and the in-browser sources download).
  */
-export async function buildTypstOptions(website, { mode = 'sources', endpoint } = {}) {
+export async function buildTypstOptions(website, { mode = 'sources', endpoint, loadAsset } = {}) {
     const bookCfg = website?.config?.book || {}
     const language = bookCfg.language ?? website?.config?.language
     const meta = buildBookMeta(website)
     const typography = resolveTypographyWithCssFallback(bookCfg.typography)
     const { bundlePaths: covers, assets } = await gatherCovers(
         bookCfg.covers,
-        website?.basePath,
+        loadAsset,
     )
     const template = createTemplate({
         trim: bookCfg.trim,
