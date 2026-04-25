@@ -26,52 +26,48 @@ The package is scoped, but the executable is unscoped: after install, invoke as 
 
 ## Quick-start
 
-### 1. Pick a foundation
+### 1. Pick a template
 
-Any Uniweb foundation that declares **document outputs** (an `outputs: { … }` map in its default export) can be compiled by unipress. [`@proximify/press-book`](https://github.com/Proximify/press-book) is the reference example — books that compile to PDF via Typst, plus EPUB, Paged.js HTML, and a Typst source-bundle zip.
+Run `unipress list-templates` to see what's available. Five built-in templates ship with the binary:
 
-### 2. Create a content directory
+| Template      | Foundation        | Outputs                          | Use case                                              |
+|---------------|-------------------|----------------------------------|-------------------------------------------------------|
+| `book`        | `@uniweb/book`    | pdf, typst, pagedjs, epub        | Trade book, long-form prose                           |
+| `monograph`   | `@uniweb/book`    | pdf, typst, pagedjs, epub        | Scholarly monograph (royal-octavo, classical type)    |
+| `report`      | `@uniweb/book`    | pdf, typst, pagedjs, epub        | Technical report (trade-7x10, block paragraphs)       |
+| `data-report` | `@uniweb/data`    | xlsx, docx                       | Aggregate metrics across structured records          |
+| `directory`   | `@uniweb/data`    | xlsx, docx                       | Flat records listing with filterable surface          |
 
-Minimum viable shape (mirrors a Uniweb site — `document.yml` is the top-level config; `site.yml` is accepted as a fallback):
+Per-template guides: [`docs/templates/`](./docs/templates/).
 
+### 2. Scaffold
+
+```bash
+unipress create my-book --template book --title "My Book" --author "Jane Doe"
+cd my-book
 ```
-my-book/
-├── document.yml
-├── theme.yml                   # optional
-├── pages/
-│   ├── preface.md
-│   ├── chapter-1.md
-│   └── chapter-2.md
-├── collections/                # optional, for data-driven sections
-└── assets/                     # optional, images referenced from markdown
-```
 
-```yaml
-# document.yml
-name: "My Book"
-foundation: "@proximify/press-book"  # package name; URL form planned for M9-URL
-format: pdf                          # default format (overridable via --format)
-
-book:                                 # foundation-specific fields
-  title: "My Book"
-  subtitle: "A Short Title"
-  author: "Jane Doe"
-
-pages:                                # reading order
-  - preface
-  - chapter-1
-  - chapter-2
-```
+The result is a content-only directory — no `package.json`, no `node_modules`. The scaffolded `document.yml` pins the foundation to a specific version (e.g., `@uniweb/book@0.1.0`); on first compile, unipress fetches the foundation from the registry and caches it.
 
 ### 3. Compile
 
 ```bash
-unipress compile ./my-book
+unipress compile . --format pdf --out my-book.pdf
 ```
 
 unipress reads the foundation's declared `outputs.pdf` spec, assembles adapter options (meta, preamble, template, cover assets — the foundation decides what), walks the content through the foundation's section types, and hands off to the Typst binary for the final PDF.
 
-First run downloads Typst 0.14.2 to `~/Library/Caches/unipress/typst/0.14.2/` (or the XDG cache dir on Linux). Subsequent runs reuse the cached binary.
+First PDF run downloads Typst 0.14.2 to `~/Library/Caches/unipress/typst/0.14.2/` (or the XDG cache dir on Linux). Subsequent runs reuse the cached binary.
+
+### Custom foundations
+
+Any Uniweb foundation that declares an `outputs: { … }` map on its default export can drive unipress. Point `document.yml`'s `foundation:` at:
+
+- a registry ref (`@<namespace>/<name>@<version>`) — fetched from `UNIWEB_REGISTRY_URL` or the production default,
+- a full `https://…` URL,
+- a local filesystem path to a built foundation directory.
+
+See `docs/templates/book.md` and `docs/templates/data-report.md` for the field surfaces of the bundled foundations, or [foundation authors' guide](https://github.com/uniweb/docs/blob/main/reference/foundation-config.md) for building your own.
 
 ## CLI reference
 
@@ -79,21 +75,36 @@ First run downloads Typst 0.14.2 to `~/Library/Caches/unipress/typst/0.14.2/` (o
 unipress compile <dir> [options]
   --format <fmt>      Output format (pdf | typst | docx | xlsx | pagedjs | epub).
                       Overrides the format: field in document.yml.
-  --foundation <ref>  Package name or local path (overrides document.yml).
+  --foundation <ref>  Override document.yml's foundation. Accepts:
+                        - registry ref:  @<namespace>/<name>@<version>
+                        - URL:           https://…/foundation.js
+                        - path:          ./foundation, /abs/path, …
   --out <path>        Output file (default: ./<dir-basename>.<ext>).
   --config <path>     Explicit config file (default: <dir>/unipress.config.js).
   --typst-binary <p>  Path to a typst binary (skips the managed download).
   --keep-temp         On typst-compile failure, keep the temp dir for inspection.
   --verbose           Per-step progress to stderr + stack traces on errors.
 
+unipress create <dir> [options]
+  --template <id>     Template to scaffold (interactive picker if omitted).
+                      Run `unipress list-templates` to see available ids.
+  --title <str>       Document title (prompts if omitted).
+  --author <str>      Document author (prompts if omitted).
+  --force             Overwrite non-empty <dir>.
+  --yes               Skip prompts (requires --template).
+
+unipress list-templates
+  List the templates available, one per line, with description, outputs,
+  the foundation each pins, and the source URL where the foundation lives.
+
 unipress inspect <dir> [options]
-  Dump the resolved Website graph as JSON (debugging aid).
+  Dump the parsed content as JSON (debugging aid).
   --full              Include web-only fields (assets, icons, etc.).
   --summary           Replace pages[] with route strings only.
   --page <route>      Keep only the page matching <route>.
   --depth <n>         Truncate nested values beyond depth n.
   --foundation <ref>  Override document.yml's foundation.
-  --no-orchestrate    Skip foundation import + initPrerender.
+  --no-orchestrate    Skip running the foundation; show only the parsed content.
 
 unipress --help
 unipress --version
@@ -113,10 +124,10 @@ The content-directory-level config, with the same shape as Uniweb's `site.yml`. 
 | Field | Purpose |
 |---|---|
 | `name` | Document name (used as a title fallback). |
-| `foundation` | Package name or local path to the foundation's built `foundation.js`. |
+| `foundation` | Registry ref (`@ns/name@ver`), URL, or local path to the foundation's built `foundation.js`. |
 | `format` | Default output format. Overridable by CLI `--format` or `unipress.config.js`. |
 | `pages:` | Reading order (same semantics as `site.yml`). |
-| `book:`, `cv:`, `report:` … | Foundation-specific config blocks. Read by the foundation's `outputs[format].getOptions`. |
+| `book:`, `report:`, `collections:` … | Foundation-specific config blocks. Read by the foundation's `outputs[format].getOptions`. |
 
 ### `unipress.config.js`
 

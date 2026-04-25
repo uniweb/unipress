@@ -15,7 +15,7 @@ The positional argument to `unipress compile` is wrong. Check your `cd` and the 
 unipress expects a top-level config file inside the content directory. Create `document.yml` at the root:
 
 ```yaml
-foundation: "@proximify/press-book"
+foundation: "@uniweb/book@0.1.0"
 format: pdf
 pages: [preface, chapter-1, chapter-2]
 ```
@@ -46,15 +46,22 @@ The error also lists `unipress.config.js` as an option when a config file is loa
 
 ## `FoundationResolutionError: no foundation specified`
 
-Set `foundation:` in `document.yml`, or pass `--foundation <ref>`:
+Set `foundation:` in `document.yml`, or pass `--foundation <ref>`. Four ref forms accepted:
 
 ```yaml
-foundation: "@proximify/press-book"   # package name
-# or
-foundation: ./path/to/foundation       # local path (relative to document.yml)
-```
+# Registry ref (recommended) — resolved against UNIWEB_REGISTRY_URL
+# or the production default at site-router.uniweb-edge.workers.dev.
+foundation: "@uniweb/book@0.1.0"
 
-URL-based foundations (Uniweb registry) are planned for a later milestone.
+# Or a full URL.
+foundation: "https://example.com/foundations/my-foundation/foundation.js"
+
+# Or a local filesystem path (relative to document.yml).
+foundation: "./path/to/foundation"
+
+# Or, inside a pnpm workspace, a bare package name (resolves through node_modules).
+foundation: "@uniweb/book"
+```
 
 ## `FoundationResolutionError: cannot find foundation package '<name>' from <dir>`
 
