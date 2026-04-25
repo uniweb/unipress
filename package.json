@@ -14,7 +14,7 @@
   },
   "files": [
     "src",
-    "templates",
+    "documents",
     "docs",
     "README.md",
     "CHANGELOG.md"

@@ -1,0 +1,27 @@
+name: "{{title}}"
+foundation: ../../foundations/book
+format: pdf
+
+book:
+  title: "{{title}}"
+  subtitle: ""
+  author: "{{author}}"
+  language: en
+  rights: "© {{year}} {{author}}."
+  trim: trade-7x10
+  typography:
+    bodySize: 10.5pt
+    leading: 0.7em
+    firstLineIndent: 0pt
+    codeMarginRelief: 0.25in
+  structure:
+    titlePage: true
+    copyrightPage: false
+    toc: true
+    tocDepth: 2
+    frontMatterNumbering: none
+
+pages:
+  - 01-summary
+  - 02-findings
+  - 03-methodology

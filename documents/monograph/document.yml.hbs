@@ -1,0 +1,28 @@
+name: "{{title}}"
+foundation: ../../foundations/book
+format: pdf
+
+book:
+  title: "{{title}}"
+  subtitle: ""
+  author: "{{author}}"
+  language: en
+  rights: "© {{year}} {{author}}."
+  trim: royal-octavo
+  typography:
+    bodySize: 10.5pt
+    leading: 0.68em
+    firstLineIndent: 1.2em
+    bodyFont: ["EB Garamond", "Garamond", "Georgia"]
+    headingFont: ["EB Garamond", "Garamond", "Georgia"]
+  structure:
+    titlePage: true
+    copyrightPage: true
+    toc: true
+    tocDepth: 3
+    frontMatterNumbering: roman
+
+pages:
+  - 01-preface
+  - 02-introduction
+  - 03-chapter-one

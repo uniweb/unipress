@@ -1,0 +1,28 @@
+name: "{{title}}"
+{{#if author}}
+author: "{{author}}"
+{{/if}}
+year: {{year}}
+
+foundation: ../../foundations/data
+format: xlsx
+
+# pages/directory/ holds one page-folder; the listing renders into a
+# single workbook (xlsx) with one sheet, or a docx tabular report.
+index: directory
+
+collections:
+  members:
+    path: collections/members
+    queryable:
+      department:
+        type: enum
+        label: Department
+        options: [engineering, sciences, humanities]
+      role:
+        type: enum
+        label: Role
+        options: [member, lead, advisor]
+      active:
+        type: boolean
+        label: Active

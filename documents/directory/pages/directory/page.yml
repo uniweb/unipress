@@ -1,0 +1,5 @@
+title: Directory
+description: A simple listing of records, filterable by department, role, and active status. Same data feeds the web preview and the downloadable Excel listing.
+
+fetch:
+  - { collection: members }
