@@ -32,13 +32,13 @@ Foundations consume [`@uniweb/press`](https://github.com/uniweb/press) for the b
 
 ## Install
 
+**Standalone binary (recommended for most users).** No Node, no npm. Download the asset for your platform from [the releases page](https://github.com/uniweb/unipress/releases), make it executable, and put it somewhere on your `PATH` — `/usr/local/bin/unipress` is a common choice on macOS and Linux. Then you can run `unipress` from any directory.
+
+**npm.** If you already have Node:
+
 ```bash
 npm i -g @uniweb/unipress
 ```
-
-The package is scoped, but the executable is unscoped: after install, invoke as `unipress`.
-
-Standalone binaries (no Node required) are also published on [the releases page](https://github.com/uniweb/unipress/releases) — pick the asset that matches your platform and put it on your `PATH`.
 
 ## Pick a template
 
