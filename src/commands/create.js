@@ -130,8 +130,15 @@ export async function createCommand({ dir, template, title, author, force = fals
     : 'pdf'
   log(`        unipress compile --format <${formats}>`)
   log('')
-  log(`note: the foundation is loaded from ${entry.source?.url ?? '(no source.url)'}`)
-  log(`      it will be fetched + cached on the first compile. See foundations.yml.`)
+  const foundationUrl = entry.foundation?.source?.url ?? entry.source?.url
+  const foundationRef = entry.foundation?.ref
+  if (foundationRef) {
+    log(`note: the document.yml pins ${foundationRef}`)
+  }
+  if (foundationUrl) {
+    log(`      it will be fetched from ${foundationUrl}`)
+    log(`      and cached on the first compile.`)
+  }
 }
 
 export async function listTemplatesCommand() {
@@ -150,7 +157,9 @@ export async function listTemplatesCommand() {
     if (Array.isArray(e.outputs) && e.outputs.length > 0) {
       log(`  outputs: ${e.outputs.join(', ')}`)
     }
-    if (e.source?.url) log(`  source:  ${e.source.url}`)
+    if (e.foundation?.ref) log(`  pins:    ${e.foundation.ref}`)
+    const url = e.foundation?.source?.url ?? e.source?.url
+    if (url) log(`  source:  ${url}`)
     log('')
   }
 }

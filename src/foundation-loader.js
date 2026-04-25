@@ -5,18 +5,22 @@
 // be tested without going through React, and lets the orchestrator be
 // tested with a hand-supplied path.
 //
-// Four accepted ref forms (matches plan Section 11):
+// Five accepted ref forms:
 //
 //   1. URL ............ https://.../foundation.js  — downloaded + cached
 //   2. Local path ..... ./foo, ../foo, /abs/foo, ./foo/dist/foundation.js
-//   3. Catalog id ..... academic-metrics, book, … — looked up in
-//                       foundations.yml, then resolved as URL
-//   4. Package name ... my-foundation, @org/foo
+//   3. Registry ref ... @<namespace>/<name>@<version> — constructed into a
+//                       URL via the registry base (UNIWEB_REGISTRY_URL or
+//                       the production default), then resolved as URL
+//   4. Catalog id ..... academic-metrics, book, … — looked up in
+//                       foundations-data.js, then resolved as URL
+//   5. Package name ... my-foundation, @org/foo (no @version suffix)
 //
-// Resolution order for a bare name: catalog first, package second. A
-// catalog hit takes precedence because catalog ids are the canonical
-// shortcut; packages are a fallback for foundation devs working inside a
-// workspace with the foundation installed.
+// Resolution order for a bare name: registry-ref first (if it matches the
+// scoped @ns/name@ver pattern), then catalog, then package. The registry
+// ref is the authoritative form scaffolded documents pin — it works for
+// any user of the foundation regardless of whether they have the catalog
+// id resolved locally.
 //
 // The chosen entry for a package is its `exports['./dist']` map, NOT the
 // default `.` entry — the default points at source (_entry.generated.js)
@@ -32,7 +36,22 @@ import { fetchFoundationToCache } from './foundation-fetch.js'
 
 const URL_PATTERN = /^https?:\/\//
 const PATH_PATTERN = /^(\.\.?[\/\\]|[\/\\]|[A-Za-z]:[\/\\])/
+// Registry ref: @<namespace>/<name>@<version>. Namespace + name follow npm's
+// scoped-package allowed character set (lowercase alphanumerics, _, -, .).
+// Version is anything semver-shaped — exact match isn't enforced here; the
+// registry decides what's valid.
+const REGISTRY_REF_PATTERN = /^@([a-z0-9][a-z0-9._-]*)\/([a-z0-9][a-z0-9._-]*)@([0-9a-z][0-9a-z.\-+]*)$/i
+const DEFAULT_REGISTRY_BASE = 'https://site-router.uniweb-edge.workers.dev'
 const DEFAULT_BUILT_ENTRY = 'dist/foundation.js'
+
+function getRegistryBase() {
+  const raw = process.env.UNIWEB_REGISTRY_URL || DEFAULT_REGISTRY_BASE
+  return raw.replace(/\/$/, '')
+}
+
+function buildRegistryUrl(namespace, name, version) {
+  return `${getRegistryBase()}/registry/packages/${namespace}/${name}/${version}/foundation.js`
+}
 
 export async function resolveFoundationRef(ref, { anchorDir, onProgress = () => {} } = {}) {
   if (!ref || typeof ref !== 'string') {
@@ -49,6 +68,11 @@ export async function resolveFoundationRef(ref, { anchorDir, onProgress = () => 
     return resolvePathRef(ref, anchorDir)
   }
 
+  const registryMatch = ref.match(REGISTRY_REF_PATTERN)
+  if (registryMatch) {
+    return resolveRegistryRef(ref, registryMatch, { onProgress })
+  }
+
   const catalogEntry = findCatalogEntry(ref)
   if (catalogEntry) {
     return resolveCatalogRef(ref, catalogEntry, { onProgress })
@@ -57,17 +81,35 @@ export async function resolveFoundationRef(ref, { anchorDir, onProgress = () => 
   return resolvePackageRef(ref, anchorDir)
 }
 
+async function resolveRegistryRef(ref, match, { onProgress }) {
+  const [, namespace, name, version] = match
+  const url = buildRegistryUrl(namespace, name, version)
+  const resolvedPath = await fetchFoundationToCache(url, { onProgress })
+  return { ref, source: 'registry', resolvedPath, registryUrl: url }
+}
+
 async function resolveUrlRef(url, { onProgress }) {
   const resolvedPath = await fetchFoundationToCache(url, { onProgress })
   return { ref: url, source: 'url', resolvedPath }
 }
 
 async function resolveCatalogRef(id, entry, { onProgress }) {
-  const url = entry?.source?.url
+  // Prefer the registry ref under the new shape (entry.foundation.ref);
+  // fall back to legacy shape (entry.source.url) for any entries still
+  // on the v0.1 layout.
+  const ref = entry?.foundation?.ref
+  if (ref) {
+    const m = ref.match(REGISTRY_REF_PATTERN)
+    if (m) {
+      const result = await resolveRegistryRef(ref, m, { onProgress })
+      return { ...result, ref: id, source: 'catalog', catalogEntry: entry }
+    }
+  }
+  const url = entry?.foundation?.source?.url ?? entry?.source?.url
   if (!url) {
     throw new FoundationResolutionError(
-      `catalog entry '${id}' has no source.url\n` +
-      `hint: add a source.url to the entry in foundations.yml, or pass --foundation <path-or-url>`
+      `catalog entry '${id}' has no foundation.ref or source.url\n` +
+      `hint: pass --foundation <path-or-url> to bypass the catalog`
     )
   }
   const resolvedPath = await fetchFoundationToCache(url, { onProgress })
