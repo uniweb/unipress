@@ -62,10 +62,10 @@ You can name a language for syntax highlighting in printed and digital outputs.
 
 ## Images
 
-Images live in your project's `images/` folder. Reference them with standard markdown:
+Images live in your project's `assets/` folder. Reference them with standard markdown — site-absolute paths are checked against `assets/` automatically:
 
 ```
-![A descriptive caption for accessibility](images/diagram.png)
+![A descriptive caption for accessibility](/assets/diagram.png)
 ```
 
 The book template handles figure numbering, captions, and placement.

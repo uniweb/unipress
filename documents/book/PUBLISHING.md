@@ -10,7 +10,7 @@ You'll typically end up needing some or all of these:
 
 - **A print-ready PDF** for physical books. unipress produces this with `--format pdf`.
 - **An EPUB** for ebook stores. unipress produces this with `--format epub`.
-- **A cover image** that meets the requirements of wherever you're publishing — different platforms want different sizes, color profiles, and layouts. The placeholders in `images/` work for testing but should be replaced before real publication.
+- **A cover image** that meets the requirements of wherever you're publishing — different platforms want different sizes, color profiles, and layouts. The placeholders in `assets/` work for testing but should be replaced before real publication.
 - **An ISBN**, in most cases. More on this below.
 - **Metadata**: title, subtitle, author, description, categories, keywords. You'll fill these in on the publishing platform; most aren't part of unipress.
 
@@ -24,7 +24,7 @@ Print-on-demand (POD) services print and ship your book one copy at a time as re
 
 Most authors who publish in print use both: KDP for Amazon's reach, IngramSpark for everywhere else. The same source files (with adjustments for each service's requirements) feed both.
 
-A note on cover artwork for print: print covers are wrap-around (front + spine + back as a single image) with bleed extending past the trim line. The width of the spine depends on your book's page count and paper. Each POD service has a cover template generator that gives you the exact dimensions for your specific book — use it. The placeholder front + back files in `images/` won't satisfy this; for print, you'll need a real wrap-around cover that POD services accept (a single image), and the unipress book foundation references the front and back independently for digital outputs (EPUB thumbnails, PDF endpapers).
+A note on cover artwork for print: print covers are wrap-around (front + spine + back as a single image) with bleed extending past the trim line. The width of the spine depends on your book's page count and paper. Each POD service has a cover template generator that gives you the exact dimensions for your specific book — use it. The placeholder front + back files in `assets/` won't satisfy this; for print, you'll need a real wrap-around cover that POD services accept (a single image), and the unipress book foundation references the front and back independently for digital outputs (EPUB thumbnails, PDF endpapers).
 
 ## Ebook distribution
 
@@ -51,13 +51,13 @@ Whether to buy your own ISBNs or use the free ones from KDP is a personal decisi
 
 ## Cover artwork: a real one
 
-The placeholder covers in `images/` exist to make the sample book compile correctly. Before you publish — to anywhere — replace them with real artwork.
+The placeholder covers in `assets/` exist to make the sample book compile correctly. Before you publish — to anywhere — replace them with real artwork.
 
 Real cover artwork is its own discipline. A few realistic options:
 
 - **Hire a designer.** Sites like [Reedsy](https://reedsy.com), [99designs](https://99designs.com), and [Fiverr](https://www.fiverr.com) connect you with cover designers across a wide range of budgets. Expect $200–$2,000 for professional work, depending on the designer's experience.
 - **Use a cover-design tool.** Canva, Adobe Express, and similar tools have book-cover templates. Cheaper; takes longer; results vary with your design skill.
-- **Make your own** if you have the skills. The placeholder dimensions in `images/` are a reasonable starting point; check the requirements of your target POD service for the exact specifications.
+- **Make your own** if you have the skills. The placeholder dimensions in `assets/` are a reasonable starting point; check the requirements of your target POD service for the exact specifications.
 
 Whatever path you take, your cover artwork has to meet the size, resolution, and bleed requirements of wherever you're publishing. KDP's print covers and Amazon's ebook thumbnails have different requirements than IngramSpark's. Your cover designer will know; if you're going alone, read each platform's specifications carefully.
 

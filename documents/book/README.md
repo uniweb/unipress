@@ -30,12 +30,12 @@ my-book/
 ├── PUBLISHING.md     ← Notes about publishing your finished book.
 ├── document.yml      ← Settings: title, author, format, trim, fonts, cover.
 ├── pages/            ← Your writing. Markdown files, one per chapter.
-└── images/           ← Image files used by your book, including the cover.
+└── assets/           ← Image files used by your book, including the cover.
 ```
 
 The four files in `pages/` are the sample chapters. They explain what the book template can do as you read through them. Replace them with your own writing when you're ready — keep the structure or change it; it's yours now.
 
-The two files in `images/` are placeholder front and back covers. Replace them with your own artwork when you have it. Real covers usually start as a single wrap-around image (front + spine + back) — see `PUBLISHING.md` for guidance on print-ready artwork.
+The two files in `assets/` are placeholder front and back covers. Replace them with your own artwork when you have it. Real covers usually start as a single wrap-around image (front + spine + back) — see `PUBLISHING.md` for guidance on print-ready artwork.
 
 `document.yml` holds your project's settings: the title, the author, what format the book compiles to by default, what trim size to use, what fonts. After you run `unipress create`, it has sensible defaults; adjust them as you need.
 
