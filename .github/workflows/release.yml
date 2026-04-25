@@ -74,7 +74,14 @@ jobs:
           bun-version: '1.3.9'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        # --ignore-workspace: this repo's pnpm-workspace.yaml lists
+        # `foundations/*` whose package.json declare `workspace:*` deps to
+        # the outer @uniweb/* monorepo, which isn't checked out here. CI
+        # only builds the CLI binary, so resolve the CLI's npm deps and
+        # ignore the inner-workspace expansion entirely.
+        # --no-frozen-lockfile: no committed lockfile — re-resolve at
+        # install time.
+        run: pnpm install --ignore-workspace --no-frozen-lockfile
 
       - name: Compile standalone binary
         shell: bash
