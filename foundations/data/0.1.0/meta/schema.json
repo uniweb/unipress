@@ -1,0 +1,135 @@
+{
+  "_self": {
+    "defaultLayout": "MetricsLayout",
+    "props": {},
+    "handlers": {},
+    "outputs": {
+      "xlsx": {
+        "extension": "xlsx"
+      },
+      "docx": {
+        "extension": "docx"
+      }
+    },
+    "vars": {
+      "max-content-width": {
+        "default": "72rem",
+        "description": "Maximum width for body content (wider than a book; tables need room)"
+      },
+      "section-padding-y": {
+        "default": "clamp(2rem, 4vw, 4rem)",
+        "description": "Vertical padding around each section"
+      },
+      "report-gap": {
+        "default": "clamp(2rem, 4vw, 4rem)",
+        "description": "Gap between report sections"
+      }
+    },
+    "name": "@uniweb/data",
+    "version": "0.1.0",
+    "description": "Data foundation for Uniweb. Aggregates structured records (members, publications, funding, supervisions) and emits Excel workbooks and Word reports. Drives @uniweb/unipress's data-report and directory templates."
+  },
+  "_layouts": {
+    "MetricsLayout": {
+      "name": "MetricsLayout",
+      "path": "layouts/MetricsLayout",
+      "title": "Metrics Layout"
+    }
+  },
+  "Cover": {
+    "name": "Cover",
+    "path": "sections/Cover",
+    "title": "Cover",
+    "description": "Report summary: title, a narrative paragraph rendered via Loom (unit-wide counts), a Population selector, and a live stats strip over the filtered member set. Registers a Summary sheet in the downloaded workbook.",
+    "category": "academic-metrics",
+    "content": {
+      "title": "Report title (e.g., \"Academic Metrics — 2025\")",
+      "subtitle": "Optional subtitle (overridden by active query name when one is selected)",
+      "paragraphs": "Narrative body — write prose with Loom expressions like {COUNT OF members}, {SHOW members.name JOINED BY \", \"}, {totalPublications}, {totalFunding}, {totalGrants}, {totalSupervisions}."
+    },
+    "params": {}
+  },
+  "Funding": {
+    "name": "Funding",
+    "path": "sections/Funding",
+    "title": "Funding",
+    "description": "Research funding received across the filtered member set, grouped by source. Preview is a horizontal bar chart of total amount per source; xlsx is one row per source with Count / Total + a totals row in currency format.",
+    "category": "academic-metrics",
+    "content": {
+      "title": "Section heading (defaults to \"Funding received\")"
+    },
+    "params": {}
+  },
+  "Members": {
+    "name": "Members",
+    "path": "sections/Members",
+    "title": "Members",
+    "description": "Roster of the filtered member set (name, rank, department, tenured, start year). Registers a Members sheet in the downloaded workbook.",
+    "category": "academic-metrics",
+    "content": {
+      "title": "Section heading (defaults to \"Members\")"
+    },
+    "params": {}
+  },
+  "PublicationsByJournal": {
+    "name": "PublicationsByJournal",
+    "path": "sections/PublicationsByJournal",
+    "title": "Publications by Journal",
+    "description": "Top journals by publication count across the filtered member set. Publisher (for books) and journal (for articles) are both treated as \"venue\". Preview is a horizontal bar chart; xlsx is one row per venue plus a totals row.",
+    "category": "academic-metrics",
+    "content": {
+      "title": "Section heading (defaults to \"Publications by journal\")"
+    },
+    "params": {}
+  },
+  "PublicationsByType": {
+    "name": "PublicationsByType",
+    "path": "sections/PublicationsByType",
+    "title": "Publications by Type",
+    "description": "Aggregates the publications of the filtered member set by type (book, article, chapter, ...). Preview is a pie chart; xlsx is a flat table with one row per type plus a totals row.",
+    "category": "academic-metrics",
+    "content": {
+      "title": "Section heading (defaults to \"Publications by type\")"
+    },
+    "params": {}
+  },
+  "PublicationsByYear": {
+    "name": "PublicationsByYear",
+    "path": "sections/PublicationsByYear",
+    "title": "Publications by Year",
+    "description": "Timeline of publication counts per year across the filtered member set. Preview is a vertical bar chart chronologically sorted; xlsx is Year / Count / Cumulative rows with a totals row.",
+    "category": "academic-metrics",
+    "content": {
+      "title": "Section heading (defaults to \"Publications by year\")"
+    },
+    "params": {}
+  },
+  "PublicationsList": {
+    "name": "PublicationsList",
+    "path": "sections/PublicationsList",
+    "title": "Publications list",
+    "description": "Formatted bibliography across the filtered member set. Applies the date-range and refereed-only filters and formats each entry through citestyle using the active citation style. Preview uses the per-field HTML citestyle emits; xlsx records citation text + year + author; docx uses a hanging-indent paragraph per entry.",
+    "category": "academic-metrics",
+    "data": {
+      "inherit": [
+        "members",
+        "queries"
+      ]
+    },
+    "content": {
+      "title": "Section heading (defaults to \"Publications\")"
+    },
+    "params": {}
+  },
+  "Supervisions": {
+    "name": "Supervisions",
+    "path": "sections/Supervisions",
+    "title": "Supervisions",
+    "description": "Student supervisions grouped by level (doctoral, masters, undergraduate, apprentice) across the filtered member set. Preview is a stacked bar chart with one bar per member; xlsx is a cross-tab with member rows × level columns plus a totals row.",
+    "category": "academic-metrics",
+    "content": {
+      "title": "Section heading (defaults to \"Supervisions\")"
+    },
+    "params": {}
+  }
+}

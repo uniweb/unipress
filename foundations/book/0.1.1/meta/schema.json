@@ -1,0 +1,81 @@
+{
+  "_self": {
+    "defaultSection": "Chapter",
+    "defaultLayout": "BookLayout",
+    "props": {},
+    "outputs": {
+      "typst": {
+        "extension": "zip"
+      },
+      "pdf": {
+        "extension": "pdf",
+        "via": "typst"
+      },
+      "pagedjs": {
+        "extension": "html"
+      },
+      "epub": {
+        "extension": "epub"
+      }
+    },
+    "vars": {
+      "max-content-width": {
+        "default": "48rem",
+        "description": "Maximum width of a book page on screen (reading column)."
+      },
+      "header-height": {
+        "default": "3.5rem",
+        "description": "Height of the top bar in the web preview."
+      }
+    },
+    "name": "@uniweb/book",
+    "version": "0.1.1",
+    "description": "Book foundation for Uniweb. Long-form prose with chapters; outputs Typst/PDF, Paged.js HTML, and EPUB. Drives @uniweb/unipress's book/monograph/report templates."
+  },
+  "_layouts": {
+    "BookLayout": {
+      "name": "BookLayout",
+      "path": "layouts/BookLayout",
+      "defaults": {},
+      "title": "Book Layout"
+    }
+  },
+  "BackCover": {
+    "name": "BackCover",
+    "path": "sections/BackCover",
+    "defaults": {},
+    "title": "Back Cover"
+  },
+  "BackMatter": {
+    "name": "BackMatter",
+    "path": "sections/BackMatter",
+    "defaults": {},
+    "title": "Back Matter"
+  },
+  "BookCover": {
+    "name": "BookCover",
+    "path": "sections/BookCover",
+    "defaults": {},
+    "title": "Book Cover"
+  },
+  "Chapter": {
+    "name": "Chapter",
+    "path": "sections/Chapter",
+    "defaults": {
+      "chapterNumber": null
+    },
+    "title": "Chapter"
+  },
+  "Contents": {
+    "name": "Contents",
+    "path": "sections/Contents",
+    "defaults": {},
+    "title": "Contents"
+  },
+  "Cover": {
+    "name": "Cover",
+    "path": "sections/Cover",
+    "defaults": {},
+    "title": "Cover"
+  }
+}
