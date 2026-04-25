@@ -26,6 +26,7 @@
 // unipress, both also resolve from unipress's node_modules.
 
 import { pathToFileURL } from 'node:url'
+import { readFile } from 'node:fs/promises'
 import { initPrerender } from '@uniweb/runtime/ssr'
 import { FoundationResolutionError, CompileError } from './errors.js'
 
@@ -54,6 +55,63 @@ export async function loadAndInit({ content, resolvedPath, extensions = [], onPr
   return { foundation, uniweb }
 }
 
+// Node-side loadAsset for the foundation's compile pipeline.
+//
+// Press's compileDocument threads a `loadAsset(src)` helper into each
+// foundation's getOptions. In a browser host it defaults to fetch; in
+// unipress (Node) we supply an fs-based implementation so config-level
+// assets (cover images, banners, logos in document.yml) load without
+// the foundation needing to branch on environment.
+//
+// Lookup order:
+//   1. data: URL → decode in place.
+//   2. Asset manifest hit (`website.assets[src]`) — the resolved entry
+//      carries an absolute filesystem path the framework's content
+//      collector populated. Read bytes via fs.
+//   3. Absolute filesystem path on disk → read directly.
+//   4. Otherwise: fail loudly. We don't fall back to fetch because
+//      unipress runs offline-by-default and a missing manifest entry
+//      almost always means a misspelled path in document.yml.
+function createNodeLoadAsset(website) {
+  return async function loadAsset(src) {
+    if (!src || typeof src !== 'string') return null
+
+    if (src.startsWith('data:')) {
+      const comma = src.indexOf(',')
+      if (comma === -1) return null
+      const meta = src.slice(5, comma)
+      const data = src.slice(comma + 1)
+      if (meta.includes(';base64')) {
+        const bin = Buffer.from(data, 'base64')
+        return new Uint8Array(bin.buffer, bin.byteOffset, bin.byteLength)
+      }
+      return new TextEncoder().encode(decodeURIComponent(data))
+    }
+
+    const entry = website?.assets?.[src]
+    const path = entry?.resolved || (src.startsWith('/') ? src : null)
+    if (!path) {
+      throw new CompileError(
+        `loadAsset: cannot resolve '${src}' in Node compile context\n` +
+        `hint: config-level asset paths must be discoverable by the framework's ` +
+        `content collector. Confirm the file exists relative to the document directory ` +
+        `(e.g. assets/${src.split('/').pop()}) and that document.yml references it ` +
+        `using the same path.`
+      )
+    }
+
+    try {
+      const buf = await readFile(path)
+      return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength)
+    } catch (err) {
+      throw new CompileError(
+        `loadAsset: failed to read '${src}' from ${path}\n` +
+        `cause: ${err.message}`
+      )
+    }
+  }
+}
+
 // Compile a populated Website into a Blob, using the foundation's
 // bundled Press via the host-shareable compileDocument re-export.
 // Throws CompileError if compileDocument isn't present — that means
@@ -68,7 +126,8 @@ export async function compileDocumentWithFoundation(foundation, website, options
     )
   }
   try {
-    return await foundation.compileDocument(website, { ...options, foundation })
+    const loadAsset = createNodeLoadAsset(website)
+    return await foundation.compileDocument(website, { ...options, foundation, loadAsset })
   } catch (err) {
     // Wrap Press's errors in CompileError so the CLI's top-level handler
     // surfaces them with consistent formatting.
