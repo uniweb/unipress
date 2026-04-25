@@ -33,7 +33,15 @@ A document is rarely just prose. Foundations declare data inputs; authors fill t
 - **API-backed collections** — declare a fetcher in `document.yml`; the build pipeline resolves it at compile time. The foundation reads `content.data` and renders.
 - **Computed values via [Loom](https://github.com/uniweb/loom)** — Loom is an expression language for instantiating templates against hierarchical data. Pull a publications list from a collection, format each entry with a Loom expression, and the result lands typeset in your output.
 
-All of these flow through the same foundation pipeline. A "Bibliography" section can pull entries from a collection, format them through Loom-templated citations, and embed the result inline in a typeset chapter — same primitives whether the data came from a YAML file, a JSON dump, or an API endpoint.
+All of these flow through the same foundation pipeline — same primitives whether the data came from a YAML file, a JSON dump, or an API endpoint.
+
+### Academic writing: bibliographies and citations
+
+For scholarly work specifically, [`citestyle`](https://github.com/uniweb/csl) handles the formatting layer Loom is too general for. CSL-based, lightweight, used directly from foundations: pick from APA, MLA, Chicago author-date, IEEE, Vancouver, Harvard at the section level (`style: chicago-author-date`); citestyle dynamically loads only the styles you reference and formats every entry to spec — the author ordering, journal abbreviations, punctuation, and conventions academic readers expect.
+
+The combination is the powerful part. Loom interpolates ("In {section.title}, we describe…"); citestyle formats bibliographic entries (a complete back-matter `Bibliography`, or inline `[Author Year]` citation marks). A thesis, monograph, or annual research report uses both: Loom for dynamic prose and per-section metadata, citestyle for every bibliographic touch in the document.
+
+Working example: the `data-report` template ships a `PublicationsList` section backed by YAML bib data in `collections/members/*.yml`, with per-section style selection. Run `unipress create my-report --template data-report` to see it. Bibliography support in long-form prose templates (`book`, `monograph`, future `thesis`/`paper`) lands across upcoming releases.
 
 ## Outputs are foundation-declared
 
@@ -63,9 +71,10 @@ That's the structural payoff: the work of defining section types, theming, and r
 
 A research-group annual-report foundation (`@yourorg/annual-report`) might ship:
 
-- **Section types**: `Cover`, `ExecutiveSummary`, `Members`, `PublicationsList`, `FundingTable`, `Charts`, `Appendix`.
-- **Data**: a `publications.yml` collection (file-based) listing every paper with co-authors, year, journal; a `funding.json` collection with grant data; an API-backed `metrics:` collection pulling live citation counts.
-- **Loom templates**: each `Publication` rendered as `**{title}**. {authors.formatted}. *{journal}*, {year}. [{doi}](https://doi.org/{doi})`.
+- **Section types**: `Cover`, `ExecutiveSummary`, `Members`, `PublicationsList`, `FundingTable`, `Charts`, `Appendix`, `Bibliography`.
+- **Data**: a `publications.yml` collection (file-based) with full bibliographic fields per paper; a `funding.json` collection with grant data; an API-backed `metrics:` collection pulling live citation counts.
+- **citestyle for bibliographic precision**: pick a style at the section level (`style: chicago-author-date`) and citestyle formats every entry to spec — author ordering, journal abbreviations, the punctuation that marks the difference between a draft and a polished publication.
+- **Loom templates**: dynamic prose elsewhere — running headers (`{book.title} — Chapter {n}`), section subtitles, the table-of-contents introductions. Loom and citestyle cooperate: citestyle owns bibliographic formatting; Loom owns everything else.
 - **Outputs**: `pdf` (typeset for the dean's office), `xlsx` (one sheet per data block, for finance), `docx` (for collaborators who don't open PDFs), `pagedjs` (HTML for the public site).
 
 A content author writes:
@@ -89,6 +98,7 @@ The group published 47 papers in 2024, a 30% increase over 2023.
 - **Foundation contract** — the `outputs:` map, `meta.js` section-type discovery, the `getOptions(website, hostHints)` signature: see [foundation configuration](https://github.com/uniweb/docs/blob/main/reference/foundation-config.md).
 - **Data fetching** — collections, fetchers, predicates, where-objects, deferred fields: see the [data fetching reference](https://github.com/uniweb/docs/blob/main/reference/data-fetching.md).
 - **Loom** — expression language for instantiating templates against hierarchical data: [`@uniweb/loom`](https://github.com/uniweb/loom).
+- **citestyle** — CSL-based citation and bibliography formatter. Domain-specific complement to Loom: Loom interpolates, citestyle formats academic-style references: [`citestyle`](https://github.com/uniweb/csl).
 - **Press (the output layer)** — [`@uniweb/press`](https://github.com/uniweb/press) docs cover the registration pattern foundations consume, the IR layer for custom adapters, and per-adapter notes (docx invariants, typst conventions, the EPUB pipeline).
 - **Building a foundation from scratch** — [Uniweb framework docs](https://github.com/uniweb/docs) cover the full authoring story; everything written for sites applies to documents.
 
