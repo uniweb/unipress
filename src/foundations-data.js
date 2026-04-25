@@ -10,6 +10,25 @@
  * different `book.structure:` defaults, and different sample chapters.
  *
  * ─────────────────────────────────────────────────────────────────────────
+ * Distribution
+ * ─────────────────────────────────────────────────────────────────────────
+ *
+ * Foundations are deployed as static artifacts to the unipress repo's
+ * GitHub Pages site. URL pattern:
+ *
+ *   https://uniweb.github.io/unipress/foundations/<name>/<version>/foundation.js
+ *
+ * On every push to main, `.github/workflows/deploy-foundations.yml`
+ * builds each `foundations/<name>/` and layers the resulting `dist/` into
+ * the gh-pages branch under `foundations/<name>/<version>/`. Versions
+ * accumulate; older versions stay reachable indefinitely.
+ *
+ * GH Pages serves `Access-Control-Allow-Origin: *` on static files, so
+ * cross-origin imports work for browser hosts (Uniweb editor preview).
+ * The unipress CLI fetches the URL directly and caches at
+ * `~/.cache/unipress/foundations/...`.
+ *
+ * ─────────────────────────────────────────────────────────────────────────
  * Resolution path
  * ─────────────────────────────────────────────────────────────────────────
  *
@@ -17,15 +36,15 @@
  *   1. catalog lookup (this file) → entry.foundation.ref + entry.scaffold.
  *   2. scaffold copies templates-data.js[entry.scaffold] into my-doc/. The
  *      bundled document.yml has `foundation: <entry.foundation.ref>` (the
- *      registry-ref form, e.g., '@uniweb/book@0.1.0' — rewritten from the
+ *      registry-ref form, e.g., '@uniweb/book@0.1.1' — rewritten from the
  *      committed dev path-ref by scripts/generate-templates-data.js).
  *
  * `unipress compile my-doc`:
- *   1. document.yml `foundation: '@uniweb/book@0.1.0'` is parsed as a
+ *   1. document.yml `foundation: '@uniweb/book@0.1.1'` is parsed as a
  *      registry ref by foundation-loader.js.
  *   2. The loader constructs a URL from the registry base
- *      (UNIWEB_REGISTRY_URL or the production default at
- *      site-router.uniweb-edge.workers.dev) → fetches + caches.
+ *      (UNIWEB_REGISTRY_URL env override or the default GH Pages base) →
+ *      fetches + caches.
  *
  * ─────────────────────────────────────────────────────────────────────────
  * source.url
@@ -33,14 +52,9 @@
  *
  * Each entry's `foundation.source.url` is the human-meaningful "where this
  * foundation lives" pointer shown in `list-templates` output and post-create
- * messages. It does NOT drive resolution under the registry-ref-in-document.yml
- * model — foundation-loader builds its own URL from the ref + base. The
- * URL is included for transparency.
- *
- * v0.2 entries pin local-registry URLs (http://localhost:4001/...) so
- * foundation devs running `uniweb publish --local` can verify resolution
- * end-to-end. TF8 of the unipress-foundations-and-templates plan switches
- * these to the production registry once the foundations publish there.
+ * messages. It mirrors the URL the loader builds at compile time, but does
+ * not itself drive resolution — the loader builds its own URL from
+ * `foundation.ref` + the configured base.
  *
  * ─────────────────────────────────────────────────────────────────────────
  * Storage format
@@ -51,20 +65,20 @@
  * runtime reads.
  */
 
-const LOCAL_REGISTRY_BASE = 'http://localhost:4001/registry/packages'
+const PUBLIC_FOUNDATIONS_BASE = 'https://uniweb.github.io/unipress/foundations'
 
-function localUrl(namespace, name, version) {
-  return `${LOCAL_REGISTRY_BASE}/${namespace}/${name}/${version}/foundation.js`
+function publicUrl(name, version) {
+  return `${PUBLIC_FOUNDATIONS_BASE}/${name}/${version}/foundation.js`
 }
 
 const BOOK_FOUNDATION = {
-  ref: '@uniweb/book@0.1.0',
-  source: { url: localUrl('uniweb', 'book', '0.1.0') },
+  ref: '@uniweb/book@0.1.1',
+  source: { url: publicUrl('book', '0.1.1') },
 }
 
 const DATA_FOUNDATION = {
   ref: '@uniweb/data@0.1.0',
-  source: { url: localUrl('uniweb', 'data', '0.1.0') },
+  source: { url: publicUrl('data', '0.1.0') },
 }
 
 export const FOUNDATIONS = [

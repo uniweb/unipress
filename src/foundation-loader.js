@@ -41,7 +41,17 @@ const PATH_PATTERN = /^(\.\.?[\/\\]|[\/\\]|[A-Za-z]:[\/\\])/
 // Version is anything semver-shaped — exact match isn't enforced here; the
 // registry decides what's valid.
 const REGISTRY_REF_PATTERN = /^@([a-z0-9][a-z0-9._-]*)\/([a-z0-9][a-z0-9._-]*)@([0-9a-z][0-9a-z.\-+]*)$/i
-const DEFAULT_REGISTRY_BASE = 'https://site-router.uniweb-edge.workers.dev'
+
+// unipress's bundled foundations are distributed as static artifacts on
+// the unipress repo's GitHub Pages site. URL pattern:
+//
+//   https://uniweb.github.io/unipress/foundations/<name>/<version>/foundation.js
+//
+// The namespace portion of a registry ref is implicit — every foundation
+// served from this base is under @uniweb/. Set UNIWEB_REGISTRY_URL to
+// override (e.g., for testing against a local http.server during foundation
+// development, or for users with a private alternative).
+const DEFAULT_REGISTRY_BASE = 'https://uniweb.github.io/unipress'
 const DEFAULT_BUILT_ENTRY = 'dist/foundation.js'
 
 function getRegistryBase() {
@@ -49,8 +59,15 @@ function getRegistryBase() {
   return raw.replace(/\/$/, '')
 }
 
+// Build the URL for a registry ref. The namespace is preserved in the
+// returned URL only when the base wants it; for the GH Pages distribution
+// the namespace is implicit and the path is <base>/foundations/<name>/<ver>/.
+// If a custom UNIWEB_REGISTRY_URL needs the namespace in the path, it can
+// hold a path prefix that resolves accordingly (e.g., set
+// `UNIWEB_REGISTRY_URL=https://my.host/by-ns/uniweb` and live without the
+// per-namespace split, or maintain a redirect rule on that host).
 function buildRegistryUrl(namespace, name, version) {
-  return `${getRegistryBase()}/registry/packages/${namespace}/${name}/${version}/foundation.js`
+  return `${getRegistryBase()}/foundations/${name}/${version}/foundation.js`
 }
 
 export async function resolveFoundationRef(ref, { anchorDir, onProgress = () => {} } = {}) {

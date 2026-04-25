@@ -64,15 +64,16 @@ separates create-time templates from runtime foundations.
 - `templates/` directory; `package.json`'s `files:` array now ships
   `documents/`.
 
-### Caveat
+### Caveat (resolved in a follow-up release)
 
-Catalog entries currently point at the **local registry**
-(`http://localhost:4001/registry/packages/<ns>/<name>/<ver>/foundation.js`).
-Scaffolded documents will fail to fetch the foundation unless the
-foundations are published locally via `uniweb publish --local` against
-a running unicloud, OR the user passes `--foundation <path>` explicitly.
-A follow-up release switches the catalog URLs to the production
-registry once `@uniweb/book` and `@uniweb/data` publish there.
+Catalog entries in 0.2.0 pointed at a local registry
+(`http://localhost:4001/...`), so scaffolded documents required the
+user to run a registry locally or to pass `--foundation <path>`
+explicitly. A subsequent release switches the catalog URLs to GitHub
+Pages (`https://uniweb.github.io/unipress/foundations/...`); the
+foundations are deployed there by `.github/workflows/deploy-foundations.yml`
+on every push to main, and `unipress create + compile` works end-to-end
+from a fresh npm install.
 
 ## 0.1.0 (unreleased)
 

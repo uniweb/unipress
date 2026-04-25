@@ -2,7 +2,9 @@
 
 Notes for cutting a release tag (`unipress@<version>`). The release workflow at `.github/workflows/release.yml` watches for tag pushes matching that pattern, builds three binaries (darwin-arm64, linux-x64, windows-x64), and creates a GitHub Release with the binaries and SHA-256 sidecars attached.
 
-This file mostly exists to flag one thing the release workflow currently can't handle on its own.
+A separate workflow at `.github/workflows/deploy-foundations.yml` builds and deploys the bundled foundations (`foundations/<name>/`) to the unipress repo's GitHub Pages site under `https://uniweb.github.io/unipress/foundations/<name>/<version>/`. It runs on every push to main, accumulating versions on the `gh-pages` branch — older versions stay reachable indefinitely. No tag needed; foundation deployment is decoupled from the binary-release tag cadence.
+
+This file mostly exists to flag one thing the binary-release workflow currently can't handle on its own.
 
 ---
 

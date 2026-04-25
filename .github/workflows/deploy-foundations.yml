@@ -1,0 +1,169 @@
+# ─────────────────────────────────────────────────────────
+# unipress — deploy bundled foundations to GitHub Pages
+#
+# Builds every foundation under foundations/<name>/ and publishes the
+# resulting dist/ tree at:
+#
+#   https://uniweb.github.io/unipress/foundations/<name>/<version>/
+#
+# Versions accumulate. The workflow checks out the existing gh-pages
+# branch, layers in the freshly-built dist for each foundation under
+# its own version directory, and pushes back. A foundation whose
+# package.json version was already deployed is overwritten in place
+# (idempotent for unchanged content); a bumped version creates a new
+# directory alongside the older ones, so existing URLs keep resolving
+# forever.
+#
+# Trigger:
+#   - push to main      (default cadence — every commit gets a deploy
+#                        if any foundation built cleanly)
+#   - workflow_dispatch (manual re-run from the Actions tab)
+#
+# This is the open-source distribution path for unipress's bundled
+# foundations. The Uniweb registry remains the path for private,
+# CDN-backed foundations served to the commercial editor; this
+# workflow is for the public artifacts the unipress CLI scaffolds
+# into. See docs/foundations-distribution.md (when written) for the
+# rationale.
+# ─────────────────────────────────────────────────────────
+
+name: Deploy Foundations
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # writes to gh-pages branch
+
+concurrency:
+  group: "deploy-foundations"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        # See RELEASING.md for why --ignore-workspace --no-frozen-lockfile
+        # is the right shape here: the foundations under foundations/<name>/
+        # declare workspace:* deps to outer-monorepo @uniweb/* packages
+        # which aren't checked out in CI. With --ignore-workspace, pnpm
+        # treats this repo as a single tree — but that doesn't help the
+        # foundations either, because they'd still see workspace:*. Per-
+        # foundation install with `--ignore-workspace` lets pnpm fall
+        # through to the npm-published versions.
+        run: pnpm install --ignore-workspace --no-frozen-lockfile
+
+      - name: Build foundations
+        shell: bash
+        run: |
+          set -e
+          mkdir -p _staging
+          for foundation_dir in foundations/*/; do
+            name=$(basename "$foundation_dir")
+            version=$(jq -r '.version' "$foundation_dir/package.json")
+            if [ -z "$version" ] || [ "$version" = "null" ]; then
+              echo "::warning::skipping $name — no version in package.json"
+              continue
+            fi
+
+            echo "=========================================="
+            echo "Building $name@$version"
+            echo "=========================================="
+
+            # Each foundation is a standalone install — workspace:* refs
+            # need npm-published siblings to resolve.
+            (cd "$foundation_dir" && pnpm install --ignore-workspace --no-frozen-lockfile)
+
+            # Build via the foundation's own script. uniweb is in the
+            # foundation's devDeps after the install above.
+            (cd "$foundation_dir" && pnpm build)
+
+            if [ ! -d "$foundation_dir/dist" ]; then
+              echo "::error::build produced no dist/ for $name"
+              exit 1
+            fi
+
+            # Stage under the deploy path: foundations/<name>/<version>/
+            mkdir -p "_staging/foundations/$name/$version"
+            cp -R "$foundation_dir/dist/." "_staging/foundations/$name/$version/"
+            echo "Staged $name@$version → foundations/$name/$version/"
+          done
+
+          echo "=========================================="
+          echo "Staging tree:"
+          find _staging -maxdepth 4 -type d | sort
+
+      - name: Layer onto gh-pages branch
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+
+          # Configure git for the deploy commit. Using the workflow bot
+          # so the gh-pages history is clearly machine-generated.
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Fetch existing gh-pages (or start fresh if the branch doesn't
+          # exist yet — happens on the very first deploy).
+          if git fetch origin gh-pages 2>/dev/null; then
+            git worktree add _gh-pages gh-pages
+          else
+            git worktree add --detach _gh-pages
+            (cd _gh-pages && git checkout --orphan gh-pages && git rm -rf . 2>/dev/null || true)
+          fi
+
+          # Layer the staged versions onto the existing tree. Newer
+          # versions of the same foundation create new directories
+          # alongside older ones; same-version content gets overwritten
+          # in place (idempotent on unchanged content).
+          mkdir -p _gh-pages/foundations
+          cp -R _staging/foundations/. _gh-pages/foundations/
+
+          # Write a top-level index for human visitors. Listing what's
+          # currently deployed; lets anyone confirm a foundation is live
+          # without having to guess paths.
+          {
+            echo '<!DOCTYPE html><html><head><meta charset="utf-8"><title>unipress foundations</title>'
+            echo '<style>body{font-family:system-ui;max-width:60ch;margin:3rem auto;padding:0 1rem;line-height:1.5;color:#1a1a1a}h1{font-size:1.5rem}h2{font-size:1.1rem;margin-top:2rem}a{color:#5a6fd6}code{background:#f3f3f3;padding:0.1em 0.35em;border-radius:3px}</style></head><body>'
+            echo '<h1>unipress foundations</h1>'
+            echo '<p>Built foundations served at stable versioned URLs for the <a href="https://github.com/uniweb/unipress">unipress</a> CLI.</p>'
+            echo '<p>URL pattern: <code>https://uniweb.github.io/unipress/foundations/&lt;name&gt;/&lt;version&gt;/foundation.js</code></p>'
+            for fdir in _gh-pages/foundations/*/; do
+              name=$(basename "$fdir")
+              echo "<h2>@uniweb/$name</h2><ul>"
+              for vdir in "$fdir"*/; do
+                version=$(basename "$vdir")
+                echo "<li><a href=\"foundations/$name/$version/foundation.js\">$version</a></li>"
+              done
+              echo "</ul>"
+            done
+            echo '</body></html>'
+          } > _gh-pages/index.html
+
+          # Commit + push if anything changed.
+          cd _gh-pages
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No foundation changes to deploy."
+            exit 0
+          fi
+          git commit -m "deploy: foundations from ${GITHUB_SHA::7}"
+          git push origin gh-pages
