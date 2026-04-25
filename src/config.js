@@ -4,7 +4,7 @@
 // `defineUnipressConfig` identity helper for editor autocomplete:
 //
 //   // unipress.config.js
-//   import { defineUnipressConfig } from 'unipress'
+//   import { defineUnipressConfig } from '@uniweb/unipress'
 //   export default defineUnipressConfig({
 //     out: './dist/book.pdf',
 //     typst: { version: '0.14.2' },

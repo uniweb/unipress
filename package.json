@@ -1,5 +1,5 @@
 {
-  "name": "unipress",
+  "name": "@uniweb/unipress",
   "version": "0.0.1",
   "description": "Compile a content directory into a document (docx, xlsx, PDF) using a Uniweb foundation. Pre-release placeholder.",
   "type": "module",

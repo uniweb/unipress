@@ -19,7 +19,7 @@
 #   - Notarization
 #   - Homebrew formula / curl-installer script
 #   - Auto-bundling the Typst binary (unipress downloads it on first use)
-#   - npm publish (blocked by the `unipress` similar-name dispute — §23 #13)
+#   - npm publish of `@uniweb/unipress` (wire up alongside the binary release when ready)
 # ─────────────────────────────────────────────────────────
 
 name: Release

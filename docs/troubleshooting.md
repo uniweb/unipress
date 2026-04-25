@@ -133,7 +133,7 @@ unipress creates missing parent directories automatically (like `mkdir -p`). If 
 `unipress.config.js` threw during import. Common causes:
 
 - **Syntax error** — Node prints `Unexpected end of input` or similar as the cause.
-- **Missing package** — if the config `import { defineUnipressConfig } from 'unipress'` and `unipress` isn't installed in that project, the import fails. Drop the `defineUnipressConfig` import and use a plain `export default { … }` until unipress is a first-class dependency of the project.
+- **Missing package** — if the config `import { defineUnipressConfig } from '@uniweb/unipress'` and `@uniweb/unipress` isn't installed in that project, the import fails. Either `pnpm add -D @uniweb/unipress` in the content directory, or drop the import and use a plain `export default { … }`.
 
 ## `ConfigValidationError: config file <path> must default-export an object`
 

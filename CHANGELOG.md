@@ -2,10 +2,12 @@
 
 ## Unreleased
 
-First working release, still pending the `unipress` npm name dispute.
-All functionality below is in the working tree and exercised end-to-end
-against `@proximify/press-book` + framework-book (198-page PDF via
-Typst 0.14.2).
+First working release, published as `@uniweb/unipress` after the
+unscoped `unipress` name was abandoned (npm Levenshtein-policy
+conflict with `unirest`). The CLI binary is still `unipress`; only the
+package specifier is scoped. All functionality below is in the working
+tree and exercised end-to-end against `@proximify/press-book` +
+framework-book (198-page PDF via Typst 0.14.2).
 
 ### Added
 

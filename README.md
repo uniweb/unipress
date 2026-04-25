@@ -18,16 +18,11 @@ The directory references a Uniweb **foundation** — a component system that dec
 
 ## Install
 
-> **Note**: the npm name `unipress` is currently in dispute (Levenshtein-policy conflict with `unirest`). Until the dispute resolves, install from source:
->
-> ```bash
-> git clone https://github.com/uniweb/unipress.git
-> cd unipress && pnpm install
-> # invoke as: node path/to/unipress/src/cli.js
-> # or pnpm link it globally during development.
-> ```
+```bash
+npm i -g @uniweb/unipress
+```
 
-When the name clears, `npm i -g unipress` will install the CLI globally.
+The package is scoped, but the executable is unscoped: after install, invoke as `unipress`.
 
 ## Quick-start
 
@@ -128,7 +123,7 @@ The content-directory-level config, with the same shape as Uniweb's `site.yml`. 
 Optional ESM file for overrides awkward in YAML (imports, computed values, format-specific options). Auto-discovered at `<dir>/unipress.config.js` or explicit via `--config <path>`.
 
 ```js
-import { defineUnipressConfig } from 'unipress'
+import { defineUnipressConfig } from '@uniweb/unipress'
 
 export default defineUnipressConfig({
   out: './dist/my-book.pdf',            // overrides --out default
