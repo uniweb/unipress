@@ -1,0 +1,548 @@
+/* Academic Metrics — foundation styles.
+ *
+ * Tailwind 4 is imported here so every section / layout / component
+ * can use utility classes inline (bg-card, text-subtle, rounded-full,
+ * fixed top-6 right-6, etc.). The @uniweb/kit theme-tokens bridge
+ * exposes semantic theme vars (--heading, --body, --primary, --card,
+ * …) to Tailwind's --color-* namespace, so utilities like bg-card
+ * and text-heading pick up values set by theme.yml.
+ *
+ * The @source directives tell Tailwind where to scan for utility
+ * class names. Without them, classes that only appear in JSX string
+ * literals would be dropped from the final CSS.
+ *
+ * Named CSS classes (.chart-container, .members-table, .cover-*)
+ * stay alongside utilities — they're natural for complex selectors
+ * (table head, :nth-child, ::marker) that utility classes can't
+ * express cleanly. The template deliberately shows both patterns:
+ * utilities for composition, named classes for domain components.
+ */
+
+@import 'tailwindcss';
+@import '@uniweb/kit/theme-tokens.css';
+
+@source "../node_modules/@uniweb/kit/src/**/*.{js,jsx}";
+@source "./sections/**/*.{js,jsx}";
+@source "./layouts/**/*.{js,jsx}";
+@source "./components/**/*.{js,jsx}";
+
+/* Theme-variant font stacks are imported up front so a tenant can
+ * swap site/theme.yml <-> site/theme-archive.yml without a foundation
+ * rebuild. The theme pipeline exposes --font-heading / --font-body
+ * / --font-mono from theme.yml; the body rules below wire them to
+ * elements (the pipeline doesn't emit default font-family rules). */
+
+/* Institute theme fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* Archive theme fonts — imported unconditionally so a theme swap is a
+ * one-file rename, not a foundation rebuild. Browsers skip fetching
+ * fonts that no CSS rule references. */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap');
+
+body {
+  font-family: var(--font-body);
+  color: var(--body);
+  background: var(--section);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  color: var(--heading);
+}
+
+code,
+pre,
+kbd {
+  font-family: var(--font-mono);
+}
+
+.metrics-body {
+  padding-block: var(--section-padding-y, 3rem);
+}
+
+.metrics-report > * + * {
+  margin-top: var(--report-gap, 3rem);
+}
+
+/* ── Cover ─────────────────────────────────────────────────────────── */
+
+.cover {
+  text-align: center;
+  padding-block: clamp(2rem, 6vw, 4rem);
+}
+
+.cover-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: var(--heading);
+  margin: 0 0 0.5rem;
+}
+
+.cover-subtitle {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  color: var(--subtle);
+  font-style: italic;
+  margin: 0 0 1.5rem;
+}
+
+.cover-narrative {
+  max-width: 44rem;
+  margin: 0 auto 2rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--body);
+  text-align: left;
+}
+
+.cover-narrative strong {
+  color: var(--heading);
+  font-weight: 600;
+}
+
+.cover-narrative p {
+  margin: 0 0 1rem;
+}
+
+.cover-meta {
+  display: inline-flex;
+  gap: 2rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--body);
+}
+
+.cover-meta-label {
+  color: var(--subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  font-size: 0.75rem;
+  display: block;
+  margin-bottom: 0.125rem;
+}
+
+.cover-meta-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+
+/* ── Query selector ────────────────────────────────────────────────── */
+
+.query-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  background: var(--section);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+}
+
+.query-selector-label {
+  font-weight: 600;
+  color: var(--subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+}
+
+.query-selector-control {
+  font: inherit;
+  color: var(--heading);
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 0.375rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.query-selector-control:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+/* ── Filter panel (Pattern A demo) ─────────────────────────────────── */
+
+.filter-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--section);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+}
+
+.filter-panel-legend {
+  font-weight: 600;
+  color: var(--subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+  padding: 0;
+}
+
+.filter-row {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.filter-label {
+  color: var(--body);
+  font-size: 0.875rem;
+}
+
+.filter-row select,
+.filter-row input[type='text'],
+.filter-row input[type='number'] {
+  font: inherit;
+  color: var(--heading);
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.filter-row select:focus-visible,
+.filter-row input:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.filter-range {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--subtle);
+}
+
+.filter-panel-reset {
+  margin-top: 0.25rem;
+  align-self: flex-end;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.filter-panel-reset:disabled {
+  color: var(--subtle);
+  cursor: default;
+  opacity: 0.6;
+}
+
+.filter-panel-reset:not(:disabled):hover {
+  background: var(--card);
+}
+
+/* ── Cover population banner ───────────────────────────────────────── */
+
+.cover-population {
+  color: var(--subtle);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.cover-population strong {
+  color: var(--heading);
+  font-weight: 600;
+}
+
+/* ── Report options (date range, refereed, citation style) ────────── */
+
+.report-options {
+  display: block;
+  margin: 0 auto 1.5rem;
+  padding: 1rem 1.25rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  text-align: left;
+  max-width: 40rem;
+}
+
+.report-options-legend {
+  padding: 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.report-options-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+@media (max-width: 36rem) {
+  .report-options-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.report-options-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.report-options-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.report-options-input {
+  font: inherit;
+  padding: 0.375rem 0.5rem;
+  color: var(--heading);
+  background: var(--section);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+}
+
+.report-options-input:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.report-options-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--body);
+  cursor: pointer;
+}
+
+.report-options-item input {
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+/* ── Publications list ────────────────────────────────────────────── */
+
+.publications-list {
+  list-style: decimal outside;
+  padding-left: 2rem;
+  margin: 0;
+}
+
+.publications-list > li {
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+  color: var(--body);
+}
+
+.publications-list .csl-entry-wrapper .csl-author {
+  font-weight: 500;
+  color: var(--heading);
+}
+
+.publications-list .csl-entry-wrapper .csl-title {
+  font-style: italic;
+}
+
+.publications-list-note {
+  margin-top: 1rem;
+  color: var(--subtle);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Section toggles ──────────────────────────────────────────────── */
+
+.section-toggles {
+  display: block;
+  margin: 0 auto 2rem;
+  padding: 1rem 1.25rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  text-align: left;
+  max-width: 40rem;
+}
+
+.section-toggles-legend {
+  padding: 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.section-toggles-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+}
+
+.section-toggles-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--body);
+  cursor: pointer;
+}
+
+.section-toggles-item input {
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+/* ── Members roster ────────────────────────────────────────────────── */
+
+.members {
+  padding-block: var(--section-padding-y, 3rem);
+}
+
+.members-title {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 600;
+  color: var(--heading);
+  margin: 0 0 1.5rem;
+}
+
+/* ── Chart sections (PublicationsByType, etc) ─────────────────────── */
+
+.chart-section {
+  padding-block: var(--section-padding-y, 3rem);
+}
+
+.chart-title {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 600;
+  color: var(--heading);
+  margin: 0 0 0.5rem;
+}
+
+.chart-query-note {
+  margin: 0 0 1.5rem;
+  color: var(--subtle);
+  font-size: 0.9rem;
+}
+
+.chart-query-note em {
+  color: var(--heading);
+  font-style: italic;
+}
+
+.chart-container {
+  width: 100%;
+  min-height: 320px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1.5rem 1rem;
+}
+
+.chart-container-placeholder {
+  /* Reserve the chart footprint during SSR / prerender so hydration
+   * doesn't cause layout shift when the chart mounts. */
+  display: block;
+}
+
+.chart-empty {
+  padding: 2.5rem;
+  text-align: center;
+  color: var(--subtle);
+  background: var(--card);
+  border: 1px dashed var(--border);
+  border-radius: 0.5rem;
+  font-style: italic;
+}
+
+.members-query-note {
+  margin: 0 0 1rem;
+  color: var(--subtle);
+  font-size: 0.9rem;
+}
+
+.members-query-note em {
+  font-style: italic;
+  color: var(--heading);
+}
+
+.members-empty {
+  padding: 2rem;
+  text-align: center;
+  color: var(--subtle);
+  background: var(--card);
+  border: 1px dashed var(--border);
+  border-radius: 0.5rem;
+  font-style: italic;
+}
+
+.members-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.members-table th,
+.members-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.members-table th {
+  font-weight: 600;
+  color: var(--heading);
+  background: color-mix(in oklch, var(--card), var(--section) 30%);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.members-table tr:last-child td {
+  border-bottom: none;
+}
+
+.members-table .numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.members-table .status-yes {
+  color: var(--heading);
+  font-weight: 500;
+}
+
+.members-table .status-no {
+  color: var(--subtle);
+}
