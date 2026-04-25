@@ -35,7 +35,7 @@ my-book/
 
 The four files in `pages/` are the sample chapters. They explain what the book template can do as you read through them. Replace them with your own writing when you're ready — keep the structure or change it; it's yours now.
 
-The single file in `images/` is a placeholder cover (`wrap.png`). Replace it with your own artwork when you have it.
+The two files in `images/` are placeholder front and back covers. Replace them with your own artwork when you have it. Real covers usually start as a single wrap-around image (front + spine + back) — see `PUBLISHING.md` for guidance on print-ready artwork.
 
 `document.yml` holds your project's settings: the title, the author, what format the book compiles to by default, what trim size to use, what fonts. After you run `unipress create`, it has sensible defaults; adjust them as you need.
 
