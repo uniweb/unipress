@@ -58,15 +58,18 @@ jobs:
         with:
           version: 10
 
+      - name: Flip workspace:* to npm versions
+        # Foundations and the CLI declare @uniweb/* deps as workspace:*
+        # so dev machines (cloning the outer monorepo) resolve to local
+        # siblings. CI checks out only this repo — there's no workspace
+        # around — and pnpm refuses workspace:* outside a workspace.
+        # The script reads the npm-current version of each sibling and
+        # rewrites every workspace:* in foundations/*/package.json (and
+        # the root package.json) to ^<version>. Runner-only mutation;
+        # not committed back.
+        run: node scripts/ci-flip-workspace-deps.js
+
       - name: Install dependencies
-        # See RELEASING.md for why --ignore-workspace --no-frozen-lockfile
-        # is the right shape here: the foundations under foundations/<name>/
-        # declare workspace:* deps to outer-monorepo @uniweb/* packages
-        # which aren't checked out in CI. With --ignore-workspace, pnpm
-        # treats this repo as a single tree — but that doesn't help the
-        # foundations either, because they'd still see workspace:*. Per-
-        # foundation install with `--ignore-workspace` lets pnpm fall
-        # through to the npm-published versions.
         run: pnpm install --ignore-workspace --no-frozen-lockfile
 
       - name: Build foundations
@@ -86,8 +89,9 @@ jobs:
             echo "Building $name@$version"
             echo "=========================================="
 
-            # Each foundation is a standalone install — workspace:* refs
-            # need npm-published siblings to resolve.
+            # Per-foundation install. The flip-workspace-deps step above
+            # already rewrote each foundation's package.json so workspace:*
+            # → ^<npm-version>; pnpm install resolves cleanly.
             (cd "$foundation_dir" && pnpm install --ignore-workspace --no-frozen-lockfile)
 
             # Build via the foundation's own script. uniweb is in the
