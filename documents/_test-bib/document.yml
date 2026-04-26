@@ -1,0 +1,13 @@
+name: Bibliography Test
+foundation: ../../foundations/book
+format: pdf
+index: book
+
+book:
+  title: "Bibliography Test"
+  author: "Test Harness"
+  citationStyle: chicago-author-date
+
+collections:
+  bibliography:
+    path: collections/bibliography

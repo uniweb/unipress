@@ -18,6 +18,7 @@ import {
     normaliseFontList,
 } from './typst-default/index.js'
 import { stylesheet as pagedjsStylesheet } from './pagedjs-default/index.js'
+import { bibliographyCss } from './utils/bibliography-css.js'
 
 /**
  * Document-level metadata object, the shape the Typst and HTML adapters
@@ -171,6 +172,47 @@ export async function buildPagedjsOptions(website) {
  * supplied `loadAsset` to turn it into bytes — same abstraction the typst
  * path uses, so the foundation doesn't need to branch on environment.
  */
+// Foundation-supplied EPUB stylesheet. Press's adapter takes a single
+// `options.stylesheet` (which replaces its DEFAULT_STYLESHEET; there's no
+// "append" hook), so the book foundation owns the whole sheet. The base
+// rules below mirror Press's defaults — book-shaped typography that
+// reading apps can rely on — and we append the shared bibliography CSS
+// so .csl-bibliography / .csl-entry / .cite render correctly.
+const EPUB_BASE_CSS = `body {
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.5;
+  margin: 0 5%;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 1.2;
+  page-break-after: avoid;
+}
+h1 { font-size: 1.8em; margin-top: 2em; }
+h2 { font-size: 1.4em; margin-top: 1.5em; }
+h3 { font-size: 1.15em; margin-top: 1em; }
+p { margin: 0 0 0.8em; text-indent: 1.25em; }
+p:first-child, p.lead { text-indent: 0; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1em 0; text-align: center; }
+figcaption { font-size: 0.9em; color: #555; }
+blockquote {
+  margin: 1em 1.5em;
+  padding-left: 1em;
+  border-left: 3px solid #ccc;
+  color: #444;
+}
+code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.92em; }
+pre {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: #f5f5f5;
+  padding: 0.75em;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+`
+
 export async function buildEpubOptions(website, { loadAsset } = {}) {
     const bookCfg = website?.config?.book || {}
     const coverSrc = bookCfg.covers?.front ?? bookCfg.coverImage
@@ -179,6 +221,7 @@ export async function buildEpubOptions(website, { loadAsset } = {}) {
             meta: buildBookMeta(website),
             cover: coverSrc,
             loadAsset,
+            stylesheet: EPUB_BASE_CSS + bibliographyCss,
         },
     }
 }

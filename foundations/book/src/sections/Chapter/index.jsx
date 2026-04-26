@@ -1,6 +1,30 @@
 import { useDocumentOutput } from '@uniweb/press'
 import { ChapterOpener, Sequence } from '@uniweb/press/typst'
 import { Prose, H1, H2, useWebsite } from '@uniweb/kit'
+import * as apa from 'citestyle/styles/apa'
+import * as mla from 'citestyle/styles/mla'
+import * as chicagoAuthorDate from 'citestyle/styles/chicago-author-date'
+import * as ieee from 'citestyle/styles/ieee'
+import * as vancouver from 'citestyle/styles/vancouver'
+import * as harvard from 'citestyle/styles/harvard'
+import * as ama from 'citestyle/styles/ama'
+import * as nature from 'citestyle/styles/nature'
+import * as science from 'citestyle/styles/science'
+import { resolveInlineInsets } from '#utils/resolve-inline-insets.js'
+import { formatCiteInsetAsText } from '#utils/cite-format.js'
+
+const STYLES = {
+  apa,
+  mla,
+  'chicago-author-date': chicagoAuthorDate,
+  ieee,
+  vancouver,
+  harvard,
+  ama,
+  nature,
+  science,
+}
+const DEFAULT_STYLE = 'chicago-author-date'
 
 /**
  * Chapter — default section type for book pages.
@@ -21,6 +45,20 @@ export default function Chapter({ content, block, params }) {
   const pageInfo = classifyPage(block?.page)
   const openerTitle = formatTitle(title, pageInfo)
 
+  // Inline cites in chapter prose: kit's Prose renders them inline at
+  // marker positions in HTML; Press's Typst Sequence reads each
+  // paragraph's `text` field as a flat string and has no concept of
+  // inline insets. Substitute the cite text into the paragraph string
+  // before handing the sequence to Sequence — the registry-formatted
+  // output replaces every `<uniweb-inset data-ref-id="…">` marker.
+  const styleName = block?.website?.config?.book?.citationStyle || DEFAULT_STYLE
+  const style = STYLES[styleName] || STYLES[DEFAULT_STYLE]
+  const typstSequence = resolveInlineInsets(
+    sequence || [],
+    block,
+    (insetBlock) => formatCiteInsetAsText(insetBlock, block?.website, style),
+  )
+
   useDocumentOutput(
     block,
     'typst',
@@ -30,7 +68,7 @@ export default function Chapter({ content, block, params }) {
         title={openerTitle}
         subtitle={subtitle}
       />
-      <Sequence data={sequence || []} />
+      <Sequence data={typstSequence} />
     </>,
   )
 
@@ -44,7 +82,7 @@ export default function Chapter({ content, block, params }) {
     <article className="chapter">
       {openerTitle ? <h1>{openerTitle}</h1> : null}
       {subtitle ? <p className="subtitle">{subtitle}</p> : null}
-      <Prose content={content} />
+      <Prose content={content} block={block} />
     </article>,
   )
 
@@ -63,7 +101,7 @@ export default function Chapter({ content, block, params }) {
           ) : null}
         </header>
       ) : null}
-      <Prose content={content} className="prose-book" />
+      <Prose content={content} block={block} className="prose-book" />
     </article>
   )
 }

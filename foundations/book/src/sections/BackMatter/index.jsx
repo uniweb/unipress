@@ -24,7 +24,7 @@ export default function BackMatter({ content, block }) {
     'html',
     <article className="backmatter">
       {title ? <h1>{title}</h1> : null}
-      <Prose content={content} />
+      <Prose content={content} block={block} />
     </article>,
   )
 
@@ -33,7 +33,7 @@ export default function BackMatter({ content, block }) {
       {title ? (
         <H1 text={title} className="text-heading text-3xl font-bold mb-6" />
       ) : null}
-      <Prose content={content} className="prose-book" />
+      <Prose content={content} block={block} className="prose-book" />
     </article>
   )
 }

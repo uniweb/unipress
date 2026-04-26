@@ -96,6 +96,34 @@ th, td { border: 1px solid #ddd; padding: 0.35em 0.5em; font-size: 10pt; }
 
 /* Links — faint underline, same colour as body in print */
 a { color: inherit; text-decoration: underline; text-decoration-thickness: 0.5pt; }
+
+/* Inline citations — citestyle wraps each in span.cite (or
+ * span.cite.cite--missing for unresolved keys). Style them as normal
+ * phrasing, distinguish missing keys with a colour cue. */
+.cite { white-space: normal; }
+.cite--missing { color: #b00; }
+
+/* Bibliography back-matter section.
+ * - Forced page break before so the references start on their own page.
+ * - Running header swaps to "Bibliography" via string-set.
+ * - The .csl-bibliography list uses hanging indents; numbered styles
+ *   keep their own [n] prefixes (no list-number).
+ * - Slightly smaller font, looser leading — standard back-matter look. */
+.book-bibliography { break-before: page; string-set: chapter "Bibliography"; }
+.book-bibliography h1 { break-before: avoid; margin-top: 0; }
+.csl-bibliography {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.92em;
+  line-height: 1.4;
+}
+.csl-entry {
+  padding-left: 1.5em;
+  text-indent: -1.5em;
+  margin-bottom: 0.5em;
+  break-inside: avoid;
+}
 `
 
 export default stylesheet

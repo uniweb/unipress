@@ -1,0 +1,13 @@
+id: wallace1858
+type: article-journal
+author:
+  - family: Wallace
+    given: Alfred Russel
+title: "On the Tendency of Varieties to Depart Indefinitely from the Original Type"
+container-title: "Journal of the Proceedings of the Linnean Society of London. Zoology"
+volume: 3
+issue: 9
+page: 53-62
+issued:
+  date-parts:
+    - [1858]

@@ -10,9 +10,107 @@
 
 import { existsSync } from 'node:fs'
 import { resolve, join } from 'node:path'
-import { collectSiteContent } from '@uniweb/build/content'
+import { collectSiteContent, processCollections } from '@uniweb/build/content'
 import { detectConfigFile, CONFIG_FILE_NAMES } from './document-yml.js'
 import { ContentDirectoryError, DocumentYmlError } from './errors.js'
+
+// Match a parsed collection-backed fetch path. parseFetchConfig (in
+// @uniweb/build) normalises `{ collection: <name> }` into
+// `{ path: '/data/<name>.json', schema: <name>, ... }` — so this regex is
+// the inverse: pull the collection name back out of the resolved path.
+const COLLECTION_PATH_RE = /^\/data\/(.+)\.json$/
+
+function attachData(section, schema, data) {
+  if (!section || !schema) return
+  if (!section.parsedContent) section.parsedContent = {}
+  if (!section.parsedContent.data) section.parsedContent.data = {}
+  // Don't clobber a section-level value with a cascaded page-level one.
+  // The Block constructor will spread parsedContent.data through, so the
+  // first writer wins for a given schema.
+  if (section.parsedContent.data[schema] === undefined) {
+    section.parsedContent.data[schema] = data
+  }
+}
+
+function findCollectionRecords(fetchConfig, resolved) {
+  if (!fetchConfig?.path || !fetchConfig?.schema) return null
+  const m = COLLECTION_PATH_RE.exec(fetchConfig.path)
+  if (!m) return null
+  const records = resolved[m[1]]
+  if (!Array.isArray(records)) return null
+  return records
+}
+
+function attachSectionFetches(sections, resolved) {
+  if (!Array.isArray(sections)) return
+  for (const section of sections) {
+    const records = findCollectionRecords(section.fetch, resolved)
+    if (records) attachData(section, section.fetch.schema, records)
+    if (Array.isArray(section.subsections) && section.subsections.length) {
+      attachSectionFetches(section.subsections, resolved)
+    }
+  }
+}
+
+/**
+ * Materialize file-based collections into each section's
+ * `parsedContent.data` so the SSR render pipeline reads populated data
+ * synchronously (no `useFetched` round-trip; no `public/` directory).
+ *
+ * In a regular Uniweb site build, the Vite plugin runs `processCollections`
+ * + `writeCollectionFiles` and the runtime resolves `fetch:` declarations
+ * over HTTP at render time. Under `unipress compile` neither of those
+ * happens — there's no public dir, and SSR skips effects. We close the
+ * gap by resolving collections in-memory and attaching the records
+ * directly to each block's `parsedContent.data.<schema>`. The Block
+ * constructor (framework/core/src/block.js) preserves that field, and
+ * `prepareProps` then surfaces it as `content.data.<schema>` to the
+ * component — same shape the runtime would produce.
+ *
+ * Page-level fetch cascades to every section on the page; section-level
+ * fetch overrides on a per-section basis. Only collection-backed fetches
+ * (parsed `path: '/data/<name>.json'`) are resolved here — remote URL
+ * fetches, refine configs, and array-form `fetch: [...]` declarations
+ * are left untouched (those have their own gaps; out of scope here).
+ */
+async function resolveLocalCollections(siteContent, sitePath) {
+  const collectionsConfig = siteContent?.config?.collections
+  if (!collectionsConfig || typeof collectionsConfig !== 'object') return
+  if (Object.keys(collectionsConfig).length === 0) return
+
+  const resolved = await processCollections(
+    sitePath,
+    collectionsConfig,
+    sitePath,
+    '/',
+  )
+
+  for (const page of siteContent.pages || []) {
+    const pageRecords = findCollectionRecords(page.fetch, resolved)
+    if (pageRecords) {
+      for (const section of page.sections || []) {
+        attachData(section, page.fetch.schema, pageRecords)
+      }
+    }
+    attachSectionFetches(page.sections, resolved)
+  }
+
+  // Stash the resolved arrays on the website config too, so any section
+  // (regardless of its own page's fetch declaration) can self-bootstrap
+  // — e.g., a Cite inset rendering inside a Chapter on page A needs the
+  // bibliography records that the Bibliography section declared on page
+  // B. Foundations read this via `block.website.config.collections.<name>.records`
+  // as a synchronous fallback.
+  if (!siteContent.config) siteContent.config = {}
+  if (!siteContent.config.collections) siteContent.config.collections = {}
+  for (const name of Object.keys(resolved)) {
+    const existing = siteContent.config.collections[name]
+    siteContent.config.collections[name] = {
+      ...(existing && typeof existing === 'object' ? existing : {}),
+      records: resolved[name],
+    }
+  }
+}
 
 export async function loadContent(dir, options = {}) {
   const sitePath = resolve(dir)
@@ -51,6 +149,8 @@ export async function loadContent(dir, options = {}) {
     }
     throw err
   }
+
+  await resolveLocalCollections(content, sitePath)
 
   return { content, configFile, sitePath }
 }
