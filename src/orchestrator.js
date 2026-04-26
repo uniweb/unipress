@@ -28,8 +28,27 @@
 import { pathToFileURL } from 'node:url'
 import { readFile } from 'node:fs/promises'
 import { initPrerender } from '@uniweb/runtime/ssr'
-import { buildXrefRegistry } from '@uniweb/build/content'
 import { FoundationResolutionError, CompileError } from './errors.js'
+
+// `buildXrefRegistry` is a recent addition to @uniweb/build/content
+// (cross-references milestone). Older published versions don't expose
+// it; the dynamic resolver below falls back to a no-op registry so the
+// pipeline keeps working against any installed version. Once the build
+// package republishes with the new export, the real registry kicks in
+// automatically — no code change required.
+let _buildXrefRegistry = null
+async function getBuildXrefRegistry() {
+  if (_buildXrefRegistry !== null) return _buildXrefRegistry
+  try {
+    const mod = await import('@uniweb/build/content')
+    _buildXrefRegistry = typeof mod.buildXrefRegistry === 'function'
+      ? mod.buildXrefRegistry
+      : () => ({ entries: {} })
+  } catch {
+    _buildXrefRegistry = () => ({ entries: {} })
+  }
+  return _buildXrefRegistry
+}
 
 export async function importFoundation(resolvedPath) {
   try {
@@ -63,6 +82,7 @@ export async function loadAndInit({ content, resolvedPath, extensions = [], onPr
     foundation?.default?.xref?.kinds ||
     foundation?.xref?.kinds ||
     {}
+  const buildXrefRegistry = await getBuildXrefRegistry()
   content.xref = buildXrefRegistry(content, { foundationKinds })
 
   const uniweb = initOrchestrator({ content, foundation, extensions, onProgress })
