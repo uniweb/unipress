@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- **Release binaries are now signed.** macOS binaries are signed with
+  Apple Developer ID Application + Apple-notarized; Windows binaries
+  are signed via Azure Trusted Signing. macOS users no longer see a
+  Gatekeeper warning on first run. The 0.2.3 release assets were
+  re-signed in place — re-download from the release page if you
+  grabbed an unsigned copy before this change landed.
+
+### Removed
+
+- `.github/workflows/release.yml`. Binaries are no longer built in
+  this public repo — they're built and signed in a private Proximify
+  pipeline. Pushing a `unipress@<version>` tag no longer triggers a
+  binary build; the maintainer dispatches the signed pipeline manually
+  after each tag, and the resulting binaries are uploaded to the same
+  GitHub Release on this repo. Source code, docs, npm publishing, and
+  the foundation-deploy workflow are unchanged.
+
 ## 0.2.3
 
 The first complete-out-of-the-box release. `npm i -g @uniweb/unipress`
