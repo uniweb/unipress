@@ -1,5 +1,72 @@
 # Changelog
 
+## 0.2.3
+
+The first complete-out-of-the-box release. `npm i -g @uniweb/unipress`
++ `unipress create my-book --template book` + `unipress compile my-book`
+produces a real PDF on the first try, no setup, no auth, no local
+servers, no `--foundation` overrides.
+
+### Added
+
+- **GitHub Pages distribution for bundled foundations.**
+  `https://uniweb.github.io/unipress/foundations/<name>/<version>/foundation.js`
+  serves every published foundation. A new workflow
+  (`.github/workflows/deploy-foundations.yml`) builds each
+  `foundations/<name>/` on every push to main and accumulates versions
+  on the `gh-pages` branch — older versions stay reachable indefinitely.
+  No registry namespace claim, no Cloudflare worker, no platform
+  authorization needed for the open-source foundations.
+- **`scripts/ci-flip-workspace-deps.js`** — pre-install rewrite that
+  translates `workspace:*` deps to npm version ranges in CI. Both
+  workflows (foundation deploy, binary release) call it as the first
+  step. Closes the standalone-install gap that the workspace:*
+  resolution introduced.
+- **`prepublishOnly` regenerates `templates-data.js`.** `pnpm publish`
+  now refreshes the bundled template data from `documents/<name>/`
+  before packing, so a stale generated file can't ship even if a
+  developer forgot to regenerate before commit.
+
+### Fixed
+
+- **EPUB cover image no longer skipped.** The foundation's
+  `buildEpubOptions` was using a `fetch`-based URL resolver that
+  silently 404'd in unipress's Node compile context. Replaced with
+  the same `loadAsset` abstraction the typst path uses. Cover image
+  now embeds at `OEBPS/images/<hash>.jpg` alongside a synthesized
+  `cover.xhtml` page.
+- **DOCX inline-image path threaded through `loadAsset`.**
+  `framework/press`'s docx adapter walker now plumbs the host-supplied
+  byte loader from `buildDocument` → `convertChildren` →
+  `irToImageParagraph` → `fetchImageData` → `fetchAsset`. Future
+  docx-emitting templates with inline images compile cleanly in
+  unipress.
+- **Cover round-trip in scaffolded projects** — front + back JPGs
+  ship via the binary-asset support added to the template generator.
+  EPUB readers + most PDF viewers now show the book's thumbnail
+  without the user adding any artwork.
+
+### Changed
+
+- Catalog URLs in `src/foundations-data.js` flipped from local-registry
+  (`http://localhost:4001/...`) to GH Pages
+  (`https://uniweb.github.io/unipress/foundations/...`). The 0.2.0
+  caveat in the changelog is resolved.
+- `foundation-loader.js`'s `DEFAULT_REGISTRY_BASE` flipped to
+  `https://uniweb.github.io/unipress`. `UNIWEB_REGISTRY_URL` env var
+  remains the override for local dev / private alternatives.
+- `@uniweb/*` deps in `package.json` are `workspace:*` again (dev
+  resolves local siblings); `pnpm publish` translates them to real
+  version specs in the published tarball.
+
+### Notes
+
+- Binary downloads (darwin-arm64, linux-x64, windows-x64) ship via
+  the existing `unipress@<version>` tag-driven release workflow. The
+  npm path is now equivalent for users with Node 20+.
+- See `RELEASING.md` for the framework-publish + workspace:* flip-back
+  dance the next maintainer release follows.
+
 ## 0.2.0
 
 The credibility-shifting release. Two production-shaped foundations
