@@ -16,7 +16,7 @@ data-report/
 ├── collections/
 │   ├── members/          three sample records (19th-century naturalists)
 │   └── queries/          saved query examples
-└── pages/
+└── content/
     └── report/           cover, members, publications-by-*, funding, supervisions
 ```
 

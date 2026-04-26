@@ -15,8 +15,7 @@ unipress compile . --format pdf --out my-monograph.pdf
 ```
 my-monograph/
 ├── document.yml          pinned to @uniweb/book@<version>; royal-octavo, EB Garamond, tocDepth: 3
-├── pages/
-│   ├── folder.yml
+├── content/
 │   ├── 01-preface.md     type: BackMatter
 │   ├── 02-introduction.md
 │   └── 03-chapter-one.md

@@ -1,0 +1,180 @@
+# ─────────────────────────────────────────────────────────
+# unipress — end-to-end smoke test
+#
+# Scaffolds every template via `unipress create`, then compiles each to
+# a fast format that doesn't need an external binary (typst source bundle
+# for book/monograph/report; xlsx for data-report/directory). The goal
+# is regression coverage on the full pipeline — content collector,
+# template scaffolding, foundation loading, format dispatch, output
+# emission — without paying for the typst binary download on every run.
+#
+# What this catches:
+#   - Template scaffolds materialize the wrong files (missing content/,
+#     stale pages/, missing assets, broken Handlebars vars).
+#   - Foundation source breaks compile dispatch (missing outputs[<format>],
+#     buildXxxOptions throws, registration fragments don't reach the
+#     adapter).
+#   - Asset round-trip fails (cover JPGs corrupted in templates-data.js,
+#     loadAsset can't find the entry, fetchAsset returns null bytes).
+#   - prepublishOnly's regenerate step drifts from documents/ source.
+#
+# What this does NOT cover:
+#   - PDF compile (typst binary download is ~15-20 MB and slow). Local
+#     verification covers this; the typst source bundle test exercises
+#     everything before the binary handoff.
+#   - The compiled binary path (covered by the release workflow).
+#   - Cross-version foundation linking (the registry-ref fetch path
+#     against GH Pages — covered by manual end-user testing).
+#
+# Trigger:
+#   - push to main (post-merge regression net)
+#   - pull_request (pre-merge gate)
+# ─────────────────────────────────────────────────────────
+
+name: E2E Smoke Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "e2e-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  scaffold-and-compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Flip workspace:* to npm versions
+        # Same prep as deploy-foundations.yml + release.yml. See
+        # scripts/ci-flip-workspace-deps.js.
+        run: node scripts/ci-flip-workspace-deps.js
+
+      - name: Install CLI dependencies
+        run: pnpm install --ignore-workspace --no-frozen-lockfile
+
+      - name: Build foundations
+        shell: bash
+        run: |
+          set -e
+          for foundation_dir in foundations/*/; do
+            name=$(basename "$foundation_dir")
+            echo "===== Building $name ====="
+            (cd "$foundation_dir" && pnpm install --ignore-workspace --no-frozen-lockfile)
+            (cd "$foundation_dir" && pnpm build)
+            test -f "$foundation_dir/dist/foundation.js" || {
+              echo "::error::no dist/foundation.js produced for $name"
+              exit 1
+            }
+          done
+
+      - name: Regenerate templates-data.js
+        # `documents/` should already be in sync with `src/templates-data.js`
+        # (prepublishOnly enforces this at publish), but regenerating in CI
+        # catches drift before publish — if `documents/` has changes that
+        # weren't reflected in the committed templates-data.js, the next
+        # step's scaffold uses the freshly-generated templates instead of
+        # whatever's in the repo. Equivalent to what publish does; runs
+        # before every test so dev-time stale states get exercised too.
+        run: node scripts/generate-templates-data.js
+
+      - name: Scaffold + compile every template
+        shell: bash
+        env:
+          BOOK_FOUNDATION: ${{ github.workspace }}/foundations/book
+          DATA_FOUNDATION: ${{ github.workspace }}/foundations/data
+        run: |
+          set -e
+
+          # Map: template -> (foundation, format, expected magic).
+          # Format is "fast" — typst is a zip (PK header), xlsx is a zip
+          # (PK header). Magic-byte check confirms the output is a real
+          # archive, not an HTML error page or a stub.
+          declare -a TEMPLATES=(
+            "book        $BOOK_FOUNDATION typst"
+            "monograph   $BOOK_FOUNDATION typst"
+            "report      $BOOK_FOUNDATION typst"
+            "data-report $DATA_FOUNDATION xlsx"
+            "directory   $DATA_FOUNDATION xlsx"
+          )
+
+          mkdir -p _e2e
+          failed=0
+
+          for entry in "${TEMPLATES[@]}"; do
+            read -r template foundation format <<<"$entry"
+            project="_e2e/$template"
+            ext="$format"
+            [ "$format" = "typst" ] && ext="zip"
+            output="_e2e/$template.$ext"
+
+            echo ""
+            echo "===== $template ($format) ====="
+
+            rm -rf "$project" "$output"
+
+            node src/cli.js create "$project" \
+              --template "$template" \
+              --title "E2E $template" \
+              --author "CI" \
+              --yes 2>&1 | tail -2
+
+            # Sanity-check the scaffold. Every template ships document.yml
+            # and a content/ directory under the new framework default.
+            test -f "$project/document.yml" || {
+              echo "::error::no document.yml in $project"
+              failed=$((failed+1))
+              continue
+            }
+            test -d "$project/content" || {
+              echo "::error::no content/ in $project (stale pages/?)"
+              failed=$((failed+1))
+              continue
+            }
+
+            node src/cli.js compile "$project" \
+              --format "$format" \
+              --foundation "$foundation" \
+              --out "$output" 2>&1 | tail -2
+
+            # Magic-byte check. PK\x03\x04 is the ZIP local file header;
+            # both typst source bundles and xlsx files are zips.
+            test -f "$output" || {
+              echo "::error::no output produced for $template ($output missing)"
+              failed=$((failed+1))
+              continue
+            }
+            magic=$(head -c 4 "$output" | xxd -p)
+            if [ "$magic" != "504b0304" ]; then
+              echo "::error::$output is not a valid zip (magic=$magic)"
+              failed=$((failed+1))
+              continue
+            fi
+
+            size=$(wc -c < "$output")
+            echo "  ✓ $template → $output ($size bytes, valid zip)"
+          done
+
+          echo ""
+          if [ "$failed" -gt 0 ]; then
+            echo "::error::$failed template(s) failed"
+            exit 1
+          fi
+          echo "All ${#TEMPLATES[@]} templates scaffolded + compiled cleanly."

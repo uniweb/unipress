@@ -12,7 +12,7 @@ unipress compile . --format epub --out my-monograph.epub
 ```
 monograph/
 ├── document.yml         pinned to @uniweb/book; royal-octavo, EB Garamond
-├── pages/
+├── content/
 │   ├── 01-preface.md    type: BackMatter
 │   ├── 02-introduction.md
 │   └── 03-chapter-one.md

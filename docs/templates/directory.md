@@ -17,7 +17,7 @@ faculty/
 ├── document.yml          pinned to @uniweb/data@<version>; one queryable collection
 ├── collections/
 │   └── members/          three sample records
-└── pages/
+└── content/
     └── directory/        cover (Loom-rendered count) + listing
 ```
 
@@ -27,7 +27,7 @@ faculty/
 |-----------------------------|--------------------------------------------------------|
 | `name`                      | Workbook title.                                        |
 | `format`                    | `xlsx` (default) or `docx`.                            |
-| `index`                     | Routes `/` → `pages/directory`.                        |
+| `index`                     | Routes `/` → `content/directory`.                        |
 | `collections.members.path`  | Where the records live (`collections/members`).        |
 | `collections.members.queryable` | Filterable fields — drives the FilterPanel UI.    |
 
@@ -58,7 +58,7 @@ Add a `joined_year:` range field, for example, if filtering by start year matter
 
 ## Hand-pick the displayed columns
 
-The Members section reads every key from each record by default. To restrict the columns shown in the web preview and the xlsx export, set `columns:` on the section frontmatter in `pages/directory/members.md`.
+The Members section reads every key from each record by default. To restrict the columns shown in the web preview and the xlsx export, set `columns:` on the section frontmatter in `content/directory/members.md`.
 
 ## When to pick `directory` over `data-report`
 

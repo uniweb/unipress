@@ -20,7 +20,7 @@ q3-metrics/
 ├── collections/
 │   ├── members/          three sample records (19th-century naturalists)
 │   └── queries/          saved query examples for the Population dropdown
-└── pages/
+└── content/
     └── report/           cover, members, publications-by-{type,journal,year},
                           publications-list, funding, supervisions
 ```
@@ -33,7 +33,7 @@ The starter ships three sample members so the first compile produces a non-empty
 |----------------------------|--------------------------------------------------------|
 | `name`, `author`, `year`   | Workbook metadata (shown in the file's properties).    |
 | `format`                   | `xlsx` (default) or `docx`. Override on the CLI.       |
-| `index`                    | Routes `/` → `pages/<index>` (here: `report`).         |
+| `index`                    | Routes `/` → `content/<index>` (here: `report`).         |
 | `collections.members.path` | Where the records live (default `collections/members`).|
 | `collections.members.queryable` | Filterable surface — drives the FilterPanel UI.   |
 | `collections.queries.path` | Saved-view dropdown (Population selector).             |

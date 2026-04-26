@@ -15,8 +15,7 @@ unipress compile . --format pdf --out my-book.pdf
 ```
 my-book/
 ├── document.yml          pinned to @uniweb/book@<version>
-├── pages/
-│   ├── folder.yml        activates folder mode
+├── content/
 │   ├── 01-preface.md     type: BackMatter — unnumbered front matter
 │   ├── 02-chapter-one.md
 │   └── 03-chapter-two.md
@@ -42,7 +41,7 @@ my-book/
 
 ## Add chapters
 
-Drop a markdown file under `pages/` and add its base name (without `.md`) to `document.yml`'s `pages:` list in the order you want it to appear. Chapters need no frontmatter — the foundation's `Chapter` section handles them by default. For non-chapter pages (acknowledgments, colophon, appendices), use `type: BackMatter` in frontmatter to skip chapter numbering.
+Drop a markdown file under `content/` and add its base name (without `.md`) to `document.yml`'s `content:` list in the order you want it to appear. Chapters need no frontmatter — the foundation's `Chapter` section handles them by default. For non-chapter pages (acknowledgments, colophon, appendices), use `type: BackMatter` in frontmatter to skip chapter numbering.
 
 ## Common customizations
 

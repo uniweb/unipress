@@ -15,8 +15,7 @@ unipress compile . --format pdf --out q3-report.pdf
 ```
 q3-report/
 ├── document.yml          pinned to @uniweb/book@<version>; trade-7x10, block paragraphs
-├── pages/
-│   ├── folder.yml
+├── content/
 │   ├── 01-summary.md     executive summary + recommendations table
 │   ├── 02-findings.md    body, with code listing and pull-quote
 │   └── 03-methodology.md
@@ -46,7 +45,7 @@ Same shape as `book` (see [book.md](./book.md)). The differences are defaults:
 
 ## Common customizations
 
-- **Add an appendix**: a new markdown file with `type: BackMatter` in frontmatter, listed in `pages:`.
+- **Add an appendix**: a new markdown file with `type: BackMatter` in frontmatter, listed in `content:`.
 - **Wider code blocks**: bump `book.typography.codeMarginRelief` to `0.5in` (code extends 0.5in past each side of the body column).
 - **No TOC** for short reports: set `book.structure.toc: false`.
 

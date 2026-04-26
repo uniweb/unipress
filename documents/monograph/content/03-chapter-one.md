@@ -23,4 +23,4 @@ Three-deep headings appear in the TOC because `tocDepth: 3` in `document.yml`. A
 
 ## Closing the chapter
 
-The next file in `document.yml`'s `pages:` list takes over from here. Add chapters by adding `04-chapter-two.md`, `05-chapter-three.md`, etc., and listing them in the `pages:` array.
+The next file in `document.yml`'s `content:` list takes over from here. Add chapters by adding `04-chapter-two.md`, `05-chapter-three.md`, etc., and listing them in the `content:` array.

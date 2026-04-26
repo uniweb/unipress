@@ -14,7 +14,7 @@ directory/
 ├── document.yml          pinned to @uniweb/data; one queryable collection
 ├── collections/
 │   └── members/          three sample records to make the first compile non-empty
-└── pages/
+└── content/
     └── directory/        cover (with Loom-rendered count) + listing
 ```
 
@@ -57,4 +57,4 @@ Add `joined_year:` as a `range` field, for example, if filtering by start year m
 
 ### Hand-pick the displayed columns
 
-The Members section reads every key from each record by default. To restrict the columns shown in the web preview and the xlsx export, set `columns:` on the section frontmatter in `pages/directory/members.md`.
+The Members section reads every key from each record by default. To restrict the columns shown in the web preview and the xlsx export, set `columns:` on the section frontmatter in `content/directory/members.md`.

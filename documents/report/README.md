@@ -12,7 +12,7 @@ unipress compile . --format pagedjs --out my-report.html
 ```
 report/
 ├── document.yml          pinned to @uniweb/book; trade-7x10, block paragraphs
-├── pages/
+├── content/
 │   ├── 01-summary.md     executive summary + recommendations table
 │   ├── 02-findings.md    body, with code listing and pull-quote
 │   └── 03-methodology.md

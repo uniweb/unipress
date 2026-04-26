@@ -29,11 +29,11 @@ my-book/
 ├── README.md         ← This file. Read first.
 ├── PUBLISHING.md     ← Notes about publishing your finished book.
 ├── document.yml      ← Settings: title, author, format, trim, fonts, cover.
-├── pages/            ← Your writing. Markdown files, one per chapter.
+├── content/            ← Your writing. Markdown files, one per chapter.
 └── assets/           ← Image files used by your book, including the cover.
 ```
 
-The four files in `pages/` are the sample chapters. They explain what the book template can do as you read through them. Replace them with your own writing when you're ready — keep the structure or change it; it's yours now.
+The four files in `content/` are the sample chapters. They explain what the book template can do as you read through them. Replace them with your own writing when you're ready — keep the structure or change it; it's yours now.
 
 The two files in `assets/` are placeholder front and back covers. Replace them with your own artwork when you have it. Real covers usually start as a single wrap-around image (front + spine + back) — see `PUBLISHING.md` for guidance on print-ready artwork.
 
@@ -41,9 +41,9 @@ The two files in `assets/` are placeholder front and back covers. Replace them w
 
 ## Writing in this folder
 
-Each markdown file in `pages/` becomes a chapter of the compiled book. The order is set by the `pages:` list in `document.yml` — add a new file to `pages/` and add its base name (without `.md`) to that list in the order you want it to appear.
+Each markdown file in `content/` becomes a chapter of the compiled book. The order is set by the `content:` list in `document.yml` — add a new file to `content/` and add its base name (without `.md`) to that list in the order you want it to appear.
 
-If you'd rather rely on filename sorting and let unipress order things alphabetically, drop the explicit `pages:` list from `document.yml` and the framework will read every `.md` file in `pages/` in filename order. Numbering filenames (`01-welcome.md`, `02-formatting.md`, …) is the easiest way to control order; if you want to insert a new chapter between two others, give it a number that sorts between theirs.
+If you'd rather rely on filename sorting and let unipress order things alphabetically, drop the explicit `content:` list from `document.yml` and the framework will read every `.md` file in `content/` in filename order. Numbering filenames (`01-welcome.md`, `02-formatting.md`, …) is the easiest way to control order; if you want to insert a new chapter between two others, give it a number that sorts between theirs.
 
 ## Compile, look, revise
 
@@ -52,7 +52,7 @@ Most of your time will be: edit a chapter, compile, open the PDF, see how it loo
 A few things to know about compile:
 
 - It's fast. A short book takes a few seconds.
-- It's safe. unipress doesn't change anything in your `pages/` folder.
+- It's safe. unipress doesn't change anything in your `content/` folder.
 - It's deterministic. The same content produces the same PDF every time.
 
 If something looks wrong in the output, run `unipress inspect my-book` to see how unipress parsed your content. Most surprises trace back to something the parser interpreted differently than you expected.
