@@ -52,6 +52,17 @@
     "defaults": {},
     "title": "Back Matter"
   },
+  "Bibliography": {
+    "name": "Bibliography",
+    "path": "sections/Bibliography",
+    "defaults": {
+      "title": "Bibliography",
+      "sortBy": null,
+      "style": null,
+      "data": "bibliography"
+    },
+    "title": "Bibliography"
+  },
   "BookCover": {
     "name": "BookCover",
     "path": "sections/BookCover",
@@ -65,6 +76,15 @@
       "chapterNumber": null
     },
     "title": "Chapter"
+  },
+  "Cite": {
+    "name": "Cite",
+    "path": "sections/Cite",
+    "inset": true,
+    "defaults": {
+      "label": "page"
+    },
+    "title": "Cite"
   },
   "Contents": {
     "name": "Contents",

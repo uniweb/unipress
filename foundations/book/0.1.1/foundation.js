@@ -1,16 +1,18 @@
-import { B as s, a as m, b as p, C as c, c as C, d as i, e as B, f, _ as k } from "./_entry.generated-Cg6080Jw.js";
+import { B as s, a as i, b as p, c as m, C, d as c, e as B, f as l, g as b, h as f, _ as h } from "./_entry.generated-BNQ3mRKM.js";
 import "react/jsx-runtime";
 import "react";
 import "react-dom/server";
 export {
   s as BackCover,
-  m as BackMatter,
-  p as BookCover,
-  c as Chapter,
-  C as Contents,
-  i as Cover,
-  B as compileDocument,
+  i as BackMatter,
+  p as Bibliography,
+  m as BookCover,
+  C as Chapter,
+  c as Cite,
+  B as Contents,
+  l as Cover,
+  b as compileDocument,
   f as compileSubtree,
-  k as default
+  h as default
 };
 //# sourceMappingURL=foundation.js.map
