@@ -13,7 +13,7 @@ State the argument once, plainly, in a paragraph. The remainder of the introduct
 
 ## How citations work in this template
 
-Inline citations use a Pandoc-style sugar: `[@key]` for a bare cite, `[@key]{page=42}` for a page locator, `[@a; @b]` for a multi-cite cluster, and `[@key]{suppress-author}` when the author is named in the running prose ("Darwin (1859) showed…"). The `key` is the bibliography entry's id — the filename stem of any YAML file under `collections/bibliography/`, or an explicit `id:` field inside that file. Pick a citation style by setting `book.citationStyle:` in `document.yml`; the same nine styles citestyle ships are wired in (Chicago author-date, APA, MLA, IEEE, Vancouver, Harvard, AMA, Nature, Science). Change one line and every cite plus the back-matter list re-formats to match.
+Inline citations use a Pandoc-style sugar: `[@key]` for a bare cite, `[@key]{page=42}` for a page locator, `[@a; @b]` for a multi-cite cluster, and `[@key]{suppress-author}` when the author is named in the running prose ("Darwin (1859) showed…"). The `key` is the BibTeX cite key in `collections/bibliography/refs.bib` — every `@entry{key, ...}` becomes one record the cites can reach. Pick a citation style by setting `book.citationStyle:` in `document.yml`; the same nine styles citestyle ships are wired in (Chicago author-date, APA, MLA, IEEE, Vancouver, Harvard, AMA, Nature, Science). Change one line and every cite plus the back-matter list re-formats to match.
 
 ## The chapters ahead
 

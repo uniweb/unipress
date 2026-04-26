@@ -31,11 +31,11 @@ book:
     sortBy: author
 
 # Bibliographic records the inline `[@key]` cites and the back-matter
-# Bibliography section read from. One YAML file per entry under
-# `collections/bibliography/`; the entry's id is the filename stem (or
-# an explicit `id:` field). Either flat shorthand (`year: 1859`,
-# `author: "Darwin, Charles"`) or full CSL-JSON works — the foundation
-# normalizes both.
+# Bibliography section read from. Drop a `.bib` file into
+# `collections/bibliography/` — every `@entry{key, ...}` becomes one
+# record, with the BibTeX cite key used as the lookup id. YAML and JSON
+# files in the same directory are merged in (handy for one-off entries
+# you want to maintain by hand alongside an exported `.bib`).
 collections:
   bibliography:
     path: collections/bibliography

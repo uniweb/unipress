@@ -33,7 +33,7 @@ For prose-driven content, pick `book` (trade-6x9) or `monograph` (royal-octavo, 
 Reports often cite — primary sources backing findings, prior work in methodology, regulatory references in compliance reports. The same `@uniweb/book` foundation supports inline cites and a back-matter bibliography; this template ships them commented out so a report that doesn't need them isn't carrying empty scaffolding. To opt in:
 
 1. Uncomment the `citationStyle:` block under `book:` and the `collections:` block at the bottom of `document.yml`.
-2. Create `collections/bibliography/` and add one YAML file per source — the filename stem is the cite key (`smith2024.yml` → `[@smith2024]`).
+2. Create `collections/bibliography/` and drop a `.bib` file in (each `@entry{key, ...}` becomes one record; the cite key is what you reference with `[@key]`). Hand-written YAML in CSL-JSON shape works alongside it if you'd rather edit entries directly.
 3. Cite in prose: `[@smith2024]`, `[@smith2024]{page=12}` for a locator, `[@a; @b]` for a multi-cite cluster, `[@key]{suppress-author}` when the author is named in the running prose.
 4. Add a back-matter content file (e.g. `99-bibliography.md`) with `type: Bibliography` and `data: bibliography` in frontmatter.
 

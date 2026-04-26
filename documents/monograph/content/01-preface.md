@@ -9,7 +9,7 @@ A monograph is a sustained, single-author argument on a focused topic — histor
 
 Replace this preface with your own. The `BackMatter` section type skips chapter numbering, so the "Preface" heading above renders without a "Chapter N" label. Acknowledgments, dedications, and a list of abbreviations all use the same section type.
 
-The starter ships a small Victorian-naturalist bibliography (`collections/bibliography/`) and a chapter that exercises the inline `[@key]` cite syntax. Replace the entries with your own — one YAML file per record — and rewrite the chapter to fit your topic. The cites and the back-matter bibliography both update automatically.
+The starter ships a small Victorian-naturalist bibliography (`collections/bibliography/refs.bib`) and a chapter that exercises the inline `[@key]` cite syntax. Replace the entries with your own — drop in the `.bib` file your reference manager exports — and rewrite the chapter to fit your topic. The cites and the back-matter bibliography both update automatically.
 
 Compile to PDF for archive-quality print or to EPUB for distribution:
 

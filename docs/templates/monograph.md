@@ -18,7 +18,8 @@ The starter ships a small Victorian-naturalist bibliography (nine entries — Da
 my-monograph/
 ├── document.yml              pinned to @uniweb/book@<version>; royal-octavo, EB Garamond
 ├── collections/
-│   └── bibliography/         one YAML file per bibliographic entry
+│   └── bibliography/
+│       └── refs.bib          BibTeX file — every @entry is one record
 ├── content/
 │   ├── 01-preface.md         type: BackMatter
 │   ├── 02-introduction.md    type: Chapter
@@ -62,23 +63,35 @@ Optional sort: `book.bibliography.sortBy:` — `author` (default), `year`, or `c
 
 ### Author bibliography entries
 
-One file per record under `collections/bibliography/`. The filename stem is the entry id (`darwin1859.yml` → `darwin1859`); an explicit `id:` field overrides. Two authoring shapes work — the foundation normalizes both at compile time.
+Drop a `.bib` file into `collections/bibliography/`. Every `@entry{key, ...}` becomes one record; the BibTeX cite key is the entry id you reference from prose with `[@key]`. Standard BibTeX entry types work (`@article`, `@book`, `@incollection`, `@inproceedings`, `@phdthesis`, `@techreport`, `@misc`, etc.); LaTeX accents (`\"u`, `\'e`, `\v{c}`) are converted to Unicode automatically.
 
-**Flat shorthand** (use when the record has a single author and a single date):
+```bibtex
+% collections/bibliography/refs.bib
 
-```yaml
-id: darwin1859
-type: book
-author: "Darwin, Charles"
-title: "On the Origin of Species"
-publisher: "John Murray"
-publisher-place: London
-year: 1859
+@book{darwin1859,
+  author    = {Darwin, Charles},
+  title     = {On the Origin of Species},
+  publisher = {John Murray},
+  address   = {London},
+  year      = {1859}
+}
+
+@article{wallace1858,
+  author  = {Wallace, Alfred Russel},
+  title   = {On the Tendency of Varieties to Depart Indefinitely from the Original Type},
+  journal = {Journal of the Proceedings of the Linnean Society of London. Zoology},
+  volume  = {3},
+  number  = {9},
+  pages   = {53--62},
+  year    = {1858}
+}
 ```
 
-**Full CSL-JSON** (use for multi-author works, exact dates, journals, edited volumes, etc.):
+If a record needs a CSL field BibTeX can't carry — multi-script titles, fine-grained date parts, fielded notes — drop a hand-written YAML file (CSL-JSON shape) into the same folder. The loader merges every `.bib`, `.yml`, and `.json` it finds, so authors can mix the format their reference manager exports with one-off hand-edited entries.
 
 ```yaml
+# collections/bibliography/wallace1858.yml — full CSL-JSON, overrides if a duplicate
+# cite key exists in any .bib file in the same folder.
 id: wallace1858
 type: article-journal
 author:

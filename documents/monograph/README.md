@@ -13,7 +13,8 @@ unipress compile . --format epub --out my-monograph.epub
 monograph/
 ├── document.yml              pinned to @uniweb/book; royal-octavo, EB Garamond
 ├── collections/
-│   └── bibliography/         one YAML file per bibliographic entry
+│   └── bibliography/
+│       └── refs.bib          BibTeX records — one .bib file, every @entry is one record
 ├── content/
 │   ├── 01-preface.md         type: BackMatter
 │   ├── 02-introduction.md    type: Chapter
@@ -46,36 +47,31 @@ Switching the style re-formats every inline cite and the back-matter bibliograph
 
 ### Author bibliography entries
 
-One file per record under `collections/bibliography/`. The filename stem is the entry id (`darwin1859.yml` → `darwin1859`); an explicit `id:` field overrides. Two authoring shapes work — pick whichever reads cleaner:
+Drop a `.bib` file into `collections/bibliography/`. Every `@entry{key, ...}` becomes one record; the BibTeX cite key is the entry id you reference from prose with `[@key]`. Standard BibTeX entry types — `@article`, `@book`, `@incollection`, `@inproceedings`, `@phdthesis`, `@techreport`, `@misc`, and the rest — all work; LaTeX accents (`\"u`, `\'e`, `\v{c}`) are converted to Unicode automatically.
 
-```yaml
-# Flat shorthand
-id: darwin1859
-type: book
-author: "Darwin, Charles"
-title: "On the Origin of Species"
-publisher: "John Murray"
-publisher-place: London
-year: 1859
+```bibtex
+% collections/bibliography/refs.bib
+
+@book{darwin1859,
+  author    = {Darwin, Charles},
+  title     = {On the Origin of Species},
+  publisher = {John Murray},
+  address   = {London},
+  year      = {1859}
+}
+
+@article{wallace1858,
+  author  = {Wallace, Alfred Russel},
+  title   = {On the Tendency of Varieties to Depart Indefinitely from the Original Type},
+  journal = {Journal of the Proceedings of the Linnean Society of London. Zoology},
+  volume  = {3},
+  number  = {9},
+  pages   = {53--62},
+  year    = {1858}
+}
 ```
 
-```yaml
-# Full CSL-JSON
-id: wallace1858
-type: article-journal
-author:
-  - family: Wallace
-    given: Alfred Russel
-title: "On the Tendency of Varieties to Depart Indefinitely from the Original Type"
-container-title: "Journal of the Proceedings of the Linnean Society of London. Zoology"
-volume: 3
-issue: 9
-page: 53-62
-issued:
-  date-parts: [[1858]]
-```
-
-Common types: `book`, `article-journal`, `chapter`, `paper-conference`, `thesis`, `report`, `webpage`. The full list of CSL types and fields is at [docs.citationstyles.org](https://docs.citationstyles.org/en/stable/specification.html#appendix-iii-types).
+Already have records as YAML or JSON in CSL-JSON shape? Drop them in the same folder — the loader merges every `.bib`, `.yml`, and `.json` it finds into one collection. Use whatever your reference manager exports; reach for hand-written YAML when an entry needs a field BibTeX can't carry. The full list of CSL types and fields is at [docs.citationstyles.org](https://docs.citationstyles.org/en/stable/specification.html#appendix-iii-types).
 
 ### Cite in prose
 
