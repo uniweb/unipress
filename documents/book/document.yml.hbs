@@ -40,6 +40,21 @@ book:
   #   bodyFont: ["EB Garamond", "Garamond", "Georgia"]
   #   headingFont: ["EB Garamond", "Garamond", "Georgia"]
 
+  # Optional citation system. Trade books rarely cite sources; the
+  # `monograph` template ships with this turned on by default. To opt in
+  # here, uncomment the two blocks below, add a `collections/bibliography/`
+  # directory of YAML records, and a `99-bibliography.md` content file
+  # with `type: Bibliography`. See the monograph template's README for
+  # the full pattern.
+  #
+  # citationStyle: chicago-author-date
+  # bibliography:
+  #   sortBy: author
+
+# collections:
+#   bibliography:
+#     path: collections/bibliography
+
 # Reading order. Files in content/ are sorted by name; the explicit list
 # below makes the order predictable. Add new chapters by creating
 # content/<name>.md and adding the base name (without `.md`) here.

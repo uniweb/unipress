@@ -57,6 +57,17 @@ A few things to know about compile:
 
 If something looks wrong in the output, run `unipress inspect my-book` to see how unipress parsed your content. Most surprises trace back to something the parser interpreted differently than you expected.
 
+## Adding citations (optional)
+
+If your book cites sources — even occasionally — the same `@uniweb/book` foundation supports inline cites and a back-matter bibliography. Trade books rarely use this, so it's commented out in `document.yml`. To opt in:
+
+1. Uncomment the `citationStyle:` block under `book:` and the `collections:` block at the bottom of `document.yml`.
+2. Create `collections/bibliography/` and add one YAML file per source (`darwin1859.yml`, etc.) — the filename stem is the cite key.
+3. Cite in prose with `[@key]` (or `[@key]{page=42}`, `[@a; @b]`, `[@key]{suppress-author}`).
+4. Add a back-matter file (e.g. `99-bibliography.md`) with `type: Bibliography` and `data: bibliography` in its frontmatter.
+
+The `monograph` template ships with this turned on as a worked example — `unipress create my-mono --template monograph` to see it.
+
 ## When you're ready to publish
 
 See [`PUBLISHING.md`](./PUBLISHING.md) for notes on what's next after you have a finished book — print-on-demand, ebook distribution, ISBNs, cover requirements, and where to find more help.

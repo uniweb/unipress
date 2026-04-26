@@ -28,6 +28,19 @@ report/
 
 For prose-driven content, pick `book` (trade-6x9) or `monograph` (royal-octavo, classical typography).
 
+## Adding citations
+
+Reports often cite — primary sources backing findings, prior work in methodology, regulatory references in compliance reports. The same `@uniweb/book` foundation supports inline cites and a back-matter bibliography; this template ships them commented out so a report that doesn't need them isn't carrying empty scaffolding. To opt in:
+
+1. Uncomment the `citationStyle:` block under `book:` and the `collections:` block at the bottom of `document.yml`.
+2. Create `collections/bibliography/` and add one YAML file per source — the filename stem is the cite key (`smith2024.yml` → `[@smith2024]`).
+3. Cite in prose: `[@smith2024]`, `[@smith2024]{page=12}` for a locator, `[@a; @b]` for a multi-cite cluster, `[@key]{suppress-author}` when the author is named in the running prose.
+4. Add a back-matter content file (e.g. `99-bibliography.md`) with `type: Bibliography` and `data: bibliography` in frontmatter.
+
+Pick a citation style by setting `book.citationStyle:` to one of `chicago-author-date`, `apa`, `mla`, `harvard`, `ieee`, `vancouver`, `ama`, `nature`, `science`. For numbered styles (IEEE, Vancouver, Nature, etc.), the back-matter list reuses the same numbering as the inline cites — `[1]` inline matches `[1]` in the back-matter.
+
+The `monograph` template ships with this turned on as a worked example — `unipress create my-mono --template monograph` to see it, including a Victorian-naturalist bibliography that exercises every cite shape.
+
 ## Customize
 
 Edit `document.yml`:
@@ -36,3 +49,4 @@ Edit `document.yml`:
 - `book.typography.codeMarginRelief:` — `0pt` to disable; `0.25in` (default) lets code blocks extend past the body column.
 - `book.typography.firstLineIndent:` — `0pt` (default for reports) for block paragraphs; `1.25em` for prose-style indented paragraphs.
 - `book.structure.copyrightPage:` — `false` (default for reports) to drop the copyright spread.
+- `book.citationStyle:` — one of nine supported styles; pairs with the `collections.bibliography` block above.
