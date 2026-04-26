@@ -152,5 +152,9 @@ export async function loadContent(dir, options = {}) {
 
   await resolveLocalCollections(content, sitePath)
 
+  // Cross-reference registry is built AFTER the foundation loads, in
+  // orchestrator.loadAndInit, so foundation-declared `xref.kinds`
+  // contribute to the kind inference at id-collection time.
+
   return { content, configFile, sitePath }
 }

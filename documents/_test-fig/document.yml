@@ -1,0 +1,7 @@
+name: Figure Test
+foundation: ../../foundations/book
+format: pagedjs
+index: book
+book:
+  title: Figure Test
+  author: Test

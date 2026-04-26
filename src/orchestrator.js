@@ -28,6 +28,7 @@
 import { pathToFileURL } from 'node:url'
 import { readFile } from 'node:fs/promises'
 import { initPrerender } from '@uniweb/runtime/ssr'
+import { buildXrefRegistry } from '@uniweb/build/content'
 import { FoundationResolutionError, CompileError } from './errors.js'
 
 export async function importFoundation(resolvedPath) {
@@ -49,8 +50,21 @@ export function initOrchestrator({ content, foundation, extensions = [], onProgr
 // Convenience: import + init in one step. Returns the uniweb instance,
 // or throws (the caller decides whether to surface as fatal or attached
 // to the inspect dump).
+//
+// Cross-reference registry is built here, after the foundation imports
+// so any foundation-declared `xref.kinds` participate in id-collection.
+// Built-in kinds (figure / equation / section / table) work without
+// foundation cooperation; foundation extensions land alongside.
 export async function loadAndInit({ content, resolvedPath, extensions = [], onProgress } = {}) {
   const foundation = await importFoundation(resolvedPath)
+
+  const foundationKinds =
+    foundation?.default?.capabilities?.xref?.kinds ||
+    foundation?.default?.xref?.kinds ||
+    foundation?.xref?.kinds ||
+    {}
+  content.xref = buildXrefRegistry(content, { foundationKinds })
+
   const uniweb = initOrchestrator({ content, foundation, extensions, onProgress })
   return { foundation, uniweb }
 }

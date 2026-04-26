@@ -1,0 +1,9 @@
+name: Cross-reference test
+foundation: ../../foundations/book
+format: pagedjs
+index: book
+
+book:
+  title: Cross-reference test
+  author: Test
+  xrefStyle: humanities
