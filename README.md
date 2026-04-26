@@ -34,9 +34,17 @@ Foundations consume [@uniweb/press](https://github.com/uniweb/press) for the byt
 
 ## Install
 
-**Standalone binary (recommended for most users).** No Node, no npm. Download the asset for your platform from [the releases page](https://github.com/uniweb/unipress/releases), make it executable, and put it somewhere on your `PATH` — `/usr/local/bin/unipress` is a common choice on macOS and Linux. Then you can run `unipress` from any directory.
+**Homebrew (macOS and Linux — recommended).** No Node, no manual download:
 
-**npm.** If you already have Node:
+```bash
+brew install uniweb/unipress/unipress
+```
+
+Updates land via `brew upgrade unipress`. The macOS binary is signed with the Proximify Inc. Developer ID and Apple-notarized — no Gatekeeper warnings.
+
+**Manual download (Windows, or any platform without Homebrew).** Grab the asset for your platform from [the releases page](https://github.com/uniweb/unipress/releases), make it executable (Unix), and put it somewhere on your `PATH`. On macOS and Linux, `/usr/local/bin/unipress` is a common location.
+
+**npm.** If you already have Node ≥ 20.19:
 
 ```bash
 npm i -g @uniweb/unipress
