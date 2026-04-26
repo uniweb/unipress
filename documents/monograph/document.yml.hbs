@@ -21,8 +21,27 @@ book:
     toc: true
     tocDepth: 3
     frontMatterNumbering: roman
+  # Citation style for inline cites and the back-matter bibliography.
+  # Pick from: chicago-author-date (default — the scholarly humanities
+  # convention), apa, mla, harvard, ieee, vancouver, ama, nature, science.
+  # Switch the document's whole bibliographic apparatus by changing one
+  # value here; nothing else in the project needs editing.
+  citationStyle: chicago-author-date
+  bibliography:
+    sortBy: author
+
+# Bibliographic records the inline `[@key]` cites and the back-matter
+# Bibliography section read from. One YAML file per entry under
+# `collections/bibliography/`; the entry's id is the filename stem (or
+# an explicit `id:` field). Either flat shorthand (`year: 1859`,
+# `author: "Darwin, Charles"`) or full CSL-JSON works — the foundation
+# normalizes both.
+collections:
+  bibliography:
+    path: collections/bibliography
 
 content:
   - 01-preface
   - 02-introduction
   - 03-chapter-one
+  - 99-bibliography

@@ -114,6 +114,10 @@ function collectTemplates() {
   if (!existsSync(DOCUMENTS_DIR)) return templates
   for (const entry of readdirSync(DOCUMENTS_DIR, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue
+    // Skip leading-underscore dirs — used in this repo for hand-authored
+    // verification harnesses (`_test-bib`, etc.) that aren't bundled
+    // templates. Same convention as `_e2e/` under framework/.
+    if (entry.name.startsWith('_')) continue
     const name = entry.name
     const root = join(DOCUMENTS_DIR, name)
     const files = {}
