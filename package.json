@@ -45,7 +45,8 @@
   },
   "scripts": {
     "test": "echo \"no tests yet\" && exit 0",
-    "lint": "echo \"no lint yet\" && exit 0"
+    "lint": "echo \"no lint yet\" && exit 0",
+    "prepublishOnly": "node scripts/generate-templates-data.js"
   },
   "dependencies": {
     "@uniweb/build": "workspace:*",
