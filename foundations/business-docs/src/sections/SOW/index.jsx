@@ -51,10 +51,10 @@ export default function SOW({ content, block }) {
     </>
   )
 
-  useDocumentOutput(block, 'docx', docxBody)
-  useDocumentOutput(block, 'pagedjs', null)
-
-  return (
+  // Browser + paged.js print share the same JSX (sow-section). Press
+  // renders this subtree to HTML for the pagedjs adapter, which passes
+  // it straight through to the Paged.js polyfill.
+  const sectionJsx = (
     <section className="sow-section">
       {title && <h1 className="sow-title">{title}</h1>}
       {preItems.map((el, i) => {
@@ -89,4 +89,9 @@ export default function SOW({ content, block }) {
       )}
     </section>
   )
+
+  useDocumentOutput(block, 'docx', docxBody)
+  useDocumentOutput(block, 'html', sectionJsx)
+
+  return sectionJsx
 }

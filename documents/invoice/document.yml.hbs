@@ -1,0 +1,35 @@
+name: "{{title}}"
+{{#if author}}
+author: "{{author}}"
+{{/if}}
+year: {{year}}
+
+foundation: ../../foundations/business-docs
+format: docx
+
+# content/invoice/ holds one page-folder; everything renders into a
+# single downloadable invoice. `--format docx` produces a Word file
+# directly; `--format pagedjs --out invoice.html` produces a Paged.js-
+# wired HTML you print-to-PDF in a browser.
+index: invoice
+
+business_docs:
+  vendor:
+    organization: Acme Studios
+    contact: First Last
+    email: billing@acme.example
+    address: |
+      123 Example Street
+      City, Region 00000
+      Country
+  defaults:
+    currency: USD
+    locale: en-US
+    tax_jurisdiction: NONE   # Demo template: no tax. Real users override.
+    payment_terms_days: 30
+
+collections:
+  sows:
+    path: collections/sows
+  invoices:
+    path: collections/invoices

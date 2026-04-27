@@ -52,10 +52,7 @@ export default function Invoice({ content, block }) {
     </>
   )
 
-  useDocumentOutput(block, 'docx', docxBody)
-  useDocumentOutput(block, 'pagedjs', null)
-
-  return (
+  const sectionJsx = (
     <section className="invoice-section">
       {title && <h1 className="invoice-title">{title}</h1>}
       {preItems.map((el, i) => {
@@ -83,4 +80,9 @@ export default function Invoice({ content, block }) {
       )}
     </section>
   )
+
+  useDocumentOutput(block, 'docx', docxBody)
+  useDocumentOutput(block, 'html', sectionJsx)
+
+  return sectionJsx
 }

@@ -81,6 +81,11 @@ const DATA_FOUNDATION = {
   source: { url: publicUrl('data', '0.1.0') },
 }
 
+const BUSINESS_DOCS_FOUNDATION = {
+  ref: '@uniweb/business-docs@0.1.0',
+  source: { url: publicUrl('business-docs', '0.1.0') },
+}
+
 export const FOUNDATIONS = [
   {
     id: 'book',
@@ -132,5 +137,16 @@ export const FOUNDATIONS = [
     outputs: ['xlsx', 'docx'],
     foundation: DATA_FOUNDATION,
     scaffold: 'directory',
+  },
+  {
+    id: 'invoice',
+    name: 'Invoice',
+    description:
+      'A multi-line subscription invoice referencing a signed statement of ' +
+      'work. Demonstrates the @uniweb/business-docs foundation: SOW + invoice ' +
+      'collections, computed totals, and the SHOW-default Loom shorthand.',
+    outputs: ['docx', 'pagedjs'],
+    foundation: BUSINESS_DOCS_FOUNDATION,
+    scaffold: 'invoice',
   },
 ]

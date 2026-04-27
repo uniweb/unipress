@@ -5,7 +5,7 @@ export default {
   category: 'business-docs',
 
   data: {
-    inherit: ['invoice', 'invoices'],
+    inherit: ['invoices', 'sows'],
   },
 
   content: {

@@ -1,0 +1,47 @@
+# Demo invoice — multi-line subscription bill billing against sow0001.
+# Demonstrates the array-of-items shape the schema is designed around.
+status: open
+number: 'INV-0001'
+sow_ref: '0001'
+issued: 2026-03-01
+due: 2026-03-31
+period:
+  from: 2026-01-01
+  to: 2026-12-31
+client:
+  organization: Globex Corporation
+  contact: Jane Example
+  email: jane@globex.example
+po_number: PO-2026-001
+
+items:
+  - description: Hosting (Year 1)
+    qty: 1
+    unit_price: 8000
+    period: { from: 2026-01-01, to: 2026-12-31 }
+  - description: Platform support (Year 1)
+    qty: 1
+    unit_price: 24000
+    period: { from: 2026-01-01, to: 2026-12-31 }
+  - description: Quarterly review sessions
+    qty: 4
+    unit_price: 1500
+    period: null   # No period: hourly/per-event line; demonstrates {IF period} drop.
+  - description: Migration assistance
+    qty: 12
+    unit_price: 250
+    period: null
+
+tax:
+  jurisdiction: NONE   # Demo template only; real users override per jurisdiction.
+
+notes: |
+  Annual subscription bill covering hosting, support, and the agreed
+  quarterly review cadence. Migration assistance is hourly, billed
+  against the discovery phase of SOW 0001.
+
+payment:
+  paid_on: null
+  remittance_ref: null
+
+foundation_version: '@uniweb/business-docs@0.1.0'
