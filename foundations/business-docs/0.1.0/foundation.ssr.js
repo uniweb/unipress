@@ -24679,10 +24679,10 @@ var init_src2 = __esm({
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/block.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/block.js
 var Block;
 var init_block = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/block.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/block.js"() {
     init_src();
     init_src2();
     Block = class _Block {
@@ -25159,10 +25159,10 @@ var init_block = __esm({
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/observable-state.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/observable-state.js
 var ObservableState;
 var init_observable_state = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/observable-state.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/observable-state.js"() {
     ObservableState = class {
       constructor() {
         this._values = /* @__PURE__ */ new Map();
@@ -25238,10 +25238,10 @@ var init_observable_state = __esm({
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/page.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/page.js
 var Page;
 var init_page = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/page.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/page.js"() {
     init_block();
     init_observable_state();
     Page = class {
@@ -25718,7 +25718,7 @@ var init_page = __esm({
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/datastore.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/datastore.js
 function deriveCacheKey(request) {
   const { path, url, schema: schema4, transform } = request || {};
   const method = request?.method && request.method.toUpperCase() !== "GET" ? request.method.toUpperCase() : void 0;
@@ -25727,7 +25727,7 @@ function deriveCacheKey(request) {
 }
 var DataStore;
 var init_datastore = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/datastore.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/datastore.js"() {
     DataStore = class {
       constructor() {
         this._cache = /* @__PURE__ */ new Map();
@@ -25828,7 +25828,7 @@ var init_datastore = __esm({
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/singularize.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/singularize.js
 function singularize(name) {
   if (!name) return name;
   const irregulars = {
@@ -25852,11 +25852,11 @@ function singularize(name) {
   return name;
 }
 var init_singularize = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/singularize.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/singularize.js"() {
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/substitute-placeholders.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/substitute-placeholders.js
 function substitutePlaceholders(value, context, options = {}) {
   const { encode = true } = options;
   if (typeof value === "string") {
@@ -25881,12 +25881,12 @@ function substitutePlaceholders(value, context, options = {}) {
 }
 var PLACEHOLDER_RE;
 var init_substitute_placeholders = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/substitute-placeholders.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/substitute-placeholders.js"() {
     PLACEHOLDER_RE = /\{([A-Za-z_][A-Za-z0-9_]*)\}/g;
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/entity-store.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/entity-store.js
 function isRefinement(bf2) {
   return bf2?.refine === true || bf2?.inherit === true;
 }
@@ -25904,7 +25904,7 @@ function peekArray(dispatcher, cfg, ctx) {
 }
 var inheritDeprecationWarned, EntityStore;
 var init_entity_store = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/entity-store.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/entity-store.js"() {
     init_singularize();
     init_substitute_placeholders();
     inheritDeprecationWarned = false;
@@ -26284,7 +26284,7 @@ var init_entity_store = __esm({
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/fetcher-dispatcher.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/fetcher-dispatcher.js
 function getFoundationDecl(mod) {
   if (!mod) return null;
   if (mod.default && typeof mod.default === "object") return mod.default;
@@ -26329,7 +26329,7 @@ function collectTransports(decl, { source, dev }) {
 }
 var FetcherDispatcher;
 var init_fetcher_dispatcher = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/fetcher-dispatcher.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/fetcher-dispatcher.js"() {
     init_datastore();
     FetcherDispatcher = class {
       /**
@@ -26555,10 +26555,10 @@ var init_fetcher_dispatcher = __esm({
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/website.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/website.js
 var Website;
 var init_website = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/website.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/website.js"() {
     init_page();
     init_datastore();
     init_entity_store();
@@ -26602,7 +26602,6 @@ var init_website = __esm({
         this.pageRoutes = [];
         this.themeData = {};
         this.config = {};
-        this.xref = null;
         this.siteDefaultLocale = "en";
         this.defaultLocale = "en";
         this.activeLocale = "en";
@@ -26632,8 +26631,7 @@ var init_website = __esm({
           layouts,
           notFound,
           versionedScopes = {},
-          assets = {},
-          xref = null
+          assets = {}
         } = content || {};
         this.name = config.name || "";
         this.description = config.description || "";
@@ -26674,7 +26672,6 @@ var init_website = __esm({
         this._routeTranslations = this._buildRouteTranslations(config);
         this.versionedScopes = versionedScopes;
         this.assets = assets;
-        this.xref = xref || null;
       }
       /**
        * Rebuild in place. Content-only rebuilds preserve the dispatcher and all
@@ -27694,10 +27691,10 @@ var init_website = __esm({
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/analytics.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/analytics.js
 var isBrowser, Analytics;
 var init_analytics = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/analytics.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/analytics.js"() {
     isBrowser = typeof window !== "undefined" && typeof document !== "undefined";
     Analytics = class {
       /**
@@ -27870,10 +27867,10 @@ var init_analytics = __esm({
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/uniweb.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/uniweb.js
 var Uniweb;
 var init_uniweb = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/uniweb.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/uniweb.js"() {
     init_website();
     init_analytics();
     Uniweb = class {
@@ -28000,19 +27997,19 @@ var init_uniweb = __esm({
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/theme.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/theme.js
 var init_theme = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/theme.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/theme.js"() {
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/where.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/where.js
 var init_where = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/where.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/where.js"() {
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/schemas.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/schemas.js
 function isRichSchema(schema4) {
   if (!schema4 || typeof schema4 !== "object") return false;
   if (Array.isArray(schema4.fields)) return true;
@@ -28021,11 +28018,11 @@ function isRichSchema(schema4) {
   return false;
 }
 var init_schemas = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/schemas.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/schemas.js"() {
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/request-styles/json-body.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/request-styles/json-body.js
 function wireName(operator, defaultWire, rename) {
   if (rename && typeof rename[operator] === "string" && rename[operator].length > 0) {
     return rename[operator];
@@ -28034,7 +28031,7 @@ function wireName(operator, defaultWire, rename) {
 }
 var jsonBody;
 var init_json_body = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/request-styles/json-body.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/request-styles/json-body.js"() {
     jsonBody = {
       name: "json-body",
       // Which operators this style knows how to push. The effective push set
@@ -28112,7 +28109,7 @@ var init_json_body = __esm({
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/request-styles/flat-query.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/request-styles/flat-query.js
 function encodeFlatEqualities(where) {
   if (!where || typeof where !== "object" || Array.isArray(where)) return null;
   const out = [];
@@ -28167,7 +28164,7 @@ function applyRename(fieldName, _rename) {
 }
 var flatQuery;
 var init_flat_query = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/request-styles/flat-query.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/request-styles/flat-query.js"() {
     flatQuery = {
       name: "flat-query",
       canPush: /* @__PURE__ */ new Set(["where", "limit", "sort"]),
@@ -28202,7 +28199,7 @@ var init_flat_query = __esm({
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/request-styles/strapi.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/request-styles/strapi.js
 function encodeStrapiFilters(where, rootKey) {
   const out = [];
   try {
@@ -28302,7 +28299,7 @@ function wireName3(operator, defaultWire, rename) {
 }
 var strapi, OPERATOR_MAP;
 var init_strapi = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/request-styles/strapi.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/request-styles/strapi.js"() {
     strapi = {
       name: "strapi",
       canPush: /* @__PURE__ */ new Set(["where", "limit", "sort"]),
@@ -28353,10 +28350,10 @@ var init_strapi = __esm({
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/request-styles/index.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/request-styles/index.js
 var STYLES;
 var init_request_styles = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/request-styles/index.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/request-styles/index.js"() {
     init_json_body();
     init_flat_query();
     init_strapi();
@@ -28368,7 +28365,7 @@ var init_request_styles = __esm({
   }
 });
 
-// node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/index.js
+// node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/index.js
 function getUniweb() {
   return globalThis.uniweb;
 }
@@ -28378,7 +28375,7 @@ function createUniweb(content, foundation = null, extensions = [], { defaultFetc
   return instance;
 }
 var init_src3 = __esm({
-  "node_modules/.pnpm/@uniweb+core@0.7.6/node_modules/@uniweb/core/src/index.js"() {
+  "node_modules/.pnpm/@uniweb+core@0.7.7/node_modules/@uniweb/core/src/index.js"() {
     init_uniweb();
     init_website();
     init_page();
@@ -79539,11 +79536,10 @@ var import_server2 = __toESM(require_server_browser(), 1);
 var import_server4 = __toESM(require_server_browser());
 var import_react4 = __toESM(require_react());
 
-// node_modules/.pnpm/@uniweb+runtime@0.8.7_react-dom@19.2.5_react@19.2.5__react-router-dom@7.14.2_react-dom@_5462f3ff60652b60c0a6113ae67a2cc4/node_modules/@uniweb/runtime/dist/ssr.js
+// node_modules/.pnpm/@uniweb+runtime@0.8.8_react-dom@19.2.5_react@19.2.5__react-router-dom@7.14.2_react-dom@_d72587211457da8cfde0a2f7a9caf889/node_modules/@uniweb/runtime/dist/ssr.js
 init_src3();
 var import_react3 = __toESM(require_react(), 1);
 var import_server3 = __toESM(require_server_browser(), 1);
-var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
 init_src2();
 function guaranteeItemStructure(item) {
   return {
@@ -79799,145 +79795,12 @@ function prepareProps(block, meta, entityData = null) {
 function getComponentMeta(componentName) {
   return globalThis.uniweb?.getComponentMeta?.(componentName) || null;
 }
-var HUMANITIES = {
-  figure: { label: "Figure", labelPlural: "Figures", counter: "arabic", sep: " " },
-  equation: { label: "Equation", labelPlural: "Equations", counter: "arabic", sep: " " },
-  section: { label: "\xA7", labelPlural: "\xA7\xA7", counter: "hierarchical", sep: "" },
-  table: { label: "Table", labelPlural: "Tables", counter: "arabic", sep: " " }
-};
-var ENGINEERING = {
-  figure: { label: "Fig.", labelPlural: "Figs.", counter: "arabic", sep: " " },
-  equation: { label: "Eq.", labelPlural: "Eqs.", counter: "arabic", sep: " " },
-  section: { label: "Sec.", labelPlural: "Secs.", counter: "hierarchical", sep: " " },
-  table: { label: "Tab.", labelPlural: "Tabs.", counter: "arabic", sep: " " }
-};
-var GERMAN = {
-  figure: { label: "Abb.", labelPlural: "Abb.", counter: "arabic", sep: " " },
-  equation: { label: "Gl.", labelPlural: "Gl.", counter: "arabic", sep: " " },
-  section: { label: "Abschn.", labelPlural: "Abschn.", counter: "hierarchical", sep: " " },
-  table: { label: "Tab.", labelPlural: "Tab.", counter: "arabic", sep: " " }
-};
-var PLAIN = {
-  figure: { label: "", labelPlural: "", counter: "arabic", sep: "" },
-  equation: { label: "", labelPlural: "", counter: "arabic", sep: "" },
-  section: { label: "", labelPlural: "", counter: "hierarchical", sep: "" },
-  table: { label: "", labelPlural: "", counter: "arabic", sep: "" }
-};
-var XREF_STYLES = {
-  humanities: HUMANITIES,
-  engineering: ENGINEERING,
-  german: GERMAN,
-  plain: PLAIN
-};
-var DEFAULT_XREF_STYLE = "humanities";
-function resolveXrefStyle(presetName, config) {
-  const preset = XREF_STYLES[presetName] || XREF_STYLES[DEFAULT_XREF_STYLE];
-  const merged = { ...preset };
-  const foundationKinds = globalThis.uniweb?.foundationConfig?.xref?.kinds;
-  if (foundationKinds && typeof foundationKinds === "object") {
-    for (const [kind, meta] of Object.entries(foundationKinds)) {
-      merged[kind] = { ...merged[kind], ...meta };
-    }
-  }
-  const docOverrides = config?.book?.xref || config?.xref || null;
-  if (docOverrides && typeof docOverrides === "object") {
-    for (const [kind, meta] of Object.entries(docOverrides)) {
-      if (meta && typeof meta === "object") {
-        merged[kind] = { ...merged[kind], ...meta };
-      }
-    }
-  }
-  return merged;
-}
-function getKindMeta(style, kind) {
-  return style?.[kind] || null;
-}
-function splitKeys(raw) {
-  return String(raw || "").split(";").map((k4) => k4.trim().replace(/^#/, "")).filter(Boolean);
-}
-function formatLocator(params) {
-  const { page, locator, label = "page" } = params || {};
-  const value = page || locator;
-  if (!value) return "";
-  const labels = {
-    page: "p.",
-    chapter: "chap.",
-    section: "\xA7",
-    paragraph: "\xB6"
-  };
-  const lab = labels[label] || `${label}.`;
-  return ` (${lab} ${value})`;
-}
-function renderEntry(entry, kindMeta) {
-  const label = kindMeta?.label || "";
-  const sep = kindMeta?.sep ?? " ";
-  const counter = entry.counterText;
-  return label ? `${label}${sep}${counter}` : counter;
-}
-function renderGroupSameKind(entries, kindMeta) {
-  if (entries.length === 1) {
-    return renderEntry(entries[0], kindMeta);
-  }
-  const label = kindMeta?.labelPlural || kindMeta?.label || "";
-  const sep = kindMeta?.sep ?? " ";
-  const counters = entries.map((e) => e.counterText);
-  let body;
-  if (counters.length === 2) {
-    body = counters.join(" and ");
-  } else {
-    body = counters.slice(0, -1).join(", ") + ", and " + counters[counters.length - 1];
-  }
-  return label ? `${label}${sep}${body}` : body;
-}
-function Ref({ params, block }) {
-  const website = block?.website;
-  const xref = website?.xref || website?.config?.xref || null;
-  const entries = xref?.entries || {};
-  const styleName = website?.config?.book?.xrefStyle || "humanities";
-  const style = resolveXrefStyle(styleName, website?.config);
-  const ids = splitKeys(params?.key);
-  if (ids.length === 0) {
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "xref xref--missing", title: "No id", children: "[?]" });
-  }
-  const resolved = ids.map((id2) => {
-    const entry = entries[id2];
-    return entry ? { id: id2, entry, kindMeta: getKindMeta(style, entry.kind) } : { id: id2, missing: true };
-  });
-  if (resolved.length === 1 && resolved[0].missing) {
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "xref xref--missing", title: `Missing label: ${resolved[0].id}`, children: [
-      "[?",
-      resolved[0].id,
-      "]"
-    ] });
-  }
-  const allKinds = resolved.filter((r3) => !r3.missing).map((r3) => r3.entry.kind);
-  const sameKind = allKinds.every((k4) => k4 === allKinds[0]);
-  const locator = formatLocator(params);
-  if (!sameKind) {
-    if (typeof console !== "undefined") {
-      console.warn(
-        `[xref] mixed-kind cluster (${[...new Set(allKinds)].join(", ")}) \u2014 falling back to comma-separated rendering`
-      );
-    }
-    const parts = resolved.map(
-      (r3) => r3.missing ? `[?${r3.id}]` : renderEntry(r3.entry, r3.kindMeta)
-    );
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "xref", children: [
-      parts.join(", "),
-      locator
-    ] });
-  }
-  const onlyResolved = resolved.filter((r3) => !r3.missing);
-  const text = onlyResolved.length > 0 ? renderGroupSameKind(
-    onlyResolved.map((r3) => r3.entry),
-    onlyResolved[0].kindMeta
-  ) : "";
-  const missingTail = resolved.filter((r3) => r3.missing).map((r3) => `[?${r3.id}]`).join(", ");
-  const body = [text, missingTail].filter(Boolean).join(", ");
-  return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "xref", children: [
-    body,
-    locator
-  ] });
+function FallbackRef({ params }) {
+  return import_react3.default.createElement(
+    "span",
+    { className: "xref xref--unhandled" },
+    `[${params?.key || "?"}]`
+  );
 }
 var VALID_CONTEXTS = ["light", "medium", "dark"];
 function getWrapperProps(block) {
@@ -80202,7 +80065,12 @@ function initPrerender(content, foundation, extensionsOrOptions, maybeOptions) {
       )
     );
   };
-  uniweb.defaultInsets = { Ref };
+  const fnDefaults = foundation?.default?.capabilities?.defaultInsets || foundation?.default?.defaultInsets || foundation?.defaultInsets || {};
+  uniweb.defaultInsets = { Ref: FallbackRef, ...fnDefaults };
+  const fnXref = foundation?.default?.capabilities?.xref || foundation?.default?.xref || foundation?.xref || null;
+  if (fnXref && typeof fnXref.build === "function" && uniweb.activeWebsite) {
+    fnXref.build(uniweb.activeWebsite, { foundationKinds: fnXref.kinds || {} });
+  }
   const website = uniweb.activeWebsite;
   uniweb.routingComponents = {
     useLocation: () => {
