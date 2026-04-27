@@ -67,6 +67,23 @@ const COMMANDS = `% Custom commands used by emitted body source.
 \\providecommand{\\sectionbreak}{%
   \\par\\bigskip\\centerline{\\Large *\\quad *\\quad *}\\bigskip\\par%
 }
+
+% Theorem-family environments — emitted by the foundation's Theorem,
+% Lemma, Definition, Proof section types. amsthm gives consistent
+% styling across the four kinds; \\newtheorem[chapter] resets the
+% counter at every \\chapter so authors get "Theorem 4.1" without
+% manual numbering. Lemma shares the theorem counter so a Theorem
+% followed by a Lemma in the same chapter numbers consecutively
+% (Theorem 4.1, Lemma 4.2, …).
+\\usepackage{amsthm}
+\\theoremstyle{plain}
+\\newtheorem{theorem}{Theorem}[chapter]
+\\newtheorem{lemma}[theorem]{Lemma}
+\\theoremstyle{definition}
+\\newtheorem{definition}{Definition}[chapter]
+% \\proof / \\endproof are part of amsthm's defaults — no \\newtheorem*
+% needed. amsthm's proof env auto-emits the QED tombstone; use as:
+%   \\begin{proof} ... \\end{proof}
 `
 
 const PREAMBLE = COMMANDS

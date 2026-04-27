@@ -18,4 +18,8 @@
  */
 
 export { default as preamble, createPreamble } from './preamble.js'
-export { default as template, createTemplate } from './template.js'
+export {
+    default as template,
+    createTemplate,
+    createThesisUoftTemplate,
+} from './template.js'

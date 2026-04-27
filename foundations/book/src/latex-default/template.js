@@ -3,8 +3,12 @@
  * Foundations may override by passing a different `template` string
  * through `buildLatexOptions`. The default produces a 6×9 trade-book
  * shape with a generic serif font, suitable for casual book / monograph
- * / report output. The thesis-uoft kind (TF11b) ships its own
- * template.
+ * / report output.
+ *
+ * The thesis-uoft kind ships a parallel template (`createThesisUoftTemplate`
+ * below) that targets ut-thesis.cls — the community-maintained UofT SGS-
+ * compliant class — with PDF/A-1b output for ProQuest archival. Authors
+ * select it via `book.kind: 'thesis-uoft'` in document.yml.
  */
 
 const DEFAULT_TRIM = { width: '6in', height: '9in', margin: '0.75in' }
@@ -84,4 +88,62 @@ function languageToBabel(language) {
     zh: 'chinese',
   }
   return MAP[lang] || MAP[lang.split('-')[0]] || 'english'
+}
+
+/**
+ * UofT thesis-shaped template targeting ut-thesis.cls. Authors install
+ * the class once via `tlmgr install ut-thesis` (CTAN); the bundled
+ * source compiles with `latexmk -pdf main.tex`.
+ *
+ * The template:
+ *   - \documentclass{ut-thesis} loads SGS-compliant geometry, line
+ *     spacing, font sizes, and front-matter / main-matter switches
+ *     automatically. We don't reapply geometry here; ut-thesis owns it.
+ *   - PDF/A-1b is enabled via `\usepackage[a-1b]{pdfx}` per decision
+ *     §7.3 — ProQuest archival accepts PDF/A-1b PDFs out of the box.
+ *   - hyperref / xcolor / graphicx still loaded explicitly because
+ *     ut-thesis keeps its own surface minimal.
+ *   - babel / csquotes mirror the default template so biblatex's
+ *     polyglossia warning stays silent.
+ *
+ * Heads-up for fresh sessions: the SGS rules drift periodically. The
+ * combination here was validated at TF11b time. Re-validate the
+ * margins / line spacing / font choice against
+ * https://www.sgs.utoronto.ca/current-students/program-completion/formatting/
+ * before a thesis goes to ProQuest.
+ */
+export function createThesisUoftTemplate({ language = 'en', degree = null } = {}) {
+  const babelOpt = languageToBabel(language)
+  // ut-thesis.cls accepts a degree class option (`oneside`/`twoside`,
+  // `phd`/`masters`, `final`/`draft`). The class defaults to phd; M.Sc.
+  // and M.A. authors override to masters via `\\documentclass[masters]
+  // {ut-thesis}`.
+  const classOpts = degree && /^(M\.?S\.?c|M\.?A|M\.?Eng|M\.?Sc)/i.test(degree)
+    ? '[masters]'
+    : ''
+
+  return `% UofT-shaped thesis template, validated against SGS formatting
+% guidelines. ut-thesis.cls is community-maintained on CTAN; install
+% via \`tlmgr install ut-thesis\`. The class supplies SGS-compliant
+% margins, line spacing (1.5 / double), and front-/main-matter
+% switches automatically.
+\\documentclass${classOpts}{ut-thesis}
+
+% PDF/A-1b for ProQuest archival. Must be loaded before hyperref.
+\\usepackage[a-1b]{pdfx}
+
+\\usepackage[utf8]{inputenc}
+\\usepackage[T1]{fontenc}
+\\usepackage{lmodern}
+${babelOpt ? `\\usepackage[${babelOpt}]{babel}` : ''}
+\\usepackage{graphicx}
+\\usepackage{xcolor}
+\\usepackage{csquotes}
+
+% hyperref is loaded by pdfx; just configure colours.
+\\hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue!50!black, citecolor=blue!50!black}
+
+\\setcounter{tocdepth}{2}
+\\setcounter{secnumdepth}{2}
+`
 }

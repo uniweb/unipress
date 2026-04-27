@@ -37,12 +37,78 @@ export const vars = {
     },
 }
 
+// Domain-specific cross-reference kinds the book foundation extends
+// the framework registry with. Each entry declares:
+//   - prefix:   id-prefix the foundation owns (e.g. `thm-` -> theorem).
+//               Used by the framework's xref-registry to classify ids
+//               on elements whose node type isn't built-in.
+//   - label / labelPlural: rendered by <Ref> for `[#thm-1]` -> "Theorem 1".
+//   - counter:  `arabic` (flat) or `hierarchical` — currently all
+//               theorem-family kinds use a flat counter that resets per
+//               chapter (resetOn: 'chapter').
+//   - resetOn:  scope at which the counter resets. 'chapter' matches the
+//               LaTeX convention "Theorem 4.1 = first theorem of
+//               chapter 4" via `\newtheorem{theorem}{Theorem}[chapter]`.
+//               (resetOn-driven counter reset is a future hook on the
+//               framework side; for now the LaTeX preamble's
+//               [chapter] argument carries the behaviour.)
+//   - sep:      separator between label and counter (' ' for "Theorem 1").
+//
+// These are read by both:
+//   - framework/build/src/site/xref-registry.js (id-prefix
+//     classification: `{#thm-main}` -> kind=theorem).
+//   - framework/runtime/src/xref-styles.js (rendering: `[#thm-main]` ->
+//     "Theorem 1" via the active xref preset merged with these meta).
+//
+// Foundations consuming the book foundation can extend this map further
+// at the document level via book.xref.kinds in document.yml.
+export const XREF_KINDS = {
+    theorem: {
+        prefix: 'thm',
+        label: 'Theorem',
+        labelPlural: 'Theorems',
+        counter: 'arabic',
+        resetOn: 'chapter',
+        sep: ' ',
+    },
+    lemma: {
+        prefix: 'lem',
+        label: 'Lemma',
+        labelPlural: 'Lemmas',
+        counter: 'arabic',
+        resetOn: 'chapter',
+        sep: ' ',
+    },
+    definition: {
+        prefix: 'def',
+        label: 'Definition',
+        labelPlural: 'Definitions',
+        counter: 'arabic',
+        resetOn: 'chapter',
+        sep: ' ',
+    },
+    proof: {
+        prefix: 'proof',
+        label: 'Proof',
+        labelPlural: 'Proofs',
+        counter: null, // proofs are typically unnumbered
+        sep: ' ',
+    },
+}
+
 export default {
     defaultSection: 'Chapter',
     defaultLayout: 'BookLayout',
 
     // Foundation-wide props accessible via website.foundationProps.
     props: {},
+
+    // Cross-reference kind extensions. The framework's xref-registry
+    // and runtime <Ref> renderer both pick this up — see XREF_KINDS
+    // declaration above for the contract.
+    xref: {
+        kinds: XREF_KINDS,
+    },
 
     // Declared document outputs. Hosts (the in-page Download button,
     // unipress compile) consume this map via compileDocument(website,

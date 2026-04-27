@@ -4,11 +4,30 @@ format: latex
 index: book
 
 book:
+  # `kind: thesis-uoft` selects the ut-thesis.cls template (verified by
+  # generated source emission). Set this only after running `tlmgr
+  # install ut-thesis` locally — the test harness leaves it unset so
+  # `latexmk -pdf main.tex` works on a vanilla TeX install.
+  # kind: thesis-uoft
   title: "On the Optimal Door-Closing Strategy of Free-Riding Squirrels"
   subtitle: "A Thesis Test Harness"
   author: "A. Squirrel"
   language: en
   citationStyle: chicago-author-date
+
+# Structured thesis metadata. Loaded as `website.config.thesis` and
+# read by the TitlePage section type to render the UofT-formatted title
+# page.
+thesis:
+  title: "On the Optimal Door-Closing Strategy of Free-Riding Squirrels"
+  candidate:
+    name: "A. Squirrel"
+  degree:
+    level: M.Sc.
+    field: Computer Science
+  department: Department of Computer Science
+  institution: University of Toronto
+  year: 2026
 
 collections:
   bibliography:

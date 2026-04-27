@@ -1,7 +1,7 @@
 {
   "name": "@uniweb/book",
-  "version": "0.2.0",
-  "description": "Book foundation for Uniweb. Long-form prose with chapters; outputs Typst/PDF, Paged.js HTML, and EPUB. Drives @uniweb/unipress's book/monograph/report templates.",
+  "version": "0.3.0",
+  "description": "Book foundation for Uniweb. Long-form prose with chapters; outputs Typst/PDF, Paged.js HTML, EPUB, and LaTeX. Drives @uniweb/unipress's book/monograph/report/thesis templates.",
   "type": "module",
   "private": true,
   "main": "./src/_entry.generated.js",

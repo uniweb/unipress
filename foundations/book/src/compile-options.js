@@ -20,6 +20,7 @@ import {
 import {
     createPreamble as createLatexPreamble,
     createTemplate as createLatexTemplate,
+    createThesisUoftTemplate,
 } from './latex-default/index.js'
 import { stylesheet as pagedjsStylesheet } from './pagedjs-default/index.js'
 import { bibliographyCss } from './utils/bibliography-css.js'
@@ -213,11 +214,22 @@ export async function buildLatexOptions(
         }
     }
 
-    const template = createLatexTemplate({
-        trim: bookCfg.trim,
-        language,
-        covers,
-    })
+    // book.kind selects the template. 'thesis-uoft' loads the UofT-
+    // shaped template (ut-thesis.cls + PDF/A-1b for ProQuest). Other
+    // kinds (the unset default for book / monograph / report) use the
+    // generic book-class template. New kinds layer in here.
+    const kind = bookCfg.kind || null
+    const template =
+        kind === 'thesis-uoft'
+            ? createThesisUoftTemplate({
+                  language,
+                  degree: website?.config?.thesis?.degree?.level,
+              })
+            : createLatexTemplate({
+                  trim: bookCfg.trim,
+                  language,
+                  covers,
+              })
     const preamble = createLatexPreamble({
         language,
         labels: bookCfg.labels,

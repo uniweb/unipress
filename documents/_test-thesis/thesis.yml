@@ -1,0 +1,11 @@
+# Structured thesis metadata read by the TitlePage section type.
+# See framework/unipress/foundations/book/src/sections/TitlePage/index.jsx.
+title: "On the Optimal Door-Closing Strategy of Free-Riding Squirrels"
+candidate:
+  name: "A. Squirrel"
+degree:
+  level: M.Sc.
+  field: Computer Science
+department: Department of Computer Science
+institution: University of Toronto
+year: 2026
