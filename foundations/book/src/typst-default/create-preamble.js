@@ -13,6 +13,14 @@ export function createPreamble({ language, labels } = {}) {
 
   return String.raw`// preamble.typ — named functions used by Press/typst section fragments.
 
+// ─── Math (mitex) ────────────────────────────────────────────────────────
+// Press's typst adapter emits math as #mitex(\`<latex>\`) wrapped in a
+// typst math context (\$…\$ inline / \$ … \$ display). mitex parses
+// the LaTeX source and re-emits typst math, sparing us a JS-side
+// LaTeX → typst translator. Pin the version explicitly — bump
+// deliberately, not with each typst release.
+#import "@preview/mitex:0.2.5": mitex
+
 // ─── Chapter opener ──────────────────────────────────────────────────────
 #let chapter-opener(number: none, title: "", subtitle: "") = {
   pagebreak(weak: true)
