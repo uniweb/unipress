@@ -30,26 +30,6 @@ import { readFile } from 'node:fs/promises'
 import { initPrerender } from '@uniweb/runtime/ssr'
 import { FoundationResolutionError, CompileError } from './errors.js'
 
-// `buildXrefRegistry` is a recent addition to @uniweb/build/content
-// (cross-references milestone). Older published versions don't expose
-// it; the dynamic resolver below falls back to a no-op registry so the
-// pipeline keeps working against any installed version. Once the build
-// package republishes with the new export, the real registry kicks in
-// automatically — no code change required.
-let _buildXrefRegistry = null
-async function getBuildXrefRegistry() {
-  if (_buildXrefRegistry !== null) return _buildXrefRegistry
-  try {
-    const mod = await import('@uniweb/build/content')
-    _buildXrefRegistry = typeof mod.buildXrefRegistry === 'function'
-      ? mod.buildXrefRegistry
-      : () => ({ entries: {} })
-  } catch {
-    _buildXrefRegistry = () => ({ entries: {} })
-  }
-  return _buildXrefRegistry
-}
-
 export async function importFoundation(resolvedPath) {
   try {
     return await import(pathToFileURL(resolvedPath).href)
@@ -70,21 +50,13 @@ export function initOrchestrator({ content, foundation, extensions = [], onProgr
 // or throws (the caller decides whether to surface as fatal or attached
 // to the inspect dump).
 //
-// Cross-reference registry is built here, after the foundation imports
-// so any foundation-declared `xref.kinds` participate in id-collection.
-// Built-in kinds (figure / equation / section / table) work without
-// foundation cooperation; foundation extensions land alongside.
+// Cross-reference registry construction is no longer driven from here.
+// The runtime's `initPrerender` calls `foundation.xref.build(website)`
+// when the foundation declares the build hook (see runtime/src/ssr-
+// renderer.js). Foundations that don't declare `xref:` get nothing
+// extra — kit's xref module is tree-shaken out of their bundle.
 export async function loadAndInit({ content, resolvedPath, extensions = [], onProgress } = {}) {
   const foundation = await importFoundation(resolvedPath)
-
-  const foundationKinds =
-    foundation?.default?.capabilities?.xref?.kinds ||
-    foundation?.default?.xref?.kinds ||
-    foundation?.xref?.kinds ||
-    {}
-  const buildXrefRegistry = await getBuildXrefRegistry()
-  content.xref = buildXrefRegistry(content, { foundationKinds })
-
   const uniweb = initOrchestrator({ content, foundation, extensions, onProgress })
   return { foundation, uniweb }
 }

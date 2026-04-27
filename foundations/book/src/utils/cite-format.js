@@ -10,7 +10,8 @@
 
 import { getRegistryForStyle, findRecord } from './cite-registry.js'
 import { recordToCsl } from './to-csl.js'
-import { markRawLatex } from '@uniweb/press/latex'
+import { formatCite as pressLatexCite, formatAutoref as pressLatexAutoref } from '@uniweb/press/latex'
+import { getXrefRegistry } from '@uniweb/kit/xref'
 
 /**
  * Build a citestyle CiteRef cluster from a Cite inset's params.
@@ -87,27 +88,24 @@ export function formatCiteInsetAsText(insetBlock, website, style) {
 }
 
 /**
- * Inline-inset LaTeX-mode formatter for the LaTeX substitution pass.
+ * Inline-inset LaTeX-mode formatter for `[@key]` cite markers.
  *
- * Emits biblatex \\cite-family commands so the active biblatex style
- * (configured in the document's preamble — see latex-default's
- * createPreamble) does the formatting at PDF compile time. This is the
- * key payoff of TF11a.3: instead of pre-formatting "(Darwin 1859)" in
- * the LaTeX source, we hand `\\cite{darwin1859}` to biblatex and let it
- * apply the style consistently with the bibliography it also formats.
+ * Foundation-side wrapper around press's `formatCite` primitive: book
+ * does the bibliography-resolution lookup (using its per-website
+ * cite-registry), press does the LaTeX emission shape (\cite,
+ * \citeyear, locator brackets, sentinel wrapping for the adapter's
+ * raw-passthrough pass).
  *
  * Mappings:
- *   [@key]                          → \\cite{key}
- *   [@key]{page=42}                 → \\cite[42]{key}
- *   [@key]{suppress-author}         → \\citeyear{key}    (author-date-style years)
- *   [@a; @b]                        → \\cite{a,b}        (multi-cite cluster)
- *   [@a; @b]{page=10}               → \\cite[10]{a,b}
+ *   [@key]                    → \\cite{key}
+ *   [@key]{page=42}           → \\cite[42]{key}
+ *   [@key]{suppress-author}   → \\citeyear{key}
+ *   [@a; @b]                  → \\cite{a,b}
+ *   [@a; @b]{page=10}         → \\cite[10]{a,b}
  *
- * Missing keys fall through to an empty string — biblatex would refuse
- * to compile a `\\cite{}` for an unknown record, and the book
- * foundation's missing-cite UX (`[?]` in the web preview) doesn't carry
- * over to print. A future enhancement could surface the failing keys
- * in a TeX comment alongside the empty substitution.
+ * Missing keys are filtered out before press emits — biblatex refuses
+ * to compile \cite{} for unknown records, so we drop them at
+ * substitution time so authors with typos still get a clean compile.
  */
 export function formatCiteInsetAsLatex(insetBlock, website) {
   if (!insetBlock) return ''
@@ -119,51 +117,27 @@ export function formatCiteInsetAsLatex(insetBlock, website) {
     .split(';')
     .map((k) => k.trim().replace(/^@/, ''))
     .filter(Boolean)
-
   if (keys.length === 0) return ''
 
-  // Drop keys that don't resolve in the bibliography. biblatex rejects
-  // unknown keys at compile time, so emitting them would block the user.
   const resolved = keys.filter((k) => findRecord(website, k) != null)
-  if (resolved.length === 0) return ''
 
-  const keyList = resolved.join(',')
-  const cmd = suppressAuthor ? '\\citeyear' : '\\cite'
-
-  // markRawLatex wraps the command in U+E000 / U+E001 sentinels so the
-  // LaTeX adapter's escape pass leaves it unescaped. Without this, the
-  // adapter would emit `\textbackslash{}cite\{darwin1859\}` instead of
-  // `\cite{darwin1859}` (the cite text has been substituted into a
-  // paragraph's HTML string, which the IR walker treats as ordinary
-  // body prose subject to character-level escaping).
-  const raw =
-    page || locator
-      ? `${cmd}[${String(page || locator)}]{${keyList}}`
-      : `${cmd}{${keyList}}`
-  return markRawLatex(raw)
+  return pressLatexCite(resolved, {
+    locator: page || locator,
+    suppressAuthor: !!suppressAuthor,
+  })
 }
 
 /**
  * Inline-inset LaTeX-mode formatter for `[#id]` cross-references.
  *
- * Mirrors `formatCiteInsetAsLatex` for Ref insets: emits
- * `\autoref{id}` so hyperref does the kind-aware label rendering at
- * PDF compile time ("Figure 3", "section 3.2", "Equation 1"). hyperref
- * is loaded by the LaTeX template (latex-default/template.js) so this
- * works without per-foundation preamble adjustment.
+ * Foundation-side wrapper around press's `formatAutoref` primitive:
+ * book reads the per-website xref registry (kit) to filter unresolved
+ * ids; press emits the \autoref{} commands and sentinel-wraps for the
+ * adapter's body-text escape pass.
  *
- * Multi-ref clusters `[#a; #b]` emit one `\autoref{}` per id joined by
- * ", ". biblatex's natbib-style \cites/\refrange equivalents don't
- * exist for autoref; cleveref does cleaner clusters but adds a
- * package dependency the v1 adapter avoids. Single-ref renders the
- * cleanest "Figure 3" output; clusters render readably as "Figure 3,
- * Figure 4" which is fine for the v1 demo.
- *
- * Locators (`[#fig-1]{page=12}`) currently fall through unused — \autoref
- * doesn't accept a locator argument the way \cite does. A future enhancement
- * could wrap with `\autoref{id} (p.~12)` when locator is set.
- *
- * Missing ids fall through to an empty string (parallel to cite handling).
+ * Locator support (`[#fig-1]{page=12}`) is on the roadmap — \autoref
+ * doesn't accept a locator argument the way \cite does, so a future
+ * enhancement would emit `\autoref{id} (p.~12)` when locator is set.
  */
 export function formatRefInsetAsLatex(insetBlock, website) {
   if (!insetBlock) return ''
@@ -176,15 +150,10 @@ export function formatRefInsetAsLatex(insetBlock, website) {
     .filter(Boolean)
   if (ids.length === 0) return ''
 
-  // Look up each id in the per-website xref registry. The framework
-  // builds this registry at content-collection time
-  // (orchestrator.js → buildXrefRegistry → website.xref.entries).
-  const entries = website?.xref?.entries || {}
+  const entries = getXrefRegistry(website)?.entries || {}
   const resolved = ids.filter((id) => entries[id] != null)
-  if (resolved.length === 0) return ''
 
-  const refs = resolved.map((id) => `\\autoref{${id}}`).join(', ')
-  return markRawLatex(refs)
+  return pressLatexAutoref(resolved)
 }
 
 /**

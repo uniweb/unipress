@@ -18,6 +18,7 @@
  *   - epub ... EPUB3 reflowable, shares the 'html' input shape with pagedjs.
  */
 
+import { Ref, buildXrefRegistry } from '@uniweb/kit/xref'
 import {
     buildTypstOptions,
     buildLatexOptions,
@@ -55,13 +56,12 @@ export const vars = {
 //   - sep:      separator between label and counter (' ' for "Theorem 1").
 //
 // These are read by both:
-//   - framework/build/src/site/xref-registry.js (id-prefix
-//     classification: `{#thm-main}` -> kind=theorem).
-//   - framework/runtime/src/xref-styles.js (rendering: `[#thm-main]` ->
-//     "Theorem 1" via the active xref preset merged with these meta).
+//   - kit's xref/registry.js walker (id-prefix classification:
+//     `{#thm-main}` -> kind=theorem).
+//   - kit's xref/styles.js (rendering: `[#thm-main]` -> "Theorem 1"
+//     via the active xref preset merged with these meta).
 //
-// Foundations consuming the book foundation can extend this map further
-// at the document level via book.xref.kinds in document.yml.
+// Documents can extend per-thesis via book.xref.<kind>: in document.yml.
 export const XREF_KINDS = {
     theorem: {
         prefix: 'thm',
@@ -103,11 +103,35 @@ export default {
     // Foundation-wide props accessible via website.foundationProps.
     props: {},
 
-    // Cross-reference kind extensions. The framework's xref-registry
-    // and runtime <Ref> renderer both pick this up — see XREF_KINDS
-    // declaration above for the contract.
+    // Inset components the foundation supplies. Content-reader's
+    // `[#id]` markers compile to inset_ref{component:'Ref'}; without
+    // this declaration the runtime would have no Ref renderer
+    // registered and cross-references would render empty. This is the
+    // foundation's opt-in to the cross-reference machinery — sites
+    // whose foundation doesn't declare it pay zero cost (kit's xref
+    // module is tree-shaken away).
+    defaultInsets: {
+        Ref,
+    },
+
+    // Cross-reference machinery. Three pieces, all foundation-supplied:
+    //
+    //   - `kinds`: per-kind metadata (label, plural, prefix, counter
+    //     reset scope, separator). Read by `<Ref>` via xref-styles to
+    //     render "[#thm-1]" as "Theorem 1" with the right styling.
+    //
+    //   - `build`: the registry-construction function from kit. The
+    //     runtime calls it during initialization (setup.js / ssr-
+    //     renderer.js's initPrerender) to walk the website and
+    //     populate the WeakMap-backed registry. Re-exported by the
+    //     foundation so the runtime — which can't import kit directly,
+    //     because kit is bundled inside each foundation — has a
+    //     reference to call. Foundations without cross-references
+    //     don't import buildXrefRegistry; kit's tree-shaking strips
+    //     the entire xref module from their bundle.
     xref: {
         kinds: XREF_KINDS,
+        build: buildXrefRegistry,
     },
 
     // Declared document outputs. Hosts (the in-page Download button,
