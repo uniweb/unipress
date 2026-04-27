@@ -1,0 +1,16 @@
+{
+  "$schema": "Each entry: { formats: [<format>...], variants?: { <name>: { formats: [...], documentYml?: <partial-yaml> } } }. The default (no-variant) build is always run with the top-level `formats` list. Variants clone the source into a tmp dir, deep-merge `documentYml` into the rendered document.yml, and compile each listed format. Any unlisted document directory under documents/ falls back to the format declared in its document.yml(.hbs) and produces a warning.",
+  "documents": {
+    "book":         { "formats": ["pdf", "epub", "pagedjs"] },
+    "monograph":    { "formats": ["pdf", "epub", "pagedjs"] },
+    "report":       { "formats": ["pdf", "pagedjs"] },
+    "thesis":       { "formats": ["latex", "pdf", "pagedjs"] },
+    "data-report":  { "formats": ["xlsx"] },
+    "directory":    { "formats": ["xlsx", "docx"] },
+    "invoice":      { "formats": ["docx", "pagedjs"] },
+    "_test-bib":    { "formats": ["pdf"] },
+    "_test-fig":    { "formats": ["pdf"] },
+    "_test-thesis": { "formats": ["latex", "pdf"] },
+    "_test-xref":   { "formats": ["pdf"] }
+  }
+}

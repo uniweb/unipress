@@ -73,6 +73,9 @@ web_modules/
 # Spike outputs (M3.5 — deletable with the spike script)
 tmp/
 
+# Audit outputs from scripts/audit-documents.js
+.outputs/
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
