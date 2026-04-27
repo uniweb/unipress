@@ -18,10 +18,13 @@ export function formatDate(value, { locale = 'en-CA' } = {}) {
   if (!value) return ''
   const d = value instanceof Date ? value : new Date(value)
   if (Number.isNaN(d.getTime())) return String(value)
+  // Force UTC so date-only inputs ('2026-03-31') don't drift by the
+  // local timezone. Without this, en-CA in EST emits 'March 30, 2026'.
   return new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+    timeZone: 'UTC',
   }).format(d)
 }
 

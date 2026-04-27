@@ -138,6 +138,32 @@ function buildLoomNamespace(data, block) {
  * Recognized kinds: 'cover', 'line-items', 'totals', 'payment',
  * 'deliverables' (SOW), 'body' (fallback).
  */
+/**
+ * Walk a value tree and coerce every Date to its UTC ISO YYYY-MM-DD
+ * string. Used at the Loom-namespace boundary because Loom's auto-
+ * formatting of Date values uses local timezone (toLocaleDateString)
+ * and shifts date-only ISO inputs by the host's offset.
+ *
+ * Preserves identity for non-Date values; doesn't mutate inputs.
+ */
+function coerceDatesToIso(value) {
+  if (value == null) return value
+  if (value instanceof Date) {
+    if (Number.isNaN(value.getTime())) return ''
+    const y = value.getUTCFullYear()
+    const m = String(value.getUTCMonth() + 1).padStart(2, '0')
+    const d = String(value.getUTCDate()).padStart(2, '0')
+    return `${y}-${m}-${d}`
+  }
+  if (Array.isArray(value)) return value.map(coerceDatesToIso)
+  if (typeof value === 'object') {
+    const out = {}
+    for (const [k, v] of Object.entries(value)) out[k] = coerceDatesToIso(v)
+    return out
+  }
+  return value
+}
+
 function inferSliceKind({ params, content, block }) {
   const explicit = params?.kind || block?.properties?.kind
   if (typeof explicit === 'string' && explicit.length) return explicit
@@ -186,7 +212,14 @@ export default {
     content: (data, block) => {
       maybeLogValidation(data, block)
 
-      const v = buildLoomNamespace(data, block)
+      // Loom auto-formats Date values via toLocaleDateString (local
+      // timezone), which makes `{due}` for `2026-03-31` render as
+      // 'Mar 30, 2026' in EST. Coerce all Date values in the
+      // namespace to ISO YYYY-MM-DD strings before passing to Loom —
+      // foundations that want a different format use `{due AS long
+      // date}` in the template, or read raw Dates from content.__bd
+      // in the section component for structured layouts.
+      const v = coerceDatesToIso(buildLoomNamespace(data, block))
       const doc = block.rawContent?.doc ?? block.rawContent
       const source = block.properties?.source
 

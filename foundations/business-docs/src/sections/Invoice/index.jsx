@@ -20,6 +20,11 @@
 import { Fragment } from 'react'
 import { useDocumentOutput } from '@uniweb/press'
 import {
+  DateText,
+  DateRangeText,
+  Currency,
+} from '@uniweb/press/format'
+import {
   Paragraph,
   TextRun,
   Table,
@@ -28,7 +33,6 @@ import {
   cm,
 } from '@uniweb/press/docx'
 import { getChildBlockRenderer } from '@uniweb/kit'
-import { formatCurrency, formatDateRange } from '../../utils/format.js'
 
 function preItemSequence(sequence) {
   if (!Array.isArray(sequence)) return []
@@ -121,13 +125,17 @@ function CoverSlice({ bd }) {
           {invoice?.issued && (
             <Td borderBottom="none">
               <Paragraph><TextRun role="Label">Issued</TextRun></Paragraph>
-              <Paragraph><TextRun>{formatInvoiceDate(invoice.issued)}</TextRun></Paragraph>
+              <Paragraph>
+                <TextRun><DateText value={invoice.issued} format="long" /></TextRun>
+              </Paragraph>
             </Td>
           )}
           {invoice?.due && (
             <Td borderBottom="none">
               <Paragraph><TextRun role="Label">Due</TextRun></Paragraph>
-              <Paragraph><TextRun>{formatInvoiceDate(invoice.due)}</TextRun></Paragraph>
+              <Paragraph>
+                <TextRun><DateText value={invoice.due} format="long" /></TextRun>
+              </Paragraph>
             </Td>
           )}
         </Tr>
@@ -139,7 +147,9 @@ function CoverSlice({ bd }) {
             <TextRun role="Label">Period</TextRun>
           </Paragraph>
           <Paragraph>
-            <TextRun>{formatDateRange(invoice.period, { locale: 'en-CA' })}</TextRun>
+            <TextRun>
+              <DateRangeText period={invoice.period} format="long" />
+            </TextRun>
           </Paragraph>
         </>
       )}
@@ -150,8 +160,7 @@ function CoverSlice({ bd }) {
 function LineItemsSlice({ bd }) {
   const { items, invoice } = bd
   if (!Array.isArray(items) || items.length === 0) return null
-  const currency = invoice?.currency || 'CAD'
-  const fmt = (n) => formatCurrency(n, { currency })
+  const code = invoice?.currency || undefined
 
   return (
     <Table
@@ -174,7 +183,7 @@ function LineItemsSlice({ bd }) {
             {item.period && (
               <Paragraph>
                 <TextRun role="Caption">
-                  {formatDateRange(item.period, { locale: 'en-CA' })}
+                  <DateRangeText period={item.period} format="medium" />
                 </TextRun>
               </Paragraph>
             )}
@@ -186,12 +195,12 @@ function LineItemsSlice({ bd }) {
           </Td>
           <Td valign="center">
             <Paragraph data-alignment="right">
-              <TextRun>{fmt(item.unit_price)}</TextRun>
+              <TextRun><Currency value={item.unit_price} code={code} /></TextRun>
             </Paragraph>
           </Td>
           <Td valign="center">
             <Paragraph data-alignment="right">
-              <TextRun>{fmt(item.amount)}</TextRun>
+              <TextRun><Currency value={item.amount} code={code} /></TextRun>
             </Paragraph>
           </Td>
         </Tr>
@@ -203,8 +212,7 @@ function LineItemsSlice({ bd }) {
 function TotalsSlice({ bd }) {
   const { totals, invoice } = bd
   if (!totals) return null
-  const currency = invoice?.currency || 'CAD'
-  const fmt = (n) => formatCurrency(n, { currency })
+  const code = invoice?.currency || undefined
 
   return (
     <Table
@@ -219,7 +227,9 @@ function TotalsSlice({ bd }) {
         </Td>
         <Td borderBottom="none">
           <Paragraph data-alignment="right">
-            <TextRun role="BodyStrong">{fmt(totals.subtotal)}</TextRun>
+            <TextRun role="BodyStrong">
+              <Currency value={totals.subtotal} code={code} />
+            </TextRun>
           </Paragraph>
         </Td>
       </Tr>
@@ -232,7 +242,9 @@ function TotalsSlice({ bd }) {
           </Td>
           <Td borderBottom="none">
             <Paragraph data-alignment="right">
-              <TextRun role="BodyStrong">{fmt(totals.tax_amount)}</TextRun>
+              <TextRun role="BodyStrong">
+                <Currency value={totals.tax_amount} code={code} />
+              </TextRun>
             </Paragraph>
           </Td>
         </Tr>
@@ -245,7 +257,9 @@ function TotalsSlice({ bd }) {
         </Td>
         <Td shading="accent" borderBottom="none" valign="center">
           <Paragraph data-alignment="right">
-            <TextRun role="TotalLine">{fmt(totals.total)}</TextRun>
+            <TextRun role="TotalLine">
+              <Currency value={totals.total} code={code} />
+            </TextRun>
           </Paragraph>
         </Td>
       </Tr>
@@ -338,26 +352,6 @@ function PlainProseSlice({ content, block }) {
   )
 
   return { docxBody, previewJsx }
-}
-
-/**
- * Format a date value for invoice display. Coerces JS Date objects
- * (yaml-parsed ISO strings get auto-promoted) to ISO YYYY-MM-DD before
- * formatting. Stage 6.0b safety net — Stage 6.1 will replace this
- * with a `<DateText>` builder + IR-level Date coercion.
- */
-function formatInvoiceDate(value) {
-  if (value == null) return ''
-  if (value instanceof Date) {
-    if (Number.isNaN(value.getTime())) return ''
-    // YYYY-MM-DD using UTC components so dates that came from a YAML
-    // `2026-03-31` (no time) don't get shifted by the local timezone.
-    const y = value.getUTCFullYear()
-    const m = String(value.getUTCMonth() + 1).padStart(2, '0')
-    const d = String(value.getUTCDate()).padStart(2, '0')
-    return `${y}-${m}-${d}`
-  }
-  return String(value)
 }
 
 // ---------------------------------------------------------------------------
