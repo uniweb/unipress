@@ -1,0 +1,4 @@
+node_modules/
+dist/
+src/_entry.generated.js
+.DS_Store
