@@ -119,6 +119,19 @@ export const FOUNDATIONS = [
     scaffold: 'report',
   },
   {
+    id: 'thesis',
+    name: 'Thesis (UofT-shaped)',
+    description:
+      'Graduate thesis targeting the University of Toronto SGS formatting ' +
+      'requirements. Includes title page, abstract, list of figures, ' +
+      'theorem/lemma/proof environments, biblatex bibliography, and ' +
+      'autoref cross-references. Compiles to PDF/A-1b for ProQuest archival ' +
+      'via `latexmk` once `tlmgr install ut-thesis` has run locally.',
+    outputs: ['latex', 'pdf', 'typst', 'pagedjs', 'epub'],
+    foundation: BOOK_FOUNDATION,
+    scaffold: 'thesis',
+  },
+  {
     id: 'data-report',
     name: 'Data Report',
     description:

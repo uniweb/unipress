@@ -1,0 +1,12 @@
+id: cormen2009
+type: book
+author:
+  - "Cormen, Thomas H."
+  - "Leiserson, Charles E."
+  - "Rivest, Ronald L."
+  - "Stein, Clifford"
+title: "Introduction to Algorithms"
+edition: "3rd"
+publisher: "MIT Press"
+publisher-place: Cambridge, MA
+year: 2009

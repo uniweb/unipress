@@ -1,0 +1,60 @@
+name: "{{title}}"
+foundation: ../../foundations/book
+format: latex
+
+book:
+  # Selects the UofT-shaped LaTeX template. Requires `tlmgr install
+  # ut-thesis` on your TeX install (the community-maintained UofT SGS-
+  # compliant class on CTAN). Comment this out to use the generic book
+  # template if you don't want the institution-specific layout —
+  # everything else still works.
+  kind: thesis-uoft
+  title: "{{title}}"
+  author: "{{author}}"
+  language: en
+  rights: "© {{year}} {{author}}."
+  # Citation style for inline cites and the back-matter bibliography.
+  # Pick from: chicago-author-date (the humanities default), apa, mla,
+  # harvard, ieee, vancouver, ama, nature, science. Switch the
+  # document's whole bibliographic apparatus by changing this one
+  # value; nothing else in the project needs editing. biblatex picks
+  # up the change automatically on the next compile.
+  citationStyle: ieee
+  bibliography:
+    sortBy: author
+
+# Bibliographic records. Drop a `.bib` file into collections/bibliography/
+# and every `@entry{key, ...}` becomes one record. YAML / JSON files in
+# the same directory are merged in.
+collections:
+  bibliography:
+    path: collections/bibliography
+
+# Structured thesis metadata read by the TitlePage section type.
+# Edit these four-five values to your own thesis; the rest of the
+# title-page text is institutional boilerplate handled by the
+# foundation.
+thesis:
+  title: "{{title}}"
+  candidate:
+    name: "{{author}}"
+  degree:
+    level: M.Sc.       # or Ph.D., M.A., M.Eng.
+    field: Computer Science
+  department: Department of Computer Science
+  institution: University of Toronto
+  year: {{year}}
+
+content:
+  - 00-titlepage
+  - 01-abstract
+  - 02-acknowledgments
+  - 03-list-of-figures
+  - 10-introduction
+  - 11-preliminaries
+  - 12-main-result
+  - 12-main-result-theorem
+  - 12-main-result-proof
+  - 13-conclusion
+  - 90-references
+  - 99-appendix-a

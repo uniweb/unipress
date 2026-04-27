@@ -1,24 +1,43 @@
 import { useDocumentOutput } from '@uniweb/press'
-import { ChapterOpener, Sequence } from '@uniweb/press/typst'
+import { ChapterOpener, Sequence, Raw } from '@uniweb/press/typst'
 import { Prose, H1 } from '@uniweb/kit'
 
 /**
  * BackMatter — for acknowledgments, colophon, author note, and other
  * non-chapter pages that should appear in the book but aren't numbered
  * chapters. Like Cover, it skips the chapter-opener's numbering.
+ *
+ * LaTeX path uses \\chapter* (starred form, unnumbered) plus
+ * \\addcontentsline so the entry still shows in the table of contents
+ * — the canonical way LaTeX handles "front-matter-shaped chapter that
+ * shouldn't consume a chapter number".
  */
 export default function BackMatter({ content, block }) {
   const { title, sequence } = content || {}
 
-  const compileTree = (
+  // Typst path keeps using ChapterOpener — Typst's heading numbering
+  // is template-controlled, and the foundation's typst template
+  // already skips numbers for front / back matter sections.
+  useDocumentOutput(
+    block,
+    'typst',
     <>
       <ChapterOpener title={title} />
       <Sequence data={sequence || []} />
-    </>
+    </>,
   )
 
-  useDocumentOutput(block, 'typst', compileTree)
-  useDocumentOutput(block, 'latex', compileTree)
+  const safeTitle = String(title || '').replace(/[\\{}]/g, '')
+  useDocumentOutput(
+    block,
+    'latex',
+    <>
+      <Raw>
+        {`\\chapter*{${safeTitle}}\n\\addcontentsline{toc}{chapter}{${safeTitle}}`}
+      </Raw>
+      <Sequence data={sequence || []} />
+    </>,
+  )
 
   useDocumentOutput(
     block,

@@ -1,0 +1,11 @@
+id: svensson-tarnawski-vegh2018
+type: paper-conference
+author:
+  - "Svensson, Ola"
+  - "Tarnawski, Jakub"
+  - "Végh, László A."
+title: "A constant-factor approximation algorithm for the asymmetric traveling salesman problem"
+container-title: "Proceedings of the 50th Annual ACM Symposium on Theory of Computing (STOC)"
+publisher: ACM
+page: "204-213"
+year: 2018
