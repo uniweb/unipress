@@ -80957,6 +80957,26 @@ function wireFoundationCapabilities(uniweb, foundation) {
     });
   }
 }
+function sliceContentForLocale(content, locale) {
+  const defaultLang = content?.config?.defaultLanguage || "en";
+  const locData = content?.locales?.[locale];
+  if (!locale || locale === defaultLang || !locData) return content;
+  return {
+    pages: locData.pages,
+    layouts: locData.layouts || content.layouts,
+    config: {
+      ...locData.config,
+      i18n: content.config?.i18n,
+      activeLocale: locale
+    }
+  };
+}
+function hydrateDataStore(website, fetchedData) {
+  if (!website?.dataStore || !fetchedData?.length) return;
+  for (const entry of fetchedData) {
+    website.dataStore.set(deriveCacheKey(entry.config), { data: entry.data });
+  }
+}
 var VALID_CONTEXTS = ["light", "medium", "dark"];
 function getWrapperProps(block) {
   const theme = block.themeName;
@@ -81194,6 +81214,15 @@ function renderLayout(page, website) {
     areaElements.footer && import_react3.default.createElement("footer", null, areaElements.footer)
   );
 }
+function initPrerenderForLocale(content, foundation, locale, extensionsOrOptions, maybeOptions) {
+  const localeContent = sliceContentForLocale(content, locale);
+  const uniweb = initPrerender(localeContent, foundation, extensionsOrOptions, maybeOptions);
+  const defaultLang = content?.config?.defaultLanguage || "en";
+  if (locale && locale !== defaultLang && uniweb.activeWebsite?.setActiveLocale) {
+    uniweb.activeWebsite.setActiveLocale(locale);
+  }
+  return uniweb;
+}
 function initPrerender(content, foundation, extensionsOrOptions, maybeOptions) {
   let extensions = [];
   let options = {};
@@ -81337,11 +81366,14 @@ export {
   Gu2 as compileSubtree,
   export_createElement as createElement,
   G0 as default,
+  hydrateDataStore,
   initPrerender,
+  initPrerenderForLocale,
   injectPageContent,
   prefetchIcons,
   renderPage,
-  export_renderToString as renderToString
+  export_renderToString as renderToString,
+  sliceContentForLocale
 };
 /*! Bundled license information:
 
