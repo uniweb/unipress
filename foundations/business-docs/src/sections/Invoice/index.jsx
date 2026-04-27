@@ -30,6 +30,8 @@ import {
   Table,
   Tr,
   Td,
+  BrandLogo,
+  PageHeader,
   cm,
 } from '@uniweb/press/docx'
 import { getChildBlockRenderer } from '@uniweb/kit'
@@ -369,6 +371,21 @@ export default function Invoice({ content, block }) {
     if (kind === 'cover') unifiedTree = <CoverSlice bd={bd} />
     else if (kind === 'line-items') unifiedTree = <LineItemsSlice bd={bd} />
     else if (kind === 'totals') unifiedTree = <TotalsSlice bd={bd} />
+  }
+
+  // Stage 6.4: when the cover slice has a vendor.logo configured,
+  // register a page-header fragment that places the brand mark on
+  // every page. The Invoice cover is the natural slice to own this
+  // — it runs once per document and has access to the vendor block.
+  // Falls back silently when no logo is configured (Stage4Header-style
+  // text wordmarks can be added by foundations on top).
+  if (kind === 'cover' && bd?.vendor?.logo) {
+    const headerJsx = (
+      <PageHeader>
+        <BrandLogo url={bd.vendor.logo} width={cm(4)} align="right" />
+      </PageHeader>
+    )
+    useDocumentOutput(block, 'docx', headerJsx, { role: 'header' })
   }
 
   if (unifiedTree) {
