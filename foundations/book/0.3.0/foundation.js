@@ -1,4 +1,4 @@
-import { A as i, b as r, B as m, c as p, d as c, e as f, C as l, f as n, g as C, h as b, D as B, L as g, i as h, j as k, P as u, T as L, k as T, l as d, n as v, _ as A } from "./_entry.generated-D5aDd46A.js";
+import { A as i, c as r, B as m, d as p, e as c, f, C as l, g as n, h as C, i as B, j as b, L as g, k as h, l as k, P as u, T as L, n as T, o as d, q as v, _ as A } from "./_entry.generated-C4qfpP_E.js";
 import "react/jsx-runtime";
 import "react";
 import "react-dom/server";
@@ -12,8 +12,8 @@ export {
   l as Chapter,
   n as Cite,
   C as Contents,
-  b as Cover,
-  B as Definition,
+  B as Cover,
+  b as Definition,
   g as Lemma,
   h as ListOfFigures,
   k as ListOfTables,
