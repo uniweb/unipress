@@ -71,8 +71,48 @@ export function buildPagedjsOptions(website, hostHints = {}) {
   }
 }
 
+/**
+ * Default Proximify-aligned brand palette. Sites can override any
+ * subset via website.config.business_docs.theme. The resolved theme
+ * flows to Press's <DocumentProvider> through compileSubtree, which
+ * makes theme keys ('accent', 'softBorder', 'muted', …) used inside
+ * the section components resolve to literal hex values during the
+ * docx compile pass.
+ *
+ * Stage 5b of kb/framework/plans/press-professional-docx.md.
+ */
+const DEFAULT_BUSINESS_DOCS_THEME = {
+  colors: {
+    accent: '4775B2',
+    body: '3B3B3B',
+    muted: '757575',
+    softBorder: 'BFD3ED',
+    surface: 'FFFFFF',
+  },
+  fonts: {
+    heading: 'Calibri',
+    body: 'Calibri',
+  },
+}
+
+function resolveBusinessDocsTheme(website) {
+  const fromConfig = website?.config?.business_docs?.theme
+  if (!fromConfig) return DEFAULT_BUSINESS_DOCS_THEME
+  return {
+    colors: {
+      ...DEFAULT_BUSINESS_DOCS_THEME.colors,
+      ...(fromConfig.colors || {}),
+    },
+    fonts: {
+      ...DEFAULT_BUSINESS_DOCS_THEME.fonts,
+      ...(fromConfig.fonts || {}),
+    },
+  }
+}
+
 export function buildDocxOptions(website, hostHints = {}) {
   return {
+    theme: resolveBusinessDocsTheme(website),
     adapterOptions: {
       ...buildMeta(website, hostHints),
       paragraphStyles: hostHints.paragraphStyles ?? DOCX_PARAGRAPH_STYLES,

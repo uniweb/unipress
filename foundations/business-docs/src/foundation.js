@@ -125,6 +125,41 @@ function buildLoomNamespace(data, block) {
   return { ...base, invoices, sows }
 }
 
+/**
+ * Infer which slice of the four-file invoice / SOW composition this
+ * block represents.
+ *
+ * Resolution order:
+ *   1. Explicit `kind` param in markdown frontmatter — wins.
+ *   2. `source: items` (the line-items slice) → 'line-items'.
+ *   3. Title slug match (case-insensitive, trim).
+ *   4. Default 'body' — section renders flat paragraphs (legacy behaviour).
+ *
+ * Recognized kinds: 'cover', 'line-items', 'totals', 'payment',
+ * 'deliverables' (SOW), 'body' (fallback).
+ */
+function inferSliceKind({ params, content, block }) {
+  const explicit = params?.kind || block?.properties?.kind
+  if (typeof explicit === 'string' && explicit.length) return explicit
+
+  const source = block?.properties?.source
+  if (source === 'items') return 'line-items'
+  if (source === 'deliverables') return 'deliverables'
+
+  // The semantic-parsed `content.title` is empty when the markdown's
+  // first body element is the dividers / rules used by source-iteration
+  // slices. The frontmatter title lives on block.properties.title.
+  const rawTitle =
+    (block?.properties?.title || content?.title || '').toString().trim().toLowerCase()
+  if (rawTitle === 'invoice') return 'cover'
+  if (rawTitle === 'totals') return 'totals'
+  if (rawTitle === 'payment') return 'payment'
+  if (rawTitle === 'line items') return 'line-items'
+  if (rawTitle === 'deliverables') return 'deliverables'
+
+  return 'body'
+}
+
 let loggedRunsForBlock = new WeakSet()
 
 function maybeLogValidation(data, block) {
@@ -168,6 +203,54 @@ export default {
         }
       }
       return instantiateRepeated(doc, engine, v, source)
+    },
+
+    /**
+     * Inject the raw business-docs namespace (vendor, defaults, active
+     * invoice/SOW with computed totals + enriched items) into the
+     * content object as a `__bd` field. Section components consume
+     * this to render structured layouts (real line-items tables,
+     * colSpan totals tables) in addition to the prose surface.
+     *
+     * Visible to the component as `content.__bd.{kind, invoice, sow,
+     * items, totals, vendor, defaults}`. The `kind` field is inferred
+     * from `block.properties.kind` (explicit) or the slice's title
+     * (cover / line items / totals / payment) — matches the four-file
+     * invoice composition shipped in the document templates.
+     */
+    props: (content, params, block) => {
+      const data = block.parsedContent?.data
+      const v = buildLoomNamespace(data, block)
+      const cfg = block?.website?.config?.business_docs || {}
+      const vendor = cfg.vendor || {}
+      const defaults = cfg.defaults || {}
+      const taxRegistry = cfg.registries?.tax || {}
+
+      const invoice = pickActiveInvoice({
+        invoice: data?.invoice,
+        invoices: gatherCollection('invoices', data, block),
+      })
+      const sow = pickActiveSow({
+        sow: data?.sow,
+        sows: gatherCollection('sows', data, block),
+      })
+
+      const totals = invoice
+        ? computeInvoiceTotals(invoice, defaults, taxRegistry)
+        : null
+      const items = invoice && Array.isArray(invoice.items)
+        ? invoice.items.map((it) => ({ ...it, amount: computeLineAmount(it) }))
+        : []
+
+      const kind = inferSliceKind({ params, content, block })
+
+      return {
+        content: {
+          ...content,
+          __bd: { kind, invoice, sow, items, totals, vendor, defaults, namespace: v },
+        },
+        params,
+      }
     },
   },
 
