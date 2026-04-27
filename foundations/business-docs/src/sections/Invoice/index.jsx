@@ -5,17 +5,21 @@
  * computes `content.__bd` with the raw invoice data, computed totals,
  * and the inferred slice `kind`; this component branches on that.
  *
- * Same JSX feeds the React preview and the docx fragment registered
- * via useDocumentOutput. Brand colors flow through Press's theme
- * channel — no inline hex literals here.
+ * Stage 6.0b — typography roles. This section emits NO inline font /
+ * size / color attributes on text runs. Every run carries a role
+ * (`<TextRun role="Label">`, `<Paragraph role="Title">`) that
+ * resolves to an OOXML named style at compile time. Brand colors
+ * still flow through Press's theme channel for shading / table
+ * borders where named styles don't apply.
  *
- * Stage 5b of kb/framework/plans/press-professional-docx.md.
+ * The shared JSX feeds the React preview AND the docx fragment
+ * registered via useDocumentOutput.
+ *
+ * Stage 5b + 6.0b of kb/framework/plans/press-professional-docx.md.
  */
 import { Fragment } from 'react'
 import { useDocumentOutput } from '@uniweb/press'
 import {
-  H1,
-  H2,
   Paragraph,
   TextRun,
   Table,
@@ -25,18 +29,6 @@ import {
 } from '@uniweb/press/docx'
 import { getChildBlockRenderer } from '@uniweb/kit'
 import { formatCurrency, formatDateRange } from '../../utils/format.js'
-
-// Default Proximify-aligned palette. Site-level theme.yml or document
-// configuration can override. The Stage 5a Press theme channel reads
-// these keys; the foundation passes them through compile options.
-// (Wiring the per-site theme override is in compile-options.js.)
-const FALLBACK_HEX = {
-  accent: '4775B2',
-  body: '3B3B3B',
-  muted: '757575',
-  softBorder: 'BFD3ED',
-  surface: 'FFFFFF',
-}
 
 function preItemSequence(sequence) {
   if (!Array.isArray(sequence)) return []
@@ -76,82 +68,80 @@ function CoverSlice({ bd }) {
   const client = invoice?.client || {}
   return (
     <>
-      <Paragraph data-spacing-after={240}>
-        <TextRun bold size={56} color="accent" font="heading">
-          INVOICE
-        </TextRun>
+      <Paragraph role="Title">
+        <TextRun>INVOICE</TextRun>
       </Paragraph>
 
       <Table widths={[50, 50]} borders={borderless()}>
         <Tr>
           <Td borderBottom="none">
-            <Paragraph>
-              <TextRun bold color="muted">FROM</TextRun>
-            </Paragraph>
+            <Paragraph><TextRun role="Label">From</TextRun></Paragraph>
             {vendor?.organization && (
               <Paragraph>
-                <TextRun bold color="body">{vendor.organization}</TextRun>
+                <TextRun role="BodyStrong">{vendor.organization}</TextRun>
               </Paragraph>
             )}
             {vendor?.address && (
               <Paragraph>
-                <TextRun color="body">{vendor.address}</TextRun>
+                <TextRun>{vendor.address}</TextRun>
               </Paragraph>
             )}
           </Td>
           <Td borderBottom="none">
-            <Paragraph>
-              <TextRun bold color="muted">BILL TO</TextRun>
-            </Paragraph>
+            <Paragraph><TextRun role="Label">Bill to</TextRun></Paragraph>
             {client.organization && (
               <Paragraph>
-                <TextRun bold color="body">{client.organization}</TextRun>
+                <TextRun role="BodyStrong">{client.organization}</TextRun>
               </Paragraph>
             )}
             {client.contact && (
-              <Paragraph>
-                <TextRun color="body">{client.contact}</TextRun>
-              </Paragraph>
+              <Paragraph><TextRun>{client.contact}</TextRun></Paragraph>
             )}
             {client.email && (
               <Paragraph>
-                <TextRun color="body">{client.email}</TextRun>
+                <TextRun role="Caption">{client.email}</TextRun>
               </Paragraph>
             )}
           </Td>
         </Tr>
       </Table>
 
-      <Paragraph data-spacing-before={200} data-spacing-after={120}>
-        {invoice?.number && (
-          <>
-            <TextRun bold color="muted">INVOICE NUMBER</TextRun>{' '}
-            <TextRun bold color="body">{invoice.number}</TextRun>
-            {'   '}
-          </>
-        )}
-        {invoice?.issued && (
-          <>
-            <TextRun bold color="muted">ISSUED</TextRun>{' '}
-            <TextRun color="body">{String(invoice.issued)}</TextRun>
-            {'   '}
-          </>
-        )}
-        {invoice?.due && (
-          <>
-            <TextRun bold color="muted">DUE</TextRun>{' '}
-            <TextRun color="body">{String(invoice.due)}</TextRun>
-          </>
-        )}
-      </Paragraph>
+      {/* Invoice metadata — labels in muted small caps, values in
+          Display (bigger, bolder body). Lays out as a 3-col table to
+          keep the labels and values aligned. */}
+      <Paragraph data-spacing-before={200} />
+      <Table widths={[33, 33, 34]} borders={borderless()}>
+        <Tr>
+          {invoice?.number && (
+            <Td borderBottom="none">
+              <Paragraph><TextRun role="Label">Invoice number</TextRun></Paragraph>
+              <Paragraph><TextRun role="Display">{invoice.number}</TextRun></Paragraph>
+            </Td>
+          )}
+          {invoice?.issued && (
+            <Td borderBottom="none">
+              <Paragraph><TextRun role="Label">Issued</TextRun></Paragraph>
+              <Paragraph><TextRun>{formatInvoiceDate(invoice.issued)}</TextRun></Paragraph>
+            </Td>
+          )}
+          {invoice?.due && (
+            <Td borderBottom="none">
+              <Paragraph><TextRun role="Label">Due</TextRun></Paragraph>
+              <Paragraph><TextRun>{formatInvoiceDate(invoice.due)}</TextRun></Paragraph>
+            </Td>
+          )}
+        </Tr>
+      </Table>
 
       {invoice?.period && (
-        <Paragraph data-spacing-after={120}>
-          <TextRun bold color="muted">PERIOD</TextRun>{' '}
-          <TextRun color="body">
-            {formatDateRange(invoice.period, { locale: 'en-CA' })}
-          </TextRun>
-        </Paragraph>
+        <>
+          <Paragraph data-spacing-before={120}>
+            <TextRun role="Label">Period</TextRun>
+          </Paragraph>
+          <Paragraph>
+            <TextRun>{formatDateRange(invoice.period, { locale: 'en-CA' })}</TextRun>
+          </Paragraph>
+        </>
       )}
     </>
   )
@@ -172,7 +162,7 @@ function LineItemsSlice({ bd }) {
         {['Description', 'Qty', 'Unit price', 'Amount'].map((label, i) => (
           <Td key={i} shading="accent" valign="center">
             <Paragraph data-alignment={i === 0 ? 'left' : 'right'}>
-              <TextRun bold color="surface">{label}</TextRun>
+              <TextRun role="TableHeader">{label}</TextRun>
             </Paragraph>
           </Td>
         ))}
@@ -180,12 +170,10 @@ function LineItemsSlice({ bd }) {
       {items.map((item, i) => (
         <Tr key={i}>
           <Td valign="center">
-            <Paragraph>
-              <TextRun color="body">{item.description}</TextRun>
-            </Paragraph>
+            <Paragraph><TextRun>{item.description}</TextRun></Paragraph>
             {item.period && (
               <Paragraph>
-                <TextRun color="muted">
+                <TextRun role="Caption">
                   {formatDateRange(item.period, { locale: 'en-CA' })}
                 </TextRun>
               </Paragraph>
@@ -193,17 +181,17 @@ function LineItemsSlice({ bd }) {
           </Td>
           <Td valign="center">
             <Paragraph data-alignment="right">
-              <TextRun color="body">{String(item.qty ?? '')}</TextRun>
+              <TextRun>{String(item.qty ?? '')}</TextRun>
             </Paragraph>
           </Td>
           <Td valign="center">
             <Paragraph data-alignment="right">
-              <TextRun color="body">{fmt(item.unit_price)}</TextRun>
+              <TextRun>{fmt(item.unit_price)}</TextRun>
             </Paragraph>
           </Td>
           <Td valign="center">
             <Paragraph data-alignment="right">
-              <TextRun color="body">{fmt(item.amount)}</TextRun>
+              <TextRun>{fmt(item.amount)}</TextRun>
             </Paragraph>
           </Td>
         </Tr>
@@ -226,12 +214,12 @@ function TotalsSlice({ bd }) {
       <Tr>
         <Td colSpan={3} borderBottom="none">
           <Paragraph data-alignment="right">
-            <TextRun color="muted">Subtotal</TextRun>
+            <TextRun role="Label">Subtotal</TextRun>
           </Paragraph>
         </Td>
         <Td borderBottom="none">
           <Paragraph data-alignment="right">
-            <TextRun bold color="body">{fmt(totals.subtotal)}</TextRun>
+            <TextRun role="BodyStrong">{fmt(totals.subtotal)}</TextRun>
           </Paragraph>
         </Td>
       </Tr>
@@ -239,25 +227,25 @@ function TotalsSlice({ bd }) {
         <Tr>
           <Td colSpan={3} borderBottom="none">
             <Paragraph data-alignment="right">
-              <TextRun color="muted">{totals.tax_label}</TextRun>
+              <TextRun role="Label">{totals.tax_label}</TextRun>
             </Paragraph>
           </Td>
           <Td borderBottom="none">
             <Paragraph data-alignment="right">
-              <TextRun bold color="body">{fmt(totals.tax_amount)}</TextRun>
+              <TextRun role="BodyStrong">{fmt(totals.tax_amount)}</TextRun>
             </Paragraph>
           </Td>
         </Tr>
       )}
       <Tr>
-        <Td colSpan={3} shading="accent" borderBottom="none">
+        <Td colSpan={3} shading="accent" borderBottom="none" valign="center">
           <Paragraph data-alignment="right">
-            <TextRun bold color="surface">Total</TextRun>
+            <TextRun role="TotalLine">Total</TextRun>
           </Paragraph>
         </Td>
-        <Td shading="accent" borderBottom="none">
+        <Td shading="accent" borderBottom="none" valign="center">
           <Paragraph data-alignment="right">
-            <TextRun bold color="surface">{fmt(totals.total)}</TextRun>
+            <TextRun role="TotalLine">{fmt(totals.total)}</TextRun>
           </Paragraph>
         </Td>
       </Tr>
@@ -288,14 +276,24 @@ function PlainProseSlice({ content, block }) {
 
   const docxBody = (
     <>
-      {title && <H1 data={title} data-spacing-after={240} />}
+      {title && (
+        <Paragraph role="Heading1" data-spacing-after={240}>
+          <TextRun>{title}</TextRun>
+        </Paragraph>
+      )}
       {paragraphsForDocx.map((p, i) => (
         <Paragraph key={`p${i}`} data={p} data-spacing-after={120} />
       ))}
       {items.map((item, i) => (
         <Fragment key={i}>
           {item.title && (
-            <H2 data={item.title} data-spacing-before={200} data-spacing-after={120} />
+            <Paragraph
+              role="Heading2"
+              data-spacing-before={200}
+              data-spacing-after={120}
+            >
+              <TextRun>{item.title}</TextRun>
+            </Paragraph>
           )}
           {item.paragraphs.map((p, j) => (
             <Paragraph key={`${i}-${j}`} data={p} data-spacing-after={100} />
@@ -342,6 +340,26 @@ function PlainProseSlice({ content, block }) {
   return { docxBody, previewJsx }
 }
 
+/**
+ * Format a date value for invoice display. Coerces JS Date objects
+ * (yaml-parsed ISO strings get auto-promoted) to ISO YYYY-MM-DD before
+ * formatting. Stage 6.0b safety net — Stage 6.1 will replace this
+ * with a `<DateText>` builder + IR-level Date coercion.
+ */
+function formatInvoiceDate(value) {
+  if (value == null) return ''
+  if (value instanceof Date) {
+    if (Number.isNaN(value.getTime())) return ''
+    // YYYY-MM-DD using UTC components so dates that came from a YAML
+    // `2026-03-31` (no time) don't get shifted by the local timezone.
+    const y = value.getUTCFullYear()
+    const m = String(value.getUTCMonth() + 1).padStart(2, '0')
+    const d = String(value.getUTCDate()).padStart(2, '0')
+    return `${y}-${m}-${d}`
+  }
+  return String(value)
+}
+
 // ---------------------------------------------------------------------------
 // Section component
 // ---------------------------------------------------------------------------
@@ -371,7 +389,3 @@ export default function Invoice({ content, block }) {
   useDocumentOutput(block, 'html', previewJsx)
   return previewJsx
 }
-
-// Re-export the fallback hex palette so compile-options.js can pass it
-// through Press's theme channel as the default theme.
-export { FALLBACK_HEX as INVOICE_FALLBACK_THEME }

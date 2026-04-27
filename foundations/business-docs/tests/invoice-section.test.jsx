@@ -61,7 +61,7 @@ function renderInvoice(content) {
 }
 
 describe('Invoice section: per-slice structural output', () => {
-  it('cover slice emits the branded INVOICE title + 2-col borderless cover table', () => {
+  it('cover slice uses Title/Label/BodyStrong/Display roles + 2-col borderless cover table', () => {
     const html = renderInvoice({
       title: 'Invoice',
       paragraphs: [],
@@ -76,9 +76,16 @@ describe('Invoice section: per-slice structural output', () => {
         defaults: {},
       },
     })
-    // Branded title text + theme-resolved accent color emitted as data-color.
+    // Branded title via Title paragraph style — no inline data-color
+    // anymore, the synthesised OOXML style carries the brand accent.
     expect(html).toContain('INVOICE')
-    expect(html).toContain('data-color="4775B2"')
+    expect(html).toContain('data-paragraph-style="Title"')
+    // FROM / BILL TO / INVOICE NUMBER use the Label character style.
+    expect(html).toMatch(/data-style="Label"/)
+    // Vendor / client orgs use BodyStrong.
+    expect(html).toMatch(/data-style="BodyStrong"/)
+    // Invoice number uses Display.
+    expect(html).toMatch(/data-style="Display"/)
     // 2-column cover table with vendor / client.
     expect(html).toMatch(/data-type="table"/)
     expect(html).toContain('Proximify Inc.')

@@ -40,27 +40,6 @@ function buildMeta(website, hostHints = {}) {
   }
 }
 
-const DOCX_PARAGRAPH_STYLES = [
-  {
-    id: 'invoice-line',
-    name: 'InvoiceLine',
-    basedOn: 'Normal',
-    next: 'Normal',
-    quickFormat: true,
-    run: { size: 22 }, // 11pt
-    paragraph: { spacing: { before: 0, after: 80 } },
-  },
-  {
-    id: 'totals-row',
-    name: 'TotalsRow',
-    basedOn: 'Normal',
-    next: 'Normal',
-    quickFormat: true,
-    run: { size: 22, bold: true },
-    paragraph: { spacing: { before: 80, after: 80 } },
-  },
-]
-
 export function buildPagedjsOptions(website, hostHints = {}) {
   return {
     adapterOptions: {
@@ -81,6 +60,88 @@ export function buildPagedjsOptions(website, hostHints = {}) {
  *
  * Stage 5b of kb/framework/plans/press-professional-docx.md.
  */
+/**
+ * Typography registry — the role -> { font, size, color, ... } map
+ * that Press synthesises into OOXML named styles (Title, Heading1-6,
+ * Body, Display, Label, Caption, TableHeader, TotalLine, Hyperlink).
+ *
+ * The Body role lands on docx's `<w:rPrDefault>` / `<w:pPrDefault>`,
+ * making Calibri the document-wide default — recipients can edit the
+ * Normal style in Word's Styles pane to globally restyle the doc.
+ *
+ * Sizes are in half-points (28pt = 56). Colors and fonts are theme
+ * keys ('accent', 'body', 'muted', 'softBorder', 'surface' /
+ * 'heading', 'body') resolved against theme.colors/fonts at compile
+ * time. Foundations override roles per-site via
+ * `website.config.business_docs.typography`.
+ */
+const DEFAULT_BUSINESS_DOCS_TYPOGRAPHY = {
+  // Block-level — applied via <Paragraph role="…">.
+  Title: {
+    font: 'heading',
+    size: 56, // 28pt
+    bold: true,
+    color: 'accent',
+    paragraph: { spacing: { after: 240 } },
+  },
+  Heading1: {
+    font: 'heading',
+    size: 32, // 16pt
+    bold: true,
+    color: 'body',
+    paragraph: { spacing: { before: 240, after: 120 } },
+  },
+  Heading2: {
+    font: 'heading',
+    size: 26, // 13pt
+    bold: true,
+    color: 'body',
+    paragraph: { spacing: { before: 200, after: 100 } },
+  },
+  Body: {
+    font: 'body',
+    size: 22, // 11pt
+    color: 'body',
+    paragraph: { spacing: { line: 276 } }, // 1.15
+  },
+  Display: {
+    // Highlighted secondary value: invoice number, total. Larger than
+    // body and bold but quieter than Title.
+    font: 'body',
+    size: 28, // 14pt
+    bold: true,
+    color: 'body',
+  },
+
+  // Inline — applied via <TextRun role="…">.
+  BodyStrong: { font: 'body', size: 22, bold: true, color: 'body' },
+  Label: {
+    // Small uppercase muted labels: 'INVOICE NUMBER', 'BILL TO'.
+    // Bold + allCaps + muted gray creates contrast against the
+    // values without being visually heavy.
+    font: 'body',
+    size: 18, // 9pt
+    bold: true,
+    color: 'muted',
+    allCaps: true,
+  },
+  Caption: { font: 'body', size: 18, color: 'muted' },
+  // White-on-blue table header rows.
+  TableHeader: {
+    font: 'heading',
+    size: 20, // 10pt
+    bold: true,
+    color: 'surface',
+  },
+  // Big bold "Total" row in the totals table.
+  TotalLine: {
+    font: 'heading',
+    size: 26, // 13pt
+    bold: true,
+    color: 'surface',
+  },
+}
+
 const DEFAULT_BUSINESS_DOCS_THEME = {
   colors: {
     accent: '4775B2',
@@ -93,6 +154,7 @@ const DEFAULT_BUSINESS_DOCS_THEME = {
     heading: 'Calibri',
     body: 'Calibri',
   },
+  typography: DEFAULT_BUSINESS_DOCS_TYPOGRAPHY,
 }
 
 function resolveBusinessDocsTheme(website) {
@@ -107,15 +169,28 @@ function resolveBusinessDocsTheme(website) {
       ...DEFAULT_BUSINESS_DOCS_THEME.fonts,
       ...(fromConfig.fonts || {}),
     },
+    typography: {
+      ...DEFAULT_BUSINESS_DOCS_TYPOGRAPHY,
+      ...(fromConfig.typography || {}),
+    },
   }
 }
 
 export function buildDocxOptions(website, hostHints = {}) {
+  const theme = resolveBusinessDocsTheme(website)
   return {
-    theme: resolveBusinessDocsTheme(website),
+    theme,
     adapterOptions: {
       ...buildMeta(website, hostHints),
-      paragraphStyles: hostHints.paragraphStyles ?? DOCX_PARAGRAPH_STYLES,
+      // Theme is also threaded through adapterOptions so the docx
+      // adapter can synthesise its OOXML named-style block from
+      // theme.typography. Foundations that want to add custom paragraph
+      // styles on top can pass them via hostHints.paragraphStyles —
+      // they merge with the synthesised pack (caller wins on id
+      // conflict, except for built-in IDs which override the
+      // default.<slot> instead).
+      theme,
+      paragraphStyles: hostHints.paragraphStyles,
       loadAsset: hostHints.loadAsset,
     },
   }
