@@ -1,0 +1,211 @@
+{
+  "_self": {
+    "defaultSection": "Chapter",
+    "defaultLayout": "BookLayout",
+    "props": {},
+    "xref": {
+      "kinds": {
+        "theorem": {
+          "prefix": "thm",
+          "label": "Theorem",
+          "labelPlural": "Theorems",
+          "counter": "arabic",
+          "resetOn": "chapter",
+          "sep": " "
+        },
+        "lemma": {
+          "prefix": "lem",
+          "label": "Lemma",
+          "labelPlural": "Lemmas",
+          "counter": "arabic",
+          "resetOn": "chapter",
+          "sep": " "
+        },
+        "definition": {
+          "prefix": "def",
+          "label": "Definition",
+          "labelPlural": "Definitions",
+          "counter": "arabic",
+          "resetOn": "chapter",
+          "sep": " "
+        },
+        "proof": {
+          "prefix": "proof",
+          "label": "Proof",
+          "labelPlural": "Proofs",
+          "counter": null,
+          "sep": " "
+        }
+      }
+    },
+    "outputs": {
+      "typst": {
+        "extension": "zip"
+      },
+      "pdf": {
+        "extension": "pdf",
+        "via": "typst"
+      },
+      "latex": {
+        "extension": "zip"
+      },
+      "pagedjs": {
+        "extension": "html"
+      },
+      "epub": {
+        "extension": "epub"
+      }
+    },
+    "vars": {
+      "max-content-width": {
+        "default": "48rem",
+        "description": "Maximum width of a book page on screen (reading column)."
+      },
+      "header-height": {
+        "default": "3.5rem",
+        "description": "Height of the top bar in the web preview."
+      }
+    },
+    "name": "@uniweb/book",
+    "version": "0.3.0",
+    "description": "Book foundation for Uniweb. Long-form prose with chapters; outputs Typst/PDF, Paged.js HTML, EPUB, and LaTeX. Drives @uniweb/unipress's book/monograph/report/thesis templates."
+  },
+  "_layouts": {
+    "BookLayout": {
+      "name": "BookLayout",
+      "path": "layouts/BookLayout",
+      "defaults": {},
+      "title": "Book Layout"
+    }
+  },
+  "Abstract": {
+    "name": "Abstract",
+    "path": "sections/Abstract",
+    "defaults": {
+      "title": "Abstract"
+    },
+    "title": "Abstract"
+  },
+  "Appendix": {
+    "name": "Appendix",
+    "path": "sections/Appendix",
+    "defaults": {
+      "auto": true
+    },
+    "title": "Appendix"
+  },
+  "BackCover": {
+    "name": "BackCover",
+    "path": "sections/BackCover",
+    "defaults": {},
+    "title": "Back Cover"
+  },
+  "BackMatter": {
+    "name": "BackMatter",
+    "path": "sections/BackMatter",
+    "defaults": {},
+    "title": "Back Matter"
+  },
+  "Bibliography": {
+    "name": "Bibliography",
+    "path": "sections/Bibliography",
+    "defaults": {
+      "title": "Bibliography",
+      "sortBy": null,
+      "style": null,
+      "data": "bibliography"
+    },
+    "title": "Bibliography"
+  },
+  "BookCover": {
+    "name": "BookCover",
+    "path": "sections/BookCover",
+    "defaults": {},
+    "title": "Book Cover"
+  },
+  "Chapter": {
+    "name": "Chapter",
+    "path": "sections/Chapter",
+    "defaults": {
+      "chapterNumber": null
+    },
+    "title": "Chapter"
+  },
+  "Cite": {
+    "name": "Cite",
+    "path": "sections/Cite",
+    "inset": true,
+    "defaults": {
+      "label": "page"
+    },
+    "title": "Cite"
+  },
+  "Contents": {
+    "name": "Contents",
+    "path": "sections/Contents",
+    "defaults": {},
+    "title": "Contents"
+  },
+  "Cover": {
+    "name": "Cover",
+    "path": "sections/Cover",
+    "defaults": {},
+    "title": "Cover"
+  },
+  "Definition": {
+    "name": "Definition",
+    "path": "sections/Definition",
+    "defaults": {
+      "name": null
+    },
+    "title": "Definition"
+  },
+  "Lemma": {
+    "name": "Lemma",
+    "path": "sections/Lemma",
+    "defaults": {
+      "name": null
+    },
+    "title": "Lemma"
+  },
+  "ListOfFigures": {
+    "name": "ListOfFigures",
+    "path": "sections/ListOfFigures",
+    "defaults": {
+      "title": "List of Figures"
+    },
+    "title": "List Of Figures"
+  },
+  "ListOfTables": {
+    "name": "ListOfTables",
+    "path": "sections/ListOfTables",
+    "defaults": {
+      "title": "List of Tables"
+    },
+    "title": "List Of Tables"
+  },
+  "Proof": {
+    "name": "Proof",
+    "path": "sections/Proof",
+    "defaults": {},
+    "title": "Proof"
+  },
+  "Theorem": {
+    "name": "Theorem",
+    "path": "sections/Theorem",
+    "defaults": {
+      "name": null,
+      "idPrefix": null
+    },
+    "title": "Theorem"
+  },
+  "TitlePage": {
+    "name": "TitlePage",
+    "path": "sections/TitlePage",
+    "defaults": {
+      "data": "thesis",
+      "template": "uoft"
+    },
+    "title": "Title Page"
+  }
+}

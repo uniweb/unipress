@@ -1,0 +1,98 @@
+{
+  "_self": {
+    "defaultLayout": "BusinessDocLayout",
+    "props": {},
+    "handlers": {},
+    "outputs": {
+      "pagedjs": {
+        "extension": "html"
+      },
+      "docx": {
+        "extension": "docx"
+      },
+      "xlsx": {
+        "extension": "xlsx"
+      }
+    },
+    "vars": {
+      "max-content-width": {
+        "default": "52rem",
+        "description": "Maximum width for body content (matches a printed letter page reading column)"
+      },
+      "section-padding-y": {
+        "default": "clamp(1.5rem, 3vw, 3rem)",
+        "description": "Vertical padding around each section"
+      },
+      "header-height": {
+        "default": "3.5rem",
+        "description": "Height of the sticky download bar in the web preview"
+      }
+    },
+    "name": "@uniweb/business-docs",
+    "version": "0.1.0",
+    "description": "Business documents foundation for Uniweb. Renders statements of work, invoices, and engagement reports from YAML collections, with PDF/DOCX output via Press and XLSX export for filtered reports."
+  },
+  "_layouts": {
+    "BusinessDocLayout": {
+      "name": "BusinessDocLayout",
+      "path": "layouts/BusinessDocLayout",
+      "title": "Business Doc Layout"
+    }
+  },
+  "EngagementReport": {
+    "name": "EngagementReport",
+    "path": "sections/EngagementReport",
+    "title": "Engagement report",
+    "description": "Aggregate view across a collection of invoices or SOWs. Reads filter state (date range, client, status, source collection) from page state via useFilteredEngagement; renders an on-screen table plus aggregate cards (count, sum subtotals, sum totals, sum outstanding); registers an XLSX export with two sheets (Records, Summary).",
+    "category": "business-docs",
+    "content": {
+      "title": "Report title",
+      "subtitle": "Optional subtitle (overridden by active filter description when one is set)"
+    },
+    "params": {}
+  },
+  "Invoice": {
+    "name": "Invoice",
+    "path": "sections/Invoice",
+    "title": "Invoice slice",
+    "description": "A section in an invoice document. Renders title, paragraphs, items, and insets from semantic content; Loom expressions in the markdown are resolved before this component sees the content. Multi-line subscription invoices use source: items with a divider-split table body; totals sections rely on the computed {subtotal} / {tax_amount} / {total} placeholders.",
+    "category": "business-docs",
+    "content": {
+      "title": "Section heading",
+      "paragraphs": "Body paragraphs (Loom expressions allowed)",
+      "items": "Repeated entries when the section uses source: items"
+    },
+    "params": {
+      "source": {
+        "type": "string",
+        "description": "Invoice field to iterate (e.g., \"items\"). When set, --- dividers split the markdown into header / body / footer; the body is rendered once per item with that item's fields merged into the Loom namespace."
+      },
+      "where": {
+        "type": "string",
+        "description": "Loom filter expression applied to the source array. Example: \"qty > 0\"."
+      }
+    }
+  },
+  "SOW": {
+    "name": "SOW",
+    "path": "sections/SOW",
+    "title": "SOW slice",
+    "description": "A section in a statement-of-work document. Renders title, paragraphs, items, and insets from semantic content; Loom expressions in the markdown are resolved before this component sees the content. Pair multiple SOW sections in one folder (cover, scope, deliverables, fees, terms, signatures) to compose a full SOW.",
+    "category": "business-docs",
+    "content": {
+      "title": "Section heading",
+      "paragraphs": "Body paragraphs (Loom expressions allowed)",
+      "items": "Repeated entries when the section uses source: <field>"
+    },
+    "params": {
+      "source": {
+        "type": "string",
+        "description": "SOW field to iterate (e.g., \"deliverables\", \"signatures\"). When set, --- dividers split the markdown into header / body / footer; the body is rendered once per item with that item's fields merged into the Loom namespace."
+      },
+      "where": {
+        "type": "string",
+        "description": "Loom filter expression applied to the source array. Examples: \"fee > 0\", \"party = 'client'\"."
+      }
+    }
+  }
+}
