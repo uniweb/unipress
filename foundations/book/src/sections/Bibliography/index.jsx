@@ -33,7 +33,7 @@
 import { useEffect, useMemo } from 'react'
 import { SafeHtml, H1 } from '@uniweb/kit'
 import { useDocumentOutput } from '@uniweb/press'
-import { ChapterOpener, Sequence } from '@uniweb/press/typst'
+import { ChapterOpener, Sequence, Raw } from '@uniweb/press/typst'
 import * as apa from 'citestyle/styles/apa'
 import * as mla from 'citestyle/styles/mla'
 import * as chicagoAuthorDate from 'citestyle/styles/chicago-author-date'
@@ -138,6 +138,10 @@ export default function Bibliography({ content, params, block }) {
   // the way we expect, fall back to entry.text (plain string, no
   // italics). Press's Paragraph parser walks the typst-flavoured
   // markup the helper emits.
+  // Typst (and any sources-bundle export without a citation engine)
+  // gets pre-formatted entries: citestyle has already produced the
+  // styled HTML for each record, and Press's Paragraph parser emits
+  // the matching Typst markup at compile time.
   useDocumentOutput(
     block,
     'typst',
@@ -146,17 +150,25 @@ export default function Bibliography({ content, params, block }) {
       <Sequence
         data={entries.map((entry) => ({
           type: 'paragraph',
-          // Pass citestyle's already-formatted HTML through. Press's
-          // Paragraph (typst adapter) parses inline marks (<i>, <em>,
-          // <strong>, <a>) and emits the matching Typst markup;
-          // <span class="csl-…"> wrappers fall through transparently
-          // because parseStyledString doesn't special-case them. The
-          // entry's plain text is the fallback for any entry where
-          // citestyle declined to emit HTML.
           text: stripEntryWrapper(entry.html) || entry.text || '',
           attrs: { 'data-style': 'bibliography' },
         }))}
       />
+    </>,
+  )
+
+  // LaTeX delegates formatting to biblatex. The active style was loaded
+  // by the preamble (see latex-default's createPreamble + buildLatex
+  // Options's bibresource wiring); \printbibliography emits the entries
+  // in the style's ordering. This keeps the inline \cite{…} commands
+  // and the back-matter list using the same style — what users
+  // expect from a thesis-grade LaTeX workflow.
+  useDocumentOutput(
+    block,
+    'latex',
+    <>
+      <ChapterOpener title={heading} />
+      <Raw>{'\\printbibliography[heading=none]\n'}</Raw>
     </>,
   )
 

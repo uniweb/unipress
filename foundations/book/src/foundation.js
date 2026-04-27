@@ -20,6 +20,7 @@
 
 import {
     buildTypstOptions,
+    buildLatexOptions,
     buildPagedjsOptions,
     buildEpubOptions,
 } from './compile-options.js'
@@ -57,6 +58,10 @@ export default {
             extension: 'pdf',
             via: 'typst',
             getOptions: (website, opts) => buildTypstOptions(website, opts),
+        },
+        latex: {
+            extension: 'zip',
+            getOptions: (website, opts) => buildLatexOptions(website, opts),
         },
         pagedjs: {
             extension: 'html',

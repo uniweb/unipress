@@ -19,9 +19,10 @@ Usage:
 
 Commands:
   compile <dir>          Compile a content directory into a document
-                           --format <fmt>      output format (pdf | typst | docx | xlsx | epub)
+                           --format <fmt>      output format (pdf | typst | latex | docx | xlsx | epub | pagedjs)
                                                  overrides format: in document.yml
                                                  pdf compiles via typst source bundle
+                                                 latex emits a LaTeX source bundle (run latexmk yourself)
                            --foundation <ref>  override document.yml's foundation: field
                            --out <path>        output file (default: ./<dir>.<ext>)
                            --config <path>     explicit config file (default: <dir>/unipress.config.js)

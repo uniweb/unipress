@@ -12,14 +12,15 @@ import { Prose } from '@uniweb/kit'
 export default function Cover({ content, block }) {
   const { title, subtitle, sequence } = content || {}
 
-  useDocumentOutput(
-    block,
-    'typst',
+  const compileTree = (
     <>
       <ChapterOpener title={title} subtitle={subtitle} />
       <Sequence data={sequence || []} />
-    </>,
+    </>
   )
+
+  useDocumentOutput(block, 'typst', compileTree)
+  useDocumentOutput(block, 'latex', compileTree)
 
   useDocumentOutput(
     block,

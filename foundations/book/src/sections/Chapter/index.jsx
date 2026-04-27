@@ -11,7 +11,7 @@ import * as ama from 'citestyle/styles/ama'
 import * as nature from 'citestyle/styles/nature'
 import * as science from 'citestyle/styles/science'
 import { resolveInlineInsets } from '#utils/resolve-inline-insets.js'
-import { formatCiteInsetAsText } from '#utils/cite-format.js'
+import { formatCiteInsetAsText, formatInlineInsetAsLatex } from '#utils/cite-format.js'
 
 const STYLES = {
   apa,
@@ -46,17 +46,29 @@ export default function Chapter({ content, block, params }) {
   const openerTitle = formatTitle(title, pageInfo)
 
   // Inline cites in chapter prose: kit's Prose renders them inline at
-  // marker positions in HTML; Press's Typst Sequence reads each
-  // paragraph's `text` field as a flat string and has no concept of
-  // inline insets. Substitute the cite text into the paragraph string
-  // before handing the sequence to Sequence — the registry-formatted
-  // output replaces every `<uniweb-inset data-ref-id="…">` marker.
+  // marker positions in HTML; Press's Sequence reads each paragraph's
+  // `text` field as a flat string and has no concept of inline insets.
+  // Substitute the cite text into the paragraph string before handing
+  // the sequence to Sequence.
+  //
+  // The Typst path receives the registry-formatted text (e.g. "(Darwin
+  // 1859)") because the typst output bundles only the .typ source — no
+  // citation engine is downstream of the bundle. The LaTeX path
+  // receives `\cite{darwin1859}` so biblatex (configured in the
+  // preamble — see latex-default/preamble.js + buildLatexOptions's
+  // bibresource block) can format consistently with the
+  // \printbibliography back-matter at PDF compile time.
   const styleName = block?.website?.config?.book?.citationStyle || DEFAULT_STYLE
   const style = STYLES[styleName] || STYLES[DEFAULT_STYLE]
   const typstSequence = resolveInlineInsets(
     sequence || [],
     block,
     (insetBlock) => formatCiteInsetAsText(insetBlock, block?.website, style),
+  )
+  const latexSequence = resolveInlineInsets(
+    sequence || [],
+    block,
+    (insetBlock) => formatInlineInsetAsLatex(insetBlock, block?.website),
   )
 
   useDocumentOutput(
@@ -69,6 +81,18 @@ export default function Chapter({ content, block, params }) {
         subtitle={subtitle}
       />
       <Sequence data={typstSequence} />
+    </>,
+  )
+  useDocumentOutput(
+    block,
+    'latex',
+    <>
+      <ChapterOpener
+        number={pageInfo.number}
+        title={openerTitle}
+        subtitle={subtitle}
+      />
+      <Sequence data={latexSequence} />
     </>,
   )
 

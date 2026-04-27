@@ -10,14 +10,15 @@ import { Prose, H1 } from '@uniweb/kit'
 export default function BackMatter({ content, block }) {
   const { title, sequence } = content || {}
 
-  useDocumentOutput(
-    block,
-    'typst',
+  const compileTree = (
     <>
       <ChapterOpener title={title} />
       <Sequence data={sequence || []} />
-    </>,
+    </>
   )
+
+  useDocumentOutput(block, 'typst', compileTree)
+  useDocumentOutput(block, 'latex', compileTree)
 
   useDocumentOutput(
     block,

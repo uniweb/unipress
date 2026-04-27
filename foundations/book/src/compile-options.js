@@ -17,8 +17,14 @@ import {
     createTemplate,
     normaliseFontList,
 } from './typst-default/index.js'
+import {
+    createPreamble as createLatexPreamble,
+    createTemplate as createLatexTemplate,
+} from './latex-default/index.js'
 import { stylesheet as pagedjsStylesheet } from './pagedjs-default/index.js'
 import { bibliographyCss } from './utils/bibliography-css.js'
+import { exportBibtex } from 'citestyle'
+import { recordsToCsl } from './utils/to-csl.js'
 
 /**
  * Document-level metadata object, the shape the Typst and HTML adapters
@@ -140,6 +146,83 @@ export async function buildTypstOptions(website, { mode = 'sources', endpoint, l
     const preamble = createPreamble({
         language,
         labels: bookCfg.labels,
+    })
+    return {
+        adapterOptions: {
+            mode,
+            meta,
+            preamble,
+            template,
+            assets,
+            endpoint,
+        },
+    }
+}
+
+/**
+ * LaTeX output (sources mode by default). Mirrors `buildTypstOptions`:
+ * assembles a preamble + template string + meta + assets bundle. The
+ * caller (unipress) writes the resulting zip; the user runs `latexmk
+ * -pdf main.tex` (or `pdflatex` etc.) themselves. The framework does
+ * not bundle a TeX binary — same opt-out unipress already takes for
+ * the typst binary on every output except `--format pdf`.
+ *
+ * Phase 2 will add a `server` mode that POSTs the bundle to an endpoint
+ * running a TeX engine; sources is the only mode in v1.
+ */
+export async function buildLatexOptions(
+    website,
+    { mode = 'sources', endpoint, loadAsset } = {},
+) {
+    const bookCfg = website?.config?.book || {}
+    const language = bookCfg.language ?? website?.config?.language
+    const meta = buildBookMeta(website)
+    const { bundlePaths: covers, assets } = await gatherCovers(
+        bookCfg.covers,
+        loadAsset,
+    )
+
+    // Bibliography → refs.bib via citestyle's exportBibtex. The same
+    // collection the Bibliography section reads from at render time;
+    // content-loader stashes the resolved records on
+    // website.config.collections.<name>.records during unipress compile.
+    //
+    // The bibtex file rides in adapterOptions.assets, the same channel
+    // gatherCovers uses for image bytes — Press's compileLatex packs
+    // every key in `assets` into the zip at the declared bundle path.
+    // Generating refs.bib at compile-options-time (rather than from
+    // inside Bibliography's render) keeps the bundling concern out of
+    // React render and survives compile flows that don't render
+    // Bibliography (e.g. an explicit prefatory \cite without a back-
+    // matter page — biblatex still needs the .bib file).
+    const bibCollectionName = bookCfg.bibliography?.collection || 'bibliography'
+    const bibRecords = website?.config?.collections?.[bibCollectionName]?.records
+    const hasBibliography = Array.isArray(bibRecords) && bibRecords.length > 0
+    if (hasBibliography) {
+        try {
+            const cslItems = recordsToCsl(bibRecords)
+            const bibtex = exportBibtex(cslItems)
+            if (bibtex) assets['refs.bib'] = new TextEncoder().encode(bibtex)
+        } catch (err) {
+            // Non-fatal: a malformed record shouldn't block the LaTeX
+            // bundle. Authors get the rest of the source; biblatex will
+            // surface the missing-resource error at compile time with
+            // a clearer signal than we can produce here.
+            // eslint-disable-next-line no-console
+            console.warn('[book/buildLatexOptions] exportBibtex failed:', err.message)
+        }
+    }
+
+    const template = createLatexTemplate({
+        trim: bookCfg.trim,
+        language,
+        covers,
+    })
+    const preamble = createLatexPreamble({
+        language,
+        labels: bookCfg.labels,
+        citationStyle: bookCfg.citationStyle,
+        hasBibliography,
     })
     return {
         adapterOptions: {

@@ -1,0 +1,15 @@
+name: Thesis Test
+foundation: ../../foundations/book
+format: latex
+index: book
+
+book:
+  title: "On the Optimal Door-Closing Strategy of Free-Riding Squirrels"
+  subtitle: "A Thesis Test Harness"
+  author: "A. Squirrel"
+  language: en
+  citationStyle: chicago-author-date
+
+collections:
+  bibliography:
+    path: collections/bibliography
