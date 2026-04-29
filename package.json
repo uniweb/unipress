@@ -1,6 +1,6 @@
 {
   "name": "@uniweb/unipress",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Compile a content directory into a document (PDF, EPUB, Paged.js HTML, Typst source bundle, DOCX, XLSX) using a Uniweb foundation. Five built-in templates: book, monograph, report, data-report, directory.",
   "type": "module",
   "publishConfig": {
