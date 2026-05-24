@@ -15,7 +15,7 @@
  * The shared JSX feeds the React preview AND the docx fragment
  * registered via useDocumentOutput.
  *
- * Stage 5b + 6.0b of kb/framework/plans/press-professional-docx.md.
+ * Stage 5b + 6.0b of the print/docx work.
  */
 import { Fragment } from 'react'
 import { useDocumentOutput } from '@uniweb/press'

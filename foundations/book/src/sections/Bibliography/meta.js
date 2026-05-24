@@ -10,8 +10,7 @@
  * matching `fetch: [{ collection: bibliography }]` in page.yml.
  *
  * `onlyCited` (render only entries reached by a Cite inset) is
- * intentionally absent from v1 — see kb/framework/plans/
- * unipress-bibliography-via-citestyle.md §3.1.1 for why.
+ * intentionally absent from v1.
  */
 export default {
   defaults: {

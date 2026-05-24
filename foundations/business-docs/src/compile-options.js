@@ -58,7 +58,7 @@ export function buildPagedjsOptions(website, hostHints = {}) {
  * the section components resolve to literal hex values during the
  * docx compile pass.
  *
- * Stage 5b of kb/framework/plans/press-professional-docx.md.
+ * Stage 5b of the print/docx work.
  */
 /**
  * Typography registry — the role -> { font, size, color, ... } map
