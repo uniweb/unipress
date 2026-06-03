@@ -1,4 +1,4 @@
-import { E as p, I as r, S as i, c as s, a as c, _ as n } from "./_entry.generated-BpjeSOaN.js";
+import { E as p, I as r, S as i, c as s, b as c, _ as n } from "./_entry.generated-BmMu-gaS.js";
 import "react/jsx-runtime";
 import "react";
 import "react-dom/server";
