@@ -54,7 +54,7 @@ Set `foundation:` in `document.yml`, or pass `--foundation <ref>`. Four ref form
 foundation: "@uniweb/book@0.1.0"
 
 # Or a full URL.
-foundation: "https://example.com/foundations/my-foundation/foundation.js"
+foundation: "https://example.com/foundations/my-foundation/entry.js"
 
 # Or a local filesystem path (relative to document.yml).
 foundation: "./path/to/foundation"
@@ -72,7 +72,7 @@ The package isn't installed anywhere `Node` can see from the content directory. 
 
 Inside a pnpm workspace, foundations linked via `pnpm-workspace.yaml` globs resolve automatically.
 
-## `FoundationResolutionError: expected built foundation at <path>/dist/foundation.js`
+## `FoundationResolutionError: expected built foundation at <path>/dist/entry.js`
 
 The foundation package isn't built. From the workspace root:
 
@@ -80,7 +80,7 @@ The foundation package isn't built. From the workspace root:
 pnpm --filter <foundation-name> build
 ```
 
-unipress consumes the built artifact (`dist/foundation.js`), not the source.
+unipress consumes the built artifact (`dist/entry.js`), not the source.
 
 ## `CompileError: foundation does not expose compileDocument`
 

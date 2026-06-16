@@ -37,7 +37,7 @@ export async function importFoundation(resolvedPath) {
     throw new FoundationResolutionError(
       `failed to import foundation at ${resolvedPath}\n` +
       `cause: ${err.message}\n` +
-      `hint: confirm the foundation was built with @uniweb/build (dist/foundation.js)`
+      `hint: confirm the foundation was built with @uniweb/build (dist/entry.js)`
     )
   }
 }

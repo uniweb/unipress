@@ -7,8 +7,8 @@
 //
 // Five accepted ref forms:
 //
-//   1. URL ............ https://.../foundation.js  — downloaded + cached
-//   2. Local path ..... ./foo, ../foo, /abs/foo, ./foo/dist/foundation.js
+//   1. URL ............ https://.../entry.js  — downloaded + cached
+//   2. Local path ..... ./foo, ../foo, /abs/foo, ./foo/dist/entry.js
 //   3. Registry ref ... @<namespace>/<name>@<version> — constructed into a
 //                       URL via the registry base (UNIWEB_REGISTRY_URL or
 //                       the production default), then resolved as URL
@@ -24,7 +24,7 @@
 //
 // The chosen entry for a package is its `exports['./dist']` map, NOT the
 // default `.` entry — the default points at source (_entry.generated.js)
-// and is only valid inside a Vite build. `dist/foundation.js` is the
+// and is only valid inside a Vite build. `dist/entry.js` is the
 // built artifact (the federated module) that Node can import.
 
 import { existsSync, statSync, readFileSync } from 'node:fs'
@@ -45,14 +45,14 @@ const REGISTRY_REF_PATTERN = /^@([a-z0-9][a-z0-9._-]*)\/([a-z0-9][a-z0-9._-]*)@(
 // unipress's bundled foundations are distributed as static artifacts on
 // the unipress repo's GitHub Pages site. URL pattern:
 //
-//   https://uniweb.github.io/unipress/foundations/<name>/<version>/foundation.js
+//   https://uniweb.github.io/unipress/foundations/<name>/<version>/entry.js
 //
 // The namespace portion of a registry ref is implicit — every foundation
 // served from this base is under @uniweb/. Set UNIWEB_REGISTRY_URL to
 // override (e.g., for testing against a local http.server during foundation
 // development, or for users with a private alternative).
 const DEFAULT_REGISTRY_BASE = 'https://uniweb.github.io/unipress'
-const DEFAULT_BUILT_ENTRY = 'dist/foundation.js'
+const DEFAULT_BUILT_ENTRY = 'dist/entry.js'
 
 function getRegistryBase() {
   const raw = process.env.UNIWEB_REGISTRY_URL || DEFAULT_REGISTRY_BASE
@@ -67,7 +67,7 @@ function getRegistryBase() {
 // `UNIWEB_REGISTRY_URL=https://my.host/by-ns/uniweb` and live without the
 // per-namespace split, or maintain a redirect rule on that host).
 function buildRegistryUrl(namespace, name, version) {
-  return `${getRegistryBase()}/foundations/${name}/${version}/foundation.js`
+  return `${getRegistryBase()}/foundations/${name}/${version}/entry.js`
 }
 
 export async function resolveFoundationRef(ref, { anchorDir, onProgress = () => {} } = {}) {
@@ -188,7 +188,7 @@ async function resolvePackageRef(name, anchorDir) {
     : null
 
   // Prefer the explicit `./dist` exports subpath if declared; otherwise
-  // fall back to the convention `dist/foundation.js`.
+  // fall back to the convention `dist/entry.js`.
   const distExport = pickBuiltEntry(pkg?.exports)
   const file = distExport
     ? resolve(pkgRoot, distExport)
@@ -218,7 +218,7 @@ function findPackageDir(name, fromDir) {
   }
 }
 
-// A foundation's `exports['./dist']` entry points at the built `foundation.js`.
+// A foundation's `exports['./dist']` entry points at the built `entry.js`.
 // The value can be a string or a conditional-exports object; we accept both.
 function pickBuiltEntry(exports) {
   if (!exports || typeof exports !== 'object') return null

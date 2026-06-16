@@ -1,3 +1,3 @@
 import { defineFoundationConfig } from '@uniweb/build'
 
-export default defineFoundationConfig()
+export default defineFoundationConfig({ fileName: 'entry' })

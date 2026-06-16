@@ -90,7 +90,7 @@ The first PDF run downloads Typst 0.14.2 to `~/Library/Caches/unipress/typst/0.1
 Any foundation that declares an `outputs: { … }` map on its default export can drive unipress. Point `document.yml`'s `foundation:` at:
 
 - a registry ref: `@<namespace>/<name>@<version>` — fetched from the Uniweb registry, cached locally,
-- a URL: `https://…/foundation.js`,
+- a URL: `https://…/entry.js`,
 - a local filesystem path: `./foundation`, `/abs/path`, etc.
 
 The local-path form is the everyday dev loop — point unipress at a foundation directory you're iterating on, no publish step needed:
@@ -113,7 +113,7 @@ unipress compile <dir> [options]
                       Overrides the format: field in document.yml.
   --foundation <ref>  Override document.yml's foundation. Accepts:
                         - registry ref:  @<namespace>/<name>@<version>
-                        - URL:           https://…/foundation.js
+                        - URL:           https://…/entry.js
                         - path:          ./foundation, /abs/path, …
   --out <path>        Output file (default: ./<dir-basename>.<ext>).
   --config <path>     Explicit config file (default: <dir>/unipress.config.js).

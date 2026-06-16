@@ -79,8 +79,8 @@ jobs:
             echo "===== Building $name ====="
             (cd "$foundation_dir" && pnpm install --ignore-workspace --no-frozen-lockfile)
             (cd "$foundation_dir" && pnpm build)
-            test -f "$foundation_dir/dist/foundation.js" || {
-              echo "::error::no dist/foundation.js produced for $name"
+            test -f "$foundation_dir/dist/entry.js" || {
+              echo "::error::no dist/entry.js produced for $name"
               exit 1
             }
           done

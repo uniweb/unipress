@@ -158,13 +158,13 @@ jobs:
             echo '<style>body{font-family:system-ui;max-width:60ch;margin:3rem auto;padding:0 1rem;line-height:1.5;color:#1a1a1a}h1{font-size:1.5rem}h2{font-size:1.1rem;margin-top:2rem}a{color:#5a6fd6}code{background:#f3f3f3;padding:0.1em 0.35em;border-radius:3px}</style></head><body>'
             echo '<h1>unipress foundations</h1>'
             echo '<p>Built foundations served at stable versioned URLs for the <a href="https://github.com/uniweb/unipress">unipress</a> CLI.</p>'
-            echo '<p>URL pattern: <code>https://uniweb.github.io/unipress/foundations/&lt;name&gt;/&lt;version&gt;/foundation.js</code></p>'
+            echo '<p>URL pattern: <code>https://uniweb.github.io/unipress/foundations/&lt;name&gt;/&lt;version&gt;/entry.js</code></p>'
             for fdir in _gh-pages/foundations/*/; do
               name=$(basename "$fdir")
               echo "<h2>@uniweb/$name</h2><ul>"
               for vdir in "$fdir"*/; do
                 version=$(basename "$vdir")
-                echo "<li><a href=\"foundations/$name/$version/foundation.js\">$version</a></li>"
+                echo "<li><a href=\"foundations/$name/$version/entry.js\">$version</a></li>"
               done
               echo "</ul>"
             done

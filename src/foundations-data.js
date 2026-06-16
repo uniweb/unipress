@@ -16,7 +16,7 @@
  * Foundations are deployed as static artifacts to the unipress repo's
  * GitHub Pages site. URL pattern:
  *
- *   https://uniweb.github.io/unipress/foundations/<name>/<version>/foundation.js
+ *   https://uniweb.github.io/unipress/foundations/<name>/<version>/entry.js
  *
  * On every push to main, `.github/workflows/deploy-foundations.yml`
  * builds each `foundations/<name>/` and layers the resulting `dist/` into
@@ -68,7 +68,7 @@
 const PUBLIC_FOUNDATIONS_BASE = 'https://uniweb.github.io/unipress/foundations'
 
 function publicUrl(name, version) {
-  return `${PUBLIC_FOUNDATIONS_BASE}/${name}/${version}/foundation.js`
+  return `${PUBLIC_FOUNDATIONS_BASE}/${name}/${version}/entry.js`
 }
 
 const BOOK_FOUNDATION = {
