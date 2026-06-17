@@ -41,13 +41,21 @@ function findCollectionRecords(fetchConfig, resolved) {
   return records
 }
 
-function attachSectionFetches(sections, resolved) {
+// Walk a section tree attaching collection records to each section's
+// parsedContent.data.<schema>. A section's OWN fetch is attached first
+// (so it wins under attachData's first-writer-wins guard); the page-level
+// `cascade` ({ schema, records }) then fills any remaining gap — for this
+// section AND every nested subsection. Threading the cascade through the
+// recursion is what lets a page-level `data:` declaration reach nested
+// children (declared via page.yml `nest:`), not just top-level sections.
+function attachSectionFetches(sections, resolved, cascade = null) {
   if (!Array.isArray(sections)) return
   for (const section of sections) {
     const records = findCollectionRecords(section.fetch, resolved)
     if (records) attachData(section, section.fetch.schema, records)
+    if (cascade) attachData(section, cascade.schema, cascade.records)
     if (Array.isArray(section.subsections) && section.subsections.length) {
-      attachSectionFetches(section.subsections, resolved)
+      attachSectionFetches(section.subsections, resolved, cascade)
     }
   }
 }
@@ -86,13 +94,14 @@ async function resolveLocalCollections(siteContent, sitePath) {
   )
 
   for (const page of siteContent.pages || []) {
+    // Page-level fetch cascades to every section on the page — top-level
+    // and nested alike. attachSectionFetches threads it through the whole
+    // section tree; a section's own fetch still takes priority.
     const pageRecords = findCollectionRecords(page.fetch, resolved)
-    if (pageRecords) {
-      for (const section of page.sections || []) {
-        attachData(section, page.fetch.schema, pageRecords)
-      }
-    }
-    attachSectionFetches(page.sections, resolved)
+    const cascade = pageRecords
+      ? { schema: page.fetch.schema, records: pageRecords }
+      : null
+    attachSectionFetches(page.sections, resolved, cascade)
   }
 
   // Stash the resolved arrays on the website config too, so any section
