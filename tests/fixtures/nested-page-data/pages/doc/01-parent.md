@@ -1,0 +1,5 @@
+---
+type: Parent
+---
+
+# Parent
