@@ -1,10 +1,23 @@
 # Troubleshooting
 
-When `unipress compile` fails, the error message names a class and a cause. This file pairs each with what it usually means and how to fix it.
+`unipress` surfaces actionable failures at install and compile time — each names a class and a cause. This file pairs each with what it usually means and how to fix it.
 
-Every `unipress` error exits with code `1` (user-addressable). Unknown errors exit with code `2` — those are internal bugs; re-run with `--verbose` and open an issue.
+Every `unipress` *compile* error exits with code `1` (user-addressable). Unknown errors exit with code `2` — those are internal bugs; re-run with `--verbose` and open an issue.
 
 ---
+
+## Homebrew: `Error: Refusing to load formula ... from untrusted tap uniweb/unipress`
+
+Recent Homebrew (6.x) won't load a formula from a third-party tap until you've trusted it once. This blocks both the first `brew install uniweb/unipress/unipress` and later `brew upgrade unipress`.
+
+Trust the tap once, then re-run the command:
+
+```bash
+brew trust uniweb/unipress
+brew upgrade unipress          # or: brew install uniweb/unipress/unipress
+```
+
+This is a Homebrew policy for third-party taps, not specific to unipress. The npm install (`npm i -g @uniweb/unipress`) and the prebuilt binaries on the [releases page](https://github.com/uniweb/unipress/releases) are unaffected.
 
 ## `ContentDirectoryError: content directory does not exist: <path>`
 
