@@ -40,7 +40,7 @@ Foundations consume [@uniweb/press](https://github.com/uniweb/press) for the byt
 brew install uniweb/unipress/unipress
 ```
 
-Updates land via `brew upgrade unipress`. The macOS binary is signed with the Proximify Inc. Developer ID and Apple-notarized — no Gatekeeper warnings.
+Updates land via `brew upgrade unipress`. On recent Homebrew (6.x), the first `install` or `upgrade` may refuse the tap until you trust it once — run `brew trust uniweb/unipress`, then re-run the command. The macOS binary is signed with the Proximify Inc. Developer ID and Apple-notarized — no Gatekeeper warnings.
 
 **Manual download (Windows, or any platform without Homebrew).** Grab the asset for your platform from [the releases page](https://github.com/uniweb/unipress/releases), make it executable (Unix), and put it somewhere on your `PATH`. On macOS and Linux, `/usr/local/bin/unipress` is a common location.
 
