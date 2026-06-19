@@ -72,8 +72,8 @@ function publicUrl(name, version) {
 }
 
 const BOOK_FOUNDATION = {
-  ref: '@uniweb/book@0.3.0',
-  source: { url: publicUrl('book', '0.3.0') },
+  ref: '@uniweb/book@0.4.0',
+  source: { url: publicUrl('book', '0.4.0') },
 }
 
 const DATA_FOUNDATION = {
@@ -87,6 +87,19 @@ const BUSINESS_DOCS_FOUNDATION = {
 }
 
 export const FOUNDATIONS = [
+  {
+    id: 'article',
+    name: 'Article',
+    description:
+      'Single-column paper — A4 or US Letter, continuous prose, no ' +
+      'chapters. Clean typography, an inline title block, comfortable ' +
+      'margins. The natural shape for turning a folder of notes or docs ' +
+      'into one shareable PDF. Compiles to PDF (Typst), Typst source ' +
+      'bundle, Paged.js HTML, or EPUB.',
+    outputs: ['pdf', 'typst', 'pagedjs', 'epub'],
+    foundation: BOOK_FOUNDATION,
+    scaffold: 'article',
+  },
   {
     id: 'book',
     name: 'Book',

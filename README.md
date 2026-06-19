@@ -15,9 +15,9 @@ cd my-docs        # a folder of .md files
 unipress compile .
 ```
 
-There's no project to set up. The first time, unipress sees there's no config, offers to create a small `document.yml` for you, and produces the PDF. Numbered filenames (`01-intro.md`, `02-overview.md`) set the chapter order; `README.md` and draft files (`_notes.md`) are left out.
+There's no project to set up. The first time, unipress sees there's no config, offers to create a small `document.yml` for you, and produces the PDF — a clean, single-column **article**: A4, typeset prose, an inline title block, no chapters. Numbered filenames (`01-intro.md`, `02-overview.md`) set the section order; `README.md` and draft files (`_notes.md`) are left out.
 
-Prefer no prompts? `--yes` takes the defaults — the `book` foundation, PDF output:
+Prefer no prompts? `--yes` takes the defaults — the A4 article, PDF output:
 
 ```bash
 unipress compile . --yes
@@ -80,19 +80,22 @@ npm i -g @uniweb/unipress
 
 ## Pick a template
 
-Five built-in templates ship with the binary. Run `unipress list-templates` for the picker.
+Built-in templates ship with the binary. Run `unipress list-templates` for the picker.
 
 | Template | Foundation | Outputs | Use case |
 |---|---|---|---|
-| `book` | `@uniweb/book` | pdf, typst, pagedjs, epub | Trade book, long-form prose |
+| `article` | `@uniweb/book` | pdf, typst, pagedjs, epub | Single-column paper (A4/Letter, no chapters) — the default for a loose folder of markdown |
+| `book` | `@uniweb/book` | pdf, typst, pagedjs, epub | Trade book, long-form prose with chapters |
 | `monograph` | `@uniweb/book` | pdf, typst, pagedjs, epub | Scholarly monograph (royal-octavo, classical typography) |
 | `report` | `@uniweb/book` | pdf, typst, pagedjs, epub | Technical report (trade-7x10, block paragraphs) |
 | `data-report` | `@uniweb/data` | xlsx, docx | Aggregate metrics across structured records |
 | `directory` | `@uniweb/data` | xlsx, docx | Flat records listing with a filterable surface |
 
+`article` and `book`/`monograph`/`report` are one foundation, two genres: `article` is single-column and chapter-less (LaTeX's `article`), the others are chaptered with a title page and TOC. Switch by setting `book.kind`.
+
 Per-template guides: [docs/templates/](./docs/templates/).
 
-More templates land as more foundations ship — `cv`, `resume`, `paper`, `thesis` are on the roadmap for upcoming releases.
+More templates land as more foundations ship — `cv`, `resume`, `thesis` are on the roadmap for upcoming releases.
 
 ## Custom foundations
 

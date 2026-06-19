@@ -32,31 +32,35 @@ If the folder already holds markdown, you don't have to write one by hand —
 
 ```
 $ unipress compile .
-No document.yml here. Create one (@uniweb/book@0.3.0, pdf, 12 chapters at the project root) and compile? (Y/n)
+No document.yml here. Generate one (A4 article, pdf) from the 12 markdown files at the project root and compile? (Y/n)
 Document title › My Document
 created /path/to/document.yml
 ```
 
+By default this produces a clean single-column **article** (A4, no chapters).
 Pass `--yes` to skip the prompt (handy in scripts or non-interactive shells):
 
 ```bash
-unipress compile . --yes                     # generate + compile, book foundation, pdf
+unipress compile . --yes                     # generate + compile → A4 article PDF
 unipress compile . --yes --foundation @uniweb/data@0.1.0 --format docx
 ```
 
 The generated `document.yml` pins a foundation, sets the format, lists the
-chapters in reading order, and — when the markdown sits loose at the project
+sections in reading order, and — when the markdown sits loose at the project
 root rather than under `content/` — points the content directory at the root
 with `paths: { pages: . }`. It's an ordinary config file; edit it freely.
 
 To write one by hand instead:
 
 ```yaml
-foundation: "@uniweb/book@0.3.0"
+foundation: "@uniweb/book@0.4.0"
 format: pdf
 paths:
-  pages: .          # only needed when chapters live at the root (no content/ folder)
-content: [preface, chapter-1, chapter-2]
+  pages: .          # only needed when sections live at the root (no content/ folder)
+book:
+  kind: article     # single-column paper; omit for a chaptered book
+  trim: a4          # or: letter
+content: [introduction, main]
 ```
 
 `site.yml` is accepted as a fallback if you're dogfooding an existing Uniweb site.

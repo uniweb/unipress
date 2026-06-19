@@ -135,12 +135,23 @@ export function buildDocumentYml({
     )
   }
   if (isBook) {
-    lines.push('', 'book:', `  title: ${q(name)}`, `  author: ${q(author)}`, '  language: en')
+    lines.push(
+      '',
+      'book:',
+      '  # Single-column A4 paper (the article genre). Set trim: letter for',
+      '  # US/Canada, or remove `kind` (and pick a book trim) for a chaptered',
+      '  # book — or run `unipress create --template book`.',
+      '  kind: article',
+      '  trim: a4',
+      `  title: ${q(name)}`,
+      `  author: ${q(author)}`,
+      '  language: en'
+    )
   }
   if (chapters.length) {
     lines.push(
       '',
-      '# Reading order. Each name is a chapter filename with any leading',
+      '# Reading order. Each name is a section filename with any leading',
       '# "NN-" number prefix removed (00-intro.md → intro). Reorder these',
       '# lines to reorder the document; `...` includes anything you add',
       '# later. README.md is skipped automatically.',

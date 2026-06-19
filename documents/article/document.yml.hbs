@@ -1,0 +1,39 @@
+name: "{{title}}"
+foundation: ../../foundations/book
+format: pdf
+
+book:
+  # The `article` genre: single-column continuous prose on a paper size —
+  # no chapters, no cover, no separate title page. Remove `kind` (and pick
+  # a book trim like trade-6x9) to render a chaptered book instead.
+  kind: article
+
+  # Paper size. `a4` (default) or `letter` (US / Canada).
+  trim: a4
+
+  title: "{{title}}"
+  subtitle: ""
+  author: "{{author}}"
+  language: en
+
+  # A4/Letter at the 11pt default gives a comfortable ~75-character
+  # measure. Uncomment to tune the body copy.
+  # typography:
+  #   bodySize: 11pt
+  #   leading: 0.72em
+  #   firstLineIndent: 1.4em
+  #   bodyFont: ["EB Garamond", "Garamond", "Georgia"]
+
+  # A table of contents is off by default for an article. Turn it on for
+  # a longer paper:
+  # structure:
+  #   toc: true
+  #   tocDepth: 2
+
+# Reading order. Files in content/ are sorted by name; the explicit list
+# below makes the order predictable. Names are the filename with any
+# leading number prefix removed (01-introduction.md → introduction). Add a
+# section by creating content/<name>.md and adding its base name here.
+content:
+  - introduction
+  - main

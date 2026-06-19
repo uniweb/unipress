@@ -17,8 +17,10 @@ import { detectConfigFile, CONFIG_FILE_NAMES } from '../document-yml.js'
 import { detectBareContent, materializeDocumentYml } from '../materialize.js'
 import { findCatalogEntry } from '../catalog.js'
 
+// Bare-folder default: the book foundation's `article` genre — a clean
+// single-column A4 paper, the natural shape for a loose folder of markdown.
 const DEFAULT_FOUNDATION =
-  findCatalogEntry('book')?.foundation?.ref ?? '@uniweb/book@0.3.0'
+  findCatalogEntry('article')?.foundation?.ref ?? '@uniweb/book@0.4.0'
 
 // "durable-structured-systems" → "Durable Structured Systems"
 function titleize(slug) {
@@ -44,8 +46,11 @@ async function offerToMaterialize({ sitePath, format, foundation, yes }) {
   const fmt = format ?? 'pdf'
   const defaultTitle = titleize(basename(sitePath)) || 'Untitled document'
   const n = bare.chapters.length
-  const chaptersLabel = `${n} chapter${n === 1 ? '' : 's'}`
+  const filesLabel = `${n} markdown file${n === 1 ? '' : 's'}`
   const where = bare.contentDir === '.' ? 'at the project root' : `in ${bare.contentDir}/`
+  // The default book foundation materializes the single-column article
+  // genre; a custom --foundation is named as-is.
+  const genreLabel = foundationRef === DEFAULT_FOUNDATION ? 'A4 article' : foundationRef
   let title = defaultTitle
 
   if (!yes) {
@@ -63,8 +68,8 @@ async function offerToMaterialize({ sitePath, format, foundation, yes }) {
         type: 'confirm',
         name: 'create',
         message:
-          `No ${CONFIG_FILE_NAMES.PRIMARY} here. Create one ` +
-          `(${foundationRef}, ${fmt}, ${chaptersLabel} ${where}) and compile?`,
+          `No ${CONFIG_FILE_NAMES.PRIMARY} here. Generate one ` +
+          `(${genreLabel}, ${fmt}) from the ${filesLabel} ${where} and compile?`,
         initial: true
       },
       {
