@@ -50,6 +50,7 @@ Same `book:` shape as the other genres (see [book.md](./book.md)), with these ar
 | `book.kind`                 | `article` — selects the single-column genre                     |
 | `book.trim`                 | `a4` (or `letter` for US/Canada)                                |
 | `book.structure.toc`        | `false` — a paper has no TOC by default; set `true` for a longer one |
+| `book.structure.numberHeadings` | `false` — set `true` for numbered sections (`1`, `1.1`, `1.1.1`) |
 | `book.title` / `subtitle` / `author` | render as a centered title block atop page 1; clear the title to omit the block entirely |
 
 Cover artwork, title pages, copyright pages, and chapter numbering don't apply to the article genre.
@@ -57,6 +58,7 @@ Cover artwork, title pages, copyright pages, and chapter numbering don't apply t
 ## Common customizations
 
 - **US Letter instead of A4**: `book.trim: letter`.
+- **Numbered sections**: `book.structure: { numberHeadings: true }` → `1`, `1.1`, `1.1.1`.
 - **Add a table of contents**: `book.structure: { toc: true, tocDepth: 2 }`.
 - **Different body font**: `book.typography.bodyFont: ["EB Garamond", "Georgia"]`.
 - **Tighter or looser measure**: override `book.trim` with an object — `{ preset: a4, margins: { inside: 40mm, outside: 40mm } }` — for narrower text.

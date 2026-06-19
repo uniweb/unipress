@@ -20,7 +20,7 @@ import { findCatalogEntry } from '../catalog.js'
 // Bare-folder default: the book foundation's `article` genre — a clean
 // single-column A4 paper, the natural shape for a loose folder of markdown.
 const DEFAULT_FOUNDATION =
-  findCatalogEntry('article')?.foundation?.ref ?? '@uniweb/book@0.4.0'
+  findCatalogEntry('article')?.foundation?.ref ?? '@uniweb/book@0.4.1'
 
 // "durable-structured-systems" → "Durable Structured Systems"
 function titleize(slug) {

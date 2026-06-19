@@ -72,8 +72,8 @@ function publicUrl(name, version) {
 }
 
 const BOOK_FOUNDATION = {
-  ref: '@uniweb/book@0.4.0',
-  source: { url: publicUrl('book', '0.4.0') },
+  ref: '@uniweb/book@0.4.1',
+  source: { url: publicUrl('book', '0.4.1') },
 }
 
 const DATA_FOUNDATION = {

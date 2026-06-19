@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.1
+
+### Added
+
+- **`book.structure.numberHeadings`** (article genre) — set to `true` for
+  numbered sections (`1`, `1.1`, `1.1.1`). Off by default; section
+  headings stay unnumbered unless you opt in.
+
 ## 0.4.0
 
 The `article` release. The book foundation now renders a single-column,

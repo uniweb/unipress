@@ -26,6 +26,18 @@ unipress compile . --yes --format epub      # or any format the foundation emits
 
 The generated `document.yml` is yours to keep and edit — it holds the title, reading order, and output format. Re-run compile whenever the content changes.
 
+### A4 or US Letter?
+
+The default page size is **A4**. In the US and Canada you'll want **Letter** — open the generated `document.yml` and change `book.trim` from `a4` to `letter`:
+
+```yaml
+book:
+  kind: article
+  trim: letter      # 8.5 × 11 in  (was: a4)
+```
+
+Then re-run `unipress compile .`. A couple of other one-line tweaks live in the same `book:` block — numbered sections (`structure: { numberHeadings: true }`) and a table of contents (`structure: { toc: true }`). See the [`article` guide](./docs/templates/article.md) for the full list.
+
 ## Starting from scratch
 
 No content yet? Scaffold a starter from a template:
