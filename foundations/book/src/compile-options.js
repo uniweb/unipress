@@ -15,6 +15,7 @@
 import {
     createPreamble,
     createTemplate,
+    createArticleTemplate,
     normaliseFontList,
 } from './typst-default/index.js'
 import {
@@ -136,17 +137,28 @@ export async function buildTypstOptions(website, { mode = 'sources', endpoint, l
         bookCfg.covers,
         loadAsset,
     )
-    const template = createTemplate({
-        trim: bookCfg.trim,
-        typography,
-        structure: bookCfg.structure,
-        labels: bookCfg.labels,
-        language,
-        covers,
-    })
+    // book.kind selects the template genre. 'article' renders a single-
+    // column paper (A4/Letter, continuous prose, no chapters/cover/front
+    // matter); the unset default renders the chaptered book.
+    const template =
+        bookCfg.kind === 'article'
+            ? createArticleTemplate({
+                  trim: bookCfg.trim,
+                  typography,
+                  structure: bookCfg.structure,
+              })
+            : createTemplate({
+                  trim: bookCfg.trim,
+                  typography,
+                  structure: bookCfg.structure,
+                  labels: bookCfg.labels,
+                  language,
+                  covers,
+              })
     const preamble = createPreamble({
         language,
         labels: bookCfg.labels,
+        kind: bookCfg.kind,
     })
     return {
         adapterOptions: {

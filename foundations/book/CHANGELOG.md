@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.4.0
+
+The `article` release. The book foundation now renders a single-column,
+chapter-less paper alongside the chaptered book — the natural shape for
+turning a folder of notes or docs into one clean, shareable PDF.
+
+### Added
+
+- **`article` genre** (`book.kind: article`) — continuous single-column
+  prose on a paper size, with symmetric single-sided margins, a centered
+  page number, an inline title block (no separate title page), and clean
+  unnumbered section headings. No chapter openers, page breaks, covers, or
+  front matter. Each top-level markdown file becomes a section; its `# H1`
+  is the section heading. Body copy, fonts, and code blocks render
+  identically to the book genre.
+- **`a4` and `letter` trim presets** — full-size single-sided paper with
+  symmetric, generous margins tuned for a comfortable reading measure
+  (~75 characters/line at the 11pt default). Unlike the book trims, these
+  use equal inside/outside margins (no binding gutter). `article` defaults
+  to `a4` when no trim is set.
+- **Table of contents is opt-in for `article`** (`book.structure.toc: true`);
+  the book genre still defaults it on.
+
 ## 0.2.0
 
 The citations release. The book foundation now ships a working

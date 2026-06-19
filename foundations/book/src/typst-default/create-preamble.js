@@ -1,27 +1,29 @@
 /**
- * createPreamble({ language, labels }) → Typst preamble string.
+ * createPreamble({ language, labels, kind }) → Typst preamble string.
  *
  * Produces preamble.typ — the named functions Press's /typst builders
  * call into. Currently two functions: #chapter-opener and #section-break.
- * The only parameterised piece is the "Chapter" overline label, which
- * becomes language-specific through the `labels` resolver.
+ *
+ * `chapter-opener` is genre-dependent. For the book genre (default) it
+ * starts a new page with a large centered chapter title. For the
+ * `article` genre it is a no-op: the section's `= H1` that follows it in
+ * the body renders as an ordinary section heading (styled by the article
+ * template), so sections flow continuously instead of each starting a new
+ * page. The "Chapter" overline label is localized via `labels`.
  */
 import { resolveLabels } from './labels.js'
 
-export function createPreamble({ language, labels } = {}) {
+export function createPreamble({ language, labels, kind } = {}) {
   const l = resolveLabels({ language, overrides: labels })
 
-  return String.raw`// preamble.typ — named functions used by Press/typst section fragments.
-
-// ─── Math (mitex) ────────────────────────────────────────────────────────
-// Press's typst adapter emits math as #mitex(\`<latex>\`) wrapped in a
-// typst math context (\$…\$ inline / \$ … \$ display). mitex parses
-// the LaTeX source and re-emits typst math, sparing us a JS-side
-// LaTeX → typst translator. Pin the version explicitly — bump
-// deliberately, not with each typst release.
-#import "@preview/mitex:0.2.5": mitex
-
-// ─── Chapter opener ──────────────────────────────────────────────────────
+  // The article genre wants continuous prose — no per-section page break
+  // and no big centered chapter title (the following `= H1` is the
+  // heading). Other genres get the page-starting chapter opener.
+  const chapterOpener =
+    kind === 'article'
+      ? String.raw`// ─── Chapter opener (article: no-op — sections flow continuously) ─────────
+#let chapter-opener(number: none, title: "", subtitle: "") = []`
+      : String.raw`// ─── Chapter opener ──────────────────────────────────────────────────────
 #let chapter-opener(number: none, title: "", subtitle: "") = {
   pagebreak(weak: true)
   v(1.5in)
@@ -49,7 +51,19 @@ export function createPreamble({ language, labels } = {}) {
     )
   }
   v(1.5em)
-}
+}`
+
+  return String.raw`// preamble.typ — named functions used by Press/typst section fragments.
+
+// ─── Math (mitex) ────────────────────────────────────────────────────────
+// Press's typst adapter emits math as #mitex(\`<latex>\`) wrapped in a
+// typst math context (\$…\$ inline / \$ … \$ display). mitex parses
+// the LaTeX source and re-emits typst math, sparing us a JS-side
+// LaTeX → typst translator. Pin the version explicitly — bump
+// deliberately, not with each typst release.
+#import "@preview/mitex:0.2.5": mitex
+
+${chapterOpener}
 
 // ─── Section break ───────────────────────────────────────────────────────
 #let section-break() = {

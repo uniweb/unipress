@@ -1,6 +1,15 @@
 # @uniweb/book
 
-A Uniweb foundation for books. Pairs with `@uniweb/press` to render long-form prose as a web reader and to compile it to Typst-bundled PDF, Paged.js HTML, or EPUB. Drives the `book`, `monograph`, and `report` templates in `@uniweb/unipress`.
+A Uniweb foundation for books and papers. Pairs with `@uniweb/press` to render long-form prose as a web reader and to compile it to Typst-bundled PDF, Paged.js HTML, or EPUB. Drives the `article`, `book`, `monograph`, and `report` templates in `@uniweb/unipress`.
+
+## Two genres
+
+`book.kind` selects how the document is shaped:
+
+- **book** (default) — chaptered: each top-level file opens a new chapter, with a title page, copyright page, table of contents, running headers, and a small bindable trim (trade-6×9, royal-octavo, …). Used by the `book`, `monograph`, and `report` templates.
+- **article** (`book.kind: article`) — a single-column paper on a full page (A4 by default, or `letter`): continuous prose, symmetric single-sided margins, an inline title block, unnumbered section headings, no chapters/cover/front matter. Used by the `article` template and the default when `unipress compile` generates a config for a loose folder of markdown.
+
+Both genres share the same section types, typography knobs, and code/math rendering — the genre changes the page geometry and document furniture, not the content vocabulary.
 
 ## Shape
 

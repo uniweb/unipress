@@ -142,7 +142,7 @@ ${sections}]
 // terminated with "\n\n" (final content line + one blank line). Blocks
 // start at two-space indent, matching template body indentation.
 
-function renderRawRules(ty) {
+export function renderRawRules(ty) {
   const relief = (ty.codeMarginRelief || '0pt').toString().trim()
   const hasRelief = relief !== '' && relief !== '0' && relief !== '0pt'
 
@@ -177,7 +177,7 @@ function renderRawRules(ty) {
   ].join('\n')
 }
 
-function renderFontSet(ty) {
+export function renderFontSet(ty) {
   const parts = []
   if (ty.bodyFont) {
     parts.push(`  #set text(font: ${typstFontValue(ty.bodyFont)})`)

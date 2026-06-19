@@ -78,6 +78,34 @@ export const TRIM_PRESETS = {
       bottom: '18mm',
     },
   },
+  // ── Document / paper sizes ───────────────────────────────────────────
+  // Unlike the book trims above (small, two-sided, asymmetric binding
+  // margins), these are full-size single-sided paper. Margins are
+  // symmetric (inside === outside) and generous so the text measure stays
+  // comfortable to read — ~75 characters per line at the 11pt default
+  // body size. Used by the `article` genre.
+  a4: {
+    // 210 × 297 mm — ISO standard, the default paper for most of the world.
+    width: '210mm',
+    height: '297mm',
+    margins: {
+      inside: '32mm',
+      outside: '32mm',
+      top: '28mm',
+      bottom: '30mm',
+    },
+  },
+  letter: {
+    // 8.5 × 11 in — US / Canada.
+    width: '8.5in',
+    height: '11in',
+    margins: {
+      inside: '1.35in',
+      outside: '1.35in',
+      top: '1in',
+      bottom: '1.1in',
+    },
+  },
 }
 
 export const DEFAULT_TRIM = 'trade-6x9'

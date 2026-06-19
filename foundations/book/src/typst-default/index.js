@@ -22,6 +22,7 @@ export { default as preamble } from './preamble.js'
 export { default as template } from './template.js'
 export { createPreamble } from './create-preamble.js'
 export { createTemplate } from './create-template.js'
+export { createArticleTemplate } from './create-article-template.js'
 export {
   TRIM_PRESETS,
   DEFAULT_TRIM,
