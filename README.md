@@ -2,12 +2,40 @@
 
 **Compile a directory of markdown into a document — typeset PDF, EPUB, Word, Excel, Paged.js HTML, Typst source — using a foundation that knows the conventions of the kind of document you're writing.**
 
+You already write in markdown, and you keep it organized — a folder of files, numbered for order, maybe a `README` and some assets. That's good structure. But turning it into one polished, shareable document usually means pandoc incantations, a LaTeX toolchain, or a pile of glue scripts.
+
+unipress does it in one command.
+
+## Quick start: markdown you already have → a PDF
+
+Point it at your folder:
+
 ```bash
-unipress create my-book
-unipress compile my-book
+cd my-docs        # a folder of .md files
+unipress compile .
 ```
 
-Two commands. The first scaffolds a starter project; the second produces the file.
+There's no project to set up. The first time, unipress sees there's no config, offers to create a small `document.yml` for you, and produces the PDF. Numbered filenames (`01-intro.md`, `02-overview.md`) set the chapter order; `README.md` and draft files (`_notes.md`) are left out.
+
+Prefer no prompts? `--yes` takes the defaults — the `book` foundation, PDF output:
+
+```bash
+unipress compile . --yes
+unipress compile . --yes --format epub      # or any format the foundation emits
+```
+
+The generated `document.yml` is yours to keep and edit — it holds the title, reading order, and output format. Re-run compile whenever the content changes.
+
+## Starting from scratch
+
+No content yet? Scaffold a starter from a template:
+
+```bash
+unipress create my-book --template book --title "My Book" --author "Your Name"
+cd my-book && unipress compile .
+```
+
+`create` writes a content-only directory — markdown, a `document.yml`, optional `theme.yml` and `assets/`; no `package.json`, no `node_modules`. Pick the template that matches your document (see [Pick a template](#pick-a-template)) — it carries the typography and structure so a book reads like a book and a directory like a directory.
 
 ## What it makes
 
@@ -66,25 +94,6 @@ Per-template guides: [docs/templates/](./docs/templates/).
 
 More templates land as more foundations ship — `cv`, `resume`, `paper`, `thesis` are on the roadmap for upcoming releases.
 
-## Write your first document
-
-```bash
-unipress create my-book --template book --title "My Book" --author "Your Name"
-cd my-book
-```
-
-The result is a content-only directory — markdown pages, a `document.yml`, optional `theme.yml` and `assets/`. **No `package.json`, no `node_modules`.** Edit the markdown — that's your content. Numbered filenames (`01-intro.md`, `02-chapter-one.md`) keep chapter order predictable.
-
-When you're ready to produce the document:
-
-```bash
-unipress compile . --format pdf
-```
-
-Or any of the formats the foundation declares (`--format epub`, `--format pagedjs`). Write, compile, look at the result, revise, compile again — that's the loop.
-
-The first PDF run downloads Typst 0.14.2 to `~/Library/Caches/unipress/typst/0.14.2/` (or the XDG cache dir on Linux). Subsequent runs reuse the cached binary.
-
 ## Custom foundations
 
 Any foundation that declares an `outputs: { … }` map on its default export can drive unipress. Point `document.yml`'s `foundation:` at:
@@ -119,6 +128,9 @@ unipress compile <dir> [options]
   --config <path>     Explicit config file (default: <dir>/unipress.config.js).
   --typst-binary <p>  Path to a typst binary (skips the managed download).
   --keep-temp         On typst-compile failure, keep the temp dir for inspection.
+  --yes               If no document.yml exists, generate one from the folder's
+                      markdown without prompting (book foundation by default;
+                      honors --foundation/--format).
   --verbose           Per-step progress to stderr + stack traces on errors.
 
 unipress create <dir> [options]
@@ -159,7 +171,8 @@ The content-directory-level config. Fields unipress reads:
 | `name` | Document name (used as a title fallback). |
 | `foundation` | Registry ref (`@ns/name@ver`), URL, or local path to the foundation. |
 | `format` | Default output format. Overridable by CLI `--format` or `unipress.config.js`. |
-| `pages:` | Reading order (same semantics as a Uniweb site's `site.yml`). |
+| `content:` | Reading order — chapter names with any numeric prefix stripped (`00-intro.md` → `intro`). `pages:` is accepted as an alias. |
+| `paths:` | Content-directory overrides. `paths: { pages: . }` reads markdown loose at the project root instead of a `content/` subfolder. |
 | `book:`, `report:`, `collections:` … | Foundation-specific config blocks. The foundation's `getOptions` reads these. |
 
 `site.yml` is also accepted as a fallback for compatibility with existing Uniweb site directories.
@@ -206,7 +219,7 @@ Applied per-field.
 
 unipress is **pre-1.0**. The CLI is stable enough to write real documents with — the `book` template, in particular, is well-tested. Future versions may change small things, but `document.yml` files and project folders from today should keep working: scaffolded projects pin a specific foundation version, and registry artifacts are immutable.
 
-**Heads-up for v0.2:** the bundled catalog points at a local registry (`http://localhost:4001/...`) until the foundations publish to the production Uniweb registry. To compile against a bundled template today, either pass `--foundation <path>` pointing at a built foundation directory, or run a local foundation registry (publish a built foundation with `uniweb publish --local` and serve `.unicloud/registry/` on port 4001). A follow-up release switches the catalog to production URLs once `@uniweb/book` and `@uniweb/data` ship there.
+**Foundations are fetched on first use.** The bundled templates pin foundations served from `https://uniweb.github.io/unipress/foundations/…`; the first compile downloads and caches the one your `document.yml` names (alongside the Typst binary). To iterate on a foundation locally, pass `--foundation <path>` pointing at a built foundation directory; to point at a different registry, set `UNIWEB_REGISTRY_URL`.
 
 ## Troubleshooting
 
