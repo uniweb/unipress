@@ -28,6 +28,9 @@ Commands:
                            --config <path>     explicit config file (default: <dir>/unipress.config.js)
                            --typst-binary <p>  path to a typst binary (skips managed download)
                            --keep-temp         keep the typst temp dir on failure (for debugging)
+                           --yes               if no document.yml exists, generate one from the
+                                                 folder's markdown without prompting (defaults to
+                                                 the book foundation; honors --foundation/--format)
   create <dir>           Scaffold a new unipress project from a template
                            --template <id>     template to use (interactive picker if omitted)
                            --title <str>       document title (prompts if omitted)
@@ -130,6 +133,7 @@ async function main(argv) {
           config: values.config ?? null,
           typstBinary: values['typst-binary'] ?? null,
           keepTemp: !!values['keep-temp'],
+          yes: !!values.yes,
           verbose: !!values.verbose
         })
         break

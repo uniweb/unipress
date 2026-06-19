@@ -25,15 +25,48 @@ The positional argument to `unipress compile` is wrong. Check your `cd` and the 
 
 ## `DocumentYmlError: no document.yml (or site.yml) found in <path>`
 
-unipress expects a top-level config file inside the content directory. Create `document.yml` at the root:
+unipress expects a top-level config file inside the content directory.
+
+If the folder already holds markdown, you don't have to write one by hand —
+`compile` offers to generate it. Running interactively, it prompts:
+
+```
+$ unipress compile .
+No document.yml here. Create one (@uniweb/book@0.3.0, pdf, 12 chapters at the project root) and compile? (Y/n)
+Document title › My Document
+created /path/to/document.yml
+```
+
+Pass `--yes` to skip the prompt (handy in scripts or non-interactive shells):
+
+```bash
+unipress compile . --yes                     # generate + compile, book foundation, pdf
+unipress compile . --yes --foundation @uniweb/data@0.1.0 --format docx
+```
+
+The generated `document.yml` pins a foundation, sets the format, lists the
+chapters in reading order, and — when the markdown sits loose at the project
+root rather than under `content/` — points the content directory at the root
+with `paths: { pages: . }`. It's an ordinary config file; edit it freely.
+
+To write one by hand instead:
 
 ```yaml
-foundation: "@uniweb/book@0.1.0"
+foundation: "@uniweb/book@0.3.0"
 format: pdf
-pages: [preface, chapter-1, chapter-2]
+paths:
+  pages: .          # only needed when chapters live at the root (no content/ folder)
+content: [preface, chapter-1, chapter-2]
 ```
 
 `site.yml` is accepted as a fallback if you're dogfooding an existing Uniweb site.
+
+## `DocumentYmlError: <config> has no pages — nothing to compile`
+
+A config file exists, but the collector found no chapters. The usual cause is
+markdown living somewhere the document profile didn't scan — loose at the
+project root while the profile looks under `content/`. The error names the fix;
+for root-level files, add `paths: { pages: . }` to your `document.yml`.
 
 ## `DocumentYmlError: malformed YAML in document.yml at <file>:<line>:<col>`
 

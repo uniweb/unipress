@@ -27,6 +27,7 @@
 
 import { basename, resolve } from 'node:path'
 import { loadContent } from './content-loader.js'
+import { detectBareContent } from './materialize.js'
 import { resolveFoundation } from './foundation-loader.js'
 import { loadAndInit, compileDocumentWithFoundation, getFoundationOutputs } from './orchestrator.js'
 import { loadUnipressConfig } from './config.js'
@@ -56,6 +57,22 @@ export async function compile({
   onProgress('loading content...')
   const { content, sitePath, configFile } = await loadContent(dir)
   onProgress(`  ${content.pages.length} page(s) from ${sitePath} (${configFile})`)
+
+  // A config exists but nothing was collected — almost always the markdown
+  // sits in a directory the profile didn't look in (e.g. loose at the root
+  // while the document profile scans content/). Fail loudly with the fix
+  // rather than silently emitting an empty document.
+  if (content.pages.length === 0) {
+    const bare = detectBareContent(sitePath)
+    const hint = bare
+      ? bare.contentDir === '.'
+        ? `found ${bare.chapters.length} markdown file(s) at the project root — add 'paths: { pages: . }' to ${configFile}`
+        : `found markdown in ${bare.contentDir}/ — add 'paths: { pages: ${bare.contentDir} }' to ${configFile}`
+      : `no markdown files found — check the content directory and ${configFile}`
+    throw new DocumentYmlError(
+      `${configFile} has no pages — nothing to compile.\nhint: ${hint}`
+    )
+  }
 
   // Load unipress.config.js — from --config, then <dir>/unipress.config.js,
   // else empty. Relative paths inside the config are resolved against the
