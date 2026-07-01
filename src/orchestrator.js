@@ -21,14 +21,23 @@
 //
 // React-instance note (gotcha #2): @uniweb/runtime/ssr (built bundle) imports
 // React as an external; the foundation does the same. Both must resolve to the
-// same React instance, otherwise hooks in foundation components throw "Invalid
-// hook call". Inside this monorepo react is hoisted; in a real npm install of
-// unipress, both also resolve from unipress's node_modules.
+// SAME React instance, otherwise hooks in foundation components throw "Invalid
+// hook call" — and the foundation must see the SAME @uniweb/core unipress built
+// the Website graph with. Importing runtime-externals.js (below) publishes
+// unipress's own bundled react / react-dom / @uniweb/core on a globalThis
+// bridge and drives the cache-side shim modules that the fetched foundation
+// resolves against, guaranteeing one shared instance regardless of how unipress
+// is run (source, npm install, or the bun --compile binary). See
+// runtime-externals.js for the full rationale.
 
 import { pathToFileURL } from 'node:url'
 import { readFile } from 'node:fs/promises'
 import { initPrerender } from '@uniweb/runtime/ssr'
 import { FoundationResolutionError, CompileError } from './errors.js'
+// Side-effect import: sets the globalThis bridges before any foundation is
+// dynamically imported. ESM evaluates it once (foundation-fetch.js imports it
+// too, to generate the matching shims).
+import './runtime-externals.js'
 
 export async function importFoundation(resolvedPath) {
   try {

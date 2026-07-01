@@ -31,27 +31,11 @@
 // field and this module will verify bytes before caching.
 
 import { existsSync } from 'node:fs'
-import { mkdir, writeFile, symlink } from 'node:fs/promises'
-import { dirname, join, posix, resolve as pathResolve } from 'node:path'
-import { createRequire } from 'node:module'
-import { fileURLToPath } from 'node:url'
+import { mkdir, writeFile } from 'node:fs/promises'
+import { dirname, join, posix } from 'node:path'
 import { FoundationFetchError } from './errors.js'
 import { getCacheDir } from './typst/binary-manager.js'
-
-const require = createRequire(import.meta.url)
-
-// Bare specifiers that the foundation expects to resolve externally
-// (matches DEFAULT_EXTERNALS in @uniweb/build). At import time, Node
-// walks up from the cache dir looking for a node_modules/<name>. The
-// cache dir isn't inside any package tree, so we link unipress's own
-// installations into a co-located node_modules.
-const EXTERNAL_PACKAGES = [
-  'react',
-  'react-dom',
-  'react/jsx-runtime',
-  'react/jsx-dev-runtime',
-  '@uniweb/core',
-]
+import { externalShimPackages } from './runtime-externals.js'
 
 // Match `./chunk.js` only in actual ESM import positions — `from './x'`,
 // `import './x'`, or `import('./x')`. A broad "match any quoted ./x.js"
@@ -100,6 +84,10 @@ export async function fetchFoundationToCache(url, { onProgress = () => {} } = {}
     const cached = join(cacheDir, name)
     if (existsSync(cached)) {
       onProgress(`using cached foundation: ${cached}`)
+      // Refresh the external shims even on a cache hit: it's a handful of tiny
+      // files, and it self-heals a cache populated by an older unipress (which
+      // left an empty node_modules or dead symlinks that no longer resolve).
+      await writeExternalShims(cacheDir, onProgress)
       return cached
     }
   }
@@ -138,7 +126,7 @@ export async function fetchFoundationToCache(url, { onProgress = () => {} } = {}
       if (!fetched.has(discovered)) queue.push(discovered)
     }
   }
-  await linkExternals(cacheDir, onProgress)
+  await writeExternalShims(cacheDir, onProgress)
   const entryPath = join(cacheDir, entryName)
   onProgress(`foundation cached at ${cacheDir} (${fetched.size} file(s))`)
   return entryPath
@@ -171,63 +159,32 @@ async function pickRemoteEntry(baseUrl, onProgress) {
   )
 }
 
-// Make unipress's own copies of the externalized packages reachable
-// from the cache dir. Node's ESM loader walks up from the importing
-// file looking for `node_modules/<name>` — by placing a node_modules
-// directory next to the cached entry with symlinks to each
-// external's package directory, bare imports inside the foundation
-// resolve to unipress's already-installed copies. This keeps a single
-// React instance (unipress's) across host and foundation.
-async function linkExternals(cacheDir, onProgress) {
+// Lay shim modules for the foundation's externalized peer deps into a
+// node_modules beside the cached entry, so the dynamically imported foundation
+// resolves react / react-dom / @uniweb/core to unipress's own bundled instances
+// (via the globalThis bridge in runtime-externals.js) rather than hunting for a
+// node_modules that isn't there.
+//
+// Replaces the old symlink-to-local-copies approach, which couldn't locate
+// on-disk copies inside the `bun --compile` binary: the deps are bundled into
+// the binary, and require.resolve resolves relative to the CWD, so it found
+// nothing when unipress ran from a project with no react up its tree. The shims
+// read the bridge instead of resolving a real package, so they work from any
+// directory and in any distribution. See runtime-externals.js for the full
+// rationale and the single-instance guarantee.
+//
+// Idempotent and overwriting: cheap (a handful of tiny files), and self-heals a
+// cache left in a bad state by an older unipress.
+async function writeExternalShims(cacheDir, onProgress) {
   const nmDir = join(cacheDir, 'node_modules')
-  await mkdir(nmDir, { recursive: true })
-  // Collapse subpath specifiers (react/jsx-runtime → react) to the
-  // package-root specifier we actually link. Deduped.
-  const rootSpecs = new Set()
-  for (const spec of EXTERNAL_PACKAGES) {
-    rootSpecs.add(spec.startsWith('@')
-      ? spec.split('/').slice(0, 2).join('/')  // '@scope/name'
-      : spec.split('/')[0])                     // 'name'
-  }
-  for (const name of rootSpecs) {
-    const dest = name.startsWith('@')
-      ? join(nmDir, ...name.split('/'))         // node_modules/@scope/name
-      : join(nmDir, name)                       // node_modules/name
-    if (existsSync(dest)) continue
-    try {
-      const pkgDir = findPackageRoot(name)
-      if (!pkgDir) {
-        onProgress(`  warn: cannot find '${name}' in unipress deps — foundation may fail to import`)
-        continue
-      }
-      await mkdir(dirname(dest), { recursive: true })
-      await symlink(pkgDir, dest, 'dir')
-      onProgress(`  linked ${name} → ${pkgDir}`)
-    } catch (err) {
-      onProgress(`  warn: linking ${name} failed: ${err.message}`)
+  for (const pkg of externalShimPackages()) {
+    const pkgDir = join(nmDir, ...pkg.dir.split('/'))
+    await mkdir(pkgDir, { recursive: true })
+    await writeFile(join(pkgDir, 'package.json'), pkg.packageJson)
+    for (const [rel, source] of Object.entries(pkg.files)) {
+      await writeFile(join(pkgDir, rel), source)
     }
-  }
-}
-
-function findPackageRoot(name) {
-  try {
-    // Resolve the package's `package.json` to find its root.
-    const pkgJson = require.resolve(`${name}/package.json`)
-    return dirname(pkgJson)
-  } catch {
-    // Fallback: resolve a default export and strip back.
-    try {
-      const entry = require.resolve(name)
-      let dir = dirname(entry)
-      while (dir !== dirname(dir)) {
-        if (existsSync(join(dir, 'package.json'))) {
-          const pkg = JSON.parse(require('fs').readFileSync(join(dir, 'package.json'), 'utf8'))
-          if (pkg.name === name || pkg.name === name.split('/')[0]) return dir
-        }
-        dir = dirname(dir)
-      }
-    } catch {}
-    return null
+    onProgress(`  shimmed ${pkg.dir} → unipress's bundled copy`)
   }
 }
 
