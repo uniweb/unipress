@@ -53,7 +53,7 @@ with `paths: { pages: . }`. It's an ordinary config file; edit it freely.
 To write one by hand instead:
 
 ```yaml
-foundation: "@uniweb/book@0.4.1"
+foundation: "@uniweb/book@0.4.2"
 format: pdf
 paths:
   pages: .          # only needed when sections live at the root (no content/ folder)
