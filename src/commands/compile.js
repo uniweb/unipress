@@ -17,6 +17,14 @@ import { detectConfigFile, CONFIG_FILE_NAMES } from '../document-yml.js'
 import { detectBareContent, materializeDocumentYml } from '../materialize.js'
 import { findCatalogEntry } from '../catalog.js'
 
+// `--variant book` → `book.yml`; `--variant print.yaml` → `print.yaml`.
+// The name is used verbatim — no `document-` prefixing — with a `.yml`
+// extension assumed when none is given. Returns null when unset.
+export function variantToConfigFile(variant) {
+  if (!variant) return null
+  return /\.ya?ml$/i.test(variant) ? variant : `${variant}.yml`
+}
+
 // Bare-folder default: the book foundation's `article` genre — a clean
 // single-column A4 paper, the natural shape for a loose folder of markdown.
 const DEFAULT_FOUNDATION =
@@ -98,7 +106,7 @@ async function offerToMaterialize({ sitePath, format, foundation, yes }) {
   return true
 }
 
-export async function compileCommand({ dir, format = null, foundation = null, out = null, config = null, document = null, typstBinary = null, keepTemp = false, yes = false, verbose = false } = {}) {
+export async function compileCommand({ dir, format = null, foundation = null, out = null, config = null, variant = null, typstBinary = null, keepTemp = false, yes = false, verbose = false } = {}) {
   if (!dir) {
     process.stderr.write('error: `compile` requires a directory argument\n')
     process.stderr.write('usage: unipress compile <dir> [--format <fmt>] [--foundation <ref>] [--out <path>] [--config <path>] [--typst-binary <path>] [--keep-temp] [--yes] [--verbose]\n')
@@ -106,9 +114,9 @@ export async function compileCommand({ dir, format = null, foundation = null, ou
   }
 
   const sitePath = resolve(dir)
-  // `--document <file>` names an explicit config; don't offer to generate
+  // `--variant <name>` names an explicit config; don't offer to generate
   // one (loadContent throws a clear error if the named file is missing).
-  if (!document && existsSync(sitePath) && !detectConfigFile(sitePath)) {
+  if (!variant && existsSync(sitePath) && !detectConfigFile(sitePath)) {
     const proceed = await offerToMaterialize({ sitePath, format, foundation, yes })
     if (!proceed) process.exit(1)
   }
@@ -123,7 +131,7 @@ export async function compileCommand({ dir, format = null, foundation = null, ou
     foundationRef: foundation,
     outPath: out,
     configPath: config,
-    documentConfig: document,
+    documentConfig: variantToConfigFile(variant),
     typstBinaryPath: typstBinary,
     keepTemp,
     onProgress

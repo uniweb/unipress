@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { loadContent } from '../src/content-loader.js'
+import { variantToConfigFile } from '../src/commands/compile.js'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const fixture = (name) => join(here, 'fixtures', name)
@@ -79,9 +80,47 @@ describe('content-loader — alternate document config (--document)', () => {
     expect(cover.resolved.endsWith('/assets/cover.png')).toBe(true)
   })
 
-  it('throws when the named --document config does not exist', async () => {
+  it('throws when the named --variant config does not exist', async () => {
     await expect(
       loadContent(dir, { configFile: 'document-missing.yml' }),
     ).rejects.toThrow(/document-missing\.yml/)
+  })
+})
+
+describe('variantToConfigFile — --variant name resolution', () => {
+  it('assumes a .yml extension when none is given', () => {
+    expect(variantToConfigFile('book')).toBe('book.yml')
+    expect(variantToConfigFile('document-book')).toBe('document-book.yml')
+  })
+
+  it('keeps an explicit .yml / .yaml extension', () => {
+    expect(variantToConfigFile('book.yml')).toBe('book.yml')
+    expect(variantToConfigFile('print.yaml')).toBe('print.yaml')
+  })
+
+  it('uses the name verbatim — no document- prefixing', () => {
+    expect(variantToConfigFile('book')).toBe('book.yml')
+    expect(variantToConfigFile('book')).not.toBe('document-book.yml')
+  })
+
+  it('returns null when unset', () => {
+    expect(variantToConfigFile(null)).toBe(null)
+    expect(variantToConfigFile('')).toBe(null)
+  })
+})
+
+describe('content-loader — a variant config gets the document profile', () => {
+  it('reads a non-"document"-named config with the document profile', async () => {
+    const { content } = await loadContent(fixture('variant-profile'), {
+      configFile: 'book.yml',
+    })
+    // Document profile = folder mode: each chapter markdown is its own page.
+    // Under the site profile they would collapse into sections of one page,
+    // so counting Chapter-bearing pages proves unipress forces the document
+    // profile regardless of the config's filename (book.yml has no prefix).
+    const chapterPages = content.pages.filter((p) =>
+      p.sections?.some((s) => s.type === 'Chapter'),
+    )
+    expect(chapterPages.length).toBe(2)
   })
 })

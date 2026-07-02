@@ -140,9 +140,11 @@ unipress compile <dir> [options]
                         - URL:           https://…/entry.js
                         - path:          ./foundation, /abs/path, …
   --out <path>        Output file (default: ./<dir-basename>.<ext>).
-  --document <file>   Alternate top-level config inside <dir> (e.g. document-book.yml)
-                      instead of the default document.yml. Lets one manuscript hold
-                      several cuts — an A4 article and a trade book — side by side.
+  --variant <name>    Build an alternate top-level config <name>.yml inside <dir>
+                      (e.g. --variant document-book → document-book.yml) instead of the
+                      default document.yml. Lets one manuscript hold several cuts —
+                      an A4 article and a trade book — side by side. The name is used
+                      as given (a .yml extension is assumed if omitted).
   --config <path>     Explicit config file (default: <dir>/unipress.config.js).
   --typst-binary <p>  Path to a typst binary (skips the managed download).
   --keep-temp         On typst-compile failure, keep the temp dir for inspection.
@@ -198,7 +200,7 @@ The content-directory-level config. Fields unipress reads:
 #### Several cuts of one manuscript
 
 Keep more than one top-level config beside your content and pick one per build with
-`--document`. The same chapters can ship as an A4 article and a trade book:
+`--variant`. The same chapters can ship as an A4 article and a trade book:
 
 ```text
 my-book/
@@ -207,15 +209,16 @@ my-book/
   assets/front.png
   01-intro.md  02-…
 
-unipress compile .                            # → article
-unipress compile . --document document-book.yml   # → book
+unipress compile .                          # → article (document.yml)
+unipress compile . --variant document-book  # → book (document-book.yml)
 ```
 
-Any config named `document*.yml` gets the document profile; `site*.yml` gets the site
-profile. Config-declared assets — `book.covers.front`, banners, logos — are resolved
-from the file `--document` selects, so **covers must live in the config unipress reads**
-(a `--document` file or the default `document.yml`), not in a `unipress.config.js`
-`--config` override, whose asset paths aren't scanned.
+`--variant <name>` reads `<name>.yml` from the content directory — the name is used as
+given (no prefixing) with `.yml` assumed when omitted. Config-declared assets —
+`book.covers.front`, banners, logos — are resolved from the config the build reads, so
+**covers must live in the config unipress reads** (the `--variant` file or the default
+`document.yml`), not in a `unipress.config.js` `--config` override, whose asset paths
+aren't scanned.
 
 ### `unipress.config.js`
 

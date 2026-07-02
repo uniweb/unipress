@@ -8,8 +8,8 @@
 // image asset-processor (which eagerly loads sharp's native binding and
 // blows up in a `bun build --compile` binary).
 
-import { existsSync } from 'node:fs'
-import { resolve, join } from 'node:path'
+import { existsSync, readdirSync } from 'node:fs'
+import { resolve, join, basename } from 'node:path'
 import { collectSiteContent, processCollections } from '@uniweb/build/content'
 import { detectConfigFile, CONFIG_FILE_NAMES } from './document-yml.js'
 import { ContentDirectoryError, DocumentYmlError } from './errors.js'
@@ -121,6 +121,21 @@ async function resolveLocalCollections(siteContent, sitePath) {
   }
 }
 
+// Discoverability aid: when a named `--variant` config is missing, list the
+// YAML configs that ARE present so a typo (or a forgotten `.yml`) is easy to
+// spot and fix.
+function listConfigsHint(sitePath) {
+  try {
+    const ymls = readdirSync(sitePath).filter(
+      (f) => f.endsWith('.yml') || f.endsWith('.yaml'),
+    )
+    if (!ymls.length) return ''
+    return `\navailable configs here: ${ymls.join(', ')}`
+  } catch {
+    return ''
+  }
+}
+
 export async function loadContent(dir, options = {}) {
   const sitePath = resolve(dir)
 
@@ -128,17 +143,17 @@ export async function loadContent(dir, options = {}) {
     throw new ContentDirectoryError(`content directory does not exist: ${sitePath}`)
   }
 
-  // An explicit config name (from `--document`) selects an alternate
+  // An explicit config name (from `--variant`) selects an alternate
   // top-level config inside the content dir — e.g. a `document-book.yml`
-  // that lives beside the default `document.yml`. It must exist; we don't
-  // fall back to auto-detection when the user named a specific file.
-  // Otherwise auto-detect `document.yml` / `site.yml`.
+  // beside the default `document.yml`. It must exist; we don't fall back
+  // to auto-detection when the user named one. Otherwise auto-detect
+  // `document.yml` / `site.yml`.
   let configFile
   if (options.configFile) {
     configFile = options.configFile
     if (!existsSync(join(sitePath, configFile))) {
       throw new DocumentYmlError(
-        `--document config not found: ${join(sitePath, configFile)}`
+        `variant config not found: ${join(sitePath, configFile)}${listConfigsHint(sitePath)}`
       )
     }
   } else {
@@ -150,10 +165,17 @@ export async function loadContent(dir, options = {}) {
     }
   }
 
+  // unipress is a document tool: read any config that isn't the `site.yml`
+  // dogfood fallback with the document profile (content/ + folder mode +
+  // `content:` ordering), regardless of the file's name. So a variant can
+  // be named freely (book.yml, print.yml) and still build as a document.
+  const profile = basename(configFile).startsWith('site') ? 'site' : 'document'
+
   let content
   try {
     content = await collectSiteContent(sitePath, {
       configFile,
+      profile,
       foundationPath: options.foundationPath
     })
   } catch (err) {

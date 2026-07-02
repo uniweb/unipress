@@ -1,0 +1,7 @@
+name: "Book"
+format: pdf
+paths:
+  pages: .
+content:
+  - a
+  - b

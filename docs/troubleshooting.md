@@ -211,7 +211,7 @@ default `document.yml`, or the file you pass to `--document`. They are *not* sca
 a `unipress.config.js` supplied via `--config` (that file layers build settings — `out`,
 `format`, `typst` — over the compile, after content is collected).
 
-So if your covers live in `document-book.yml`, build it with `--document document-book.yml`
+So if your covers live in `document-book.yml`, build it with `--variant document-book`
 — not `--config document-book.yml`. Confirm with `--verbose`: the `Found N asset references`
 line should count your covers (e.g. 2 more than the body images), and the source-bundle
 `blob:` size should grow by roughly the covers' byte size. Also confirm the files exist at
