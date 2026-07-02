@@ -140,6 +140,9 @@ unipress compile <dir> [options]
                         - URL:           https://…/entry.js
                         - path:          ./foundation, /abs/path, …
   --out <path>        Output file (default: ./<dir-basename>.<ext>).
+  --document <file>   Alternate top-level config inside <dir> (e.g. document-book.yml)
+                      instead of the default document.yml. Lets one manuscript hold
+                      several cuts — an A4 article and a trade book — side by side.
   --config <path>     Explicit config file (default: <dir>/unipress.config.js).
   --typst-binary <p>  Path to a typst binary (skips the managed download).
   --keep-temp         On typst-compile failure, keep the temp dir for inspection.
@@ -191,6 +194,28 @@ The content-directory-level config. Fields unipress reads:
 | `book:`, `report:`, `collections:` … | Foundation-specific config blocks. The foundation's `getOptions` reads these. |
 
 `site.yml` is also accepted as a fallback for compatibility with existing Uniweb site directories.
+
+#### Several cuts of one manuscript
+
+Keep more than one top-level config beside your content and pick one per build with
+`--document`. The same chapters can ship as an A4 article and a trade book:
+
+```text
+my-book/
+  document.yml         # A4 article (the default: unipress compile .)
+  document-book.yml    # trade 6×9 with covers
+  assets/front.png
+  01-intro.md  02-…
+
+unipress compile .                            # → article
+unipress compile . --document document-book.yml   # → book
+```
+
+Any config named `document*.yml` gets the document profile; `site*.yml` gets the site
+profile. Config-declared assets — `book.covers.front`, banners, logos — are resolved
+from the file `--document` selects, so **covers must live in the config unipress reads**
+(a `--document` file or the default `document.yml`), not in a `unipress.config.js`
+`--config` override, whose asset paths aren't scanned.
 
 ### `unipress.config.js`
 

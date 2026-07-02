@@ -25,6 +25,9 @@ Commands:
                                                  latex emits a LaTeX source bundle (run latexmk yourself)
                            --foundation <ref>  override document.yml's foundation: field
                            --out <path>        output file (default: ./<dir>.<ext>)
+                           --document <file>   alternate top-level config in <dir> (e.g.
+                                                 document-book.yml) instead of document.yml —
+                                                 build several cuts of one manuscript
                            --config <path>     explicit config file (default: <dir>/unipress.config.js)
                            --typst-binary <p>  path to a typst binary (skips managed download)
                            --keep-temp         keep the typst temp dir on failure (for debugging)
@@ -86,6 +89,7 @@ async function main(argv) {
       format: { type: 'string' },
       out: { type: 'string' },
       config: { type: 'string' },
+      document: { type: 'string' },
       title: { type: 'string' },
       author: { type: 'string' },
       force: { type: 'boolean' },
@@ -131,6 +135,7 @@ async function main(argv) {
           foundation: values.foundation ?? null,
           out: values.out ?? null,
           config: values.config ?? null,
+          document: values.document ?? null,
           typstBinary: values['typst-binary'] ?? null,
           keepTemp: !!values['keep-temp'],
           yes: !!values.yes,

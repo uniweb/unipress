@@ -98,7 +98,7 @@ async function offerToMaterialize({ sitePath, format, foundation, yes }) {
   return true
 }
 
-export async function compileCommand({ dir, format = null, foundation = null, out = null, config = null, typstBinary = null, keepTemp = false, yes = false, verbose = false } = {}) {
+export async function compileCommand({ dir, format = null, foundation = null, out = null, config = null, document = null, typstBinary = null, keepTemp = false, yes = false, verbose = false } = {}) {
   if (!dir) {
     process.stderr.write('error: `compile` requires a directory argument\n')
     process.stderr.write('usage: unipress compile <dir> [--format <fmt>] [--foundation <ref>] [--out <path>] [--config <path>] [--typst-binary <path>] [--keep-temp] [--yes] [--verbose]\n')
@@ -106,7 +106,9 @@ export async function compileCommand({ dir, format = null, foundation = null, ou
   }
 
   const sitePath = resolve(dir)
-  if (existsSync(sitePath) && !detectConfigFile(sitePath)) {
+  // `--document <file>` names an explicit config; don't offer to generate
+  // one (loadContent throws a clear error if the named file is missing).
+  if (!document && existsSync(sitePath) && !detectConfigFile(sitePath)) {
     const proceed = await offerToMaterialize({ sitePath, format, foundation, yes })
     if (!proceed) process.exit(1)
   }
@@ -121,6 +123,7 @@ export async function compileCommand({ dir, format = null, foundation = null, ou
     foundationRef: foundation,
     outPath: out,
     configPath: config,
+    documentConfig: document,
     typstBinaryPath: typstBinary,
     keepTemp,
     onProgress

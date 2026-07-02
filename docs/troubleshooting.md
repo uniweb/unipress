@@ -200,6 +200,23 @@ The config file's default export is a string, number, array, or something else. 
 export default { format: 'pdf' }
 ```
 
+## Cover image (or other config asset) doesn't appear in the output
+
+Not an error — a silent drop. The book compiles, but the front/back cover (or a
+banner/logo declared in config) is missing from the PDF/EPUB.
+
+Config-declared asset paths — `book.covers.front`, `book.covers.back`, and the like —
+are resolved from the top-level config unipress **reads for content collection**: the
+default `document.yml`, or the file you pass to `--document`. They are *not* scanned from
+a `unipress.config.js` supplied via `--config` (that file layers build settings — `out`,
+`format`, `typst` — over the compile, after content is collected).
+
+So if your covers live in `document-book.yml`, build it with `--document document-book.yml`
+— not `--config document-book.yml`. Confirm with `--verbose`: the `Found N asset references`
+line should count your covers (e.g. 2 more than the body images), and the source-bundle
+`blob:` size should grow by roughly the covers' byte size. Also confirm the files exist at
+the declared path relative to the content directory (e.g. `assets/front.png`).
+
 ## Internal error (exit code 2)
 
 Something unexpected threw — typically a library error or a code path unipress didn't wrap. Re-run with `--verbose` for a stack trace, then open an issue with the trace and a description of the content directory + foundation you're compiling.

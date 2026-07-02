@@ -128,11 +128,26 @@ export async function loadContent(dir, options = {}) {
     throw new ContentDirectoryError(`content directory does not exist: ${sitePath}`)
   }
 
-  const configFile = detectConfigFile(sitePath)
-  if (!configFile) {
-    throw new DocumentYmlError(
-      `no ${CONFIG_FILE_NAMES.PRIMARY} (or ${CONFIG_FILE_NAMES.FALLBACK}) found in ${sitePath}`
-    )
+  // An explicit config name (from `--document`) selects an alternate
+  // top-level config inside the content dir — e.g. a `document-book.yml`
+  // that lives beside the default `document.yml`. It must exist; we don't
+  // fall back to auto-detection when the user named a specific file.
+  // Otherwise auto-detect `document.yml` / `site.yml`.
+  let configFile
+  if (options.configFile) {
+    configFile = options.configFile
+    if (!existsSync(join(sitePath, configFile))) {
+      throw new DocumentYmlError(
+        `--document config not found: ${join(sitePath, configFile)}`
+      )
+    }
+  } else {
+    configFile = detectConfigFile(sitePath)
+    if (!configFile) {
+      throw new DocumentYmlError(
+        `no ${CONFIG_FILE_NAMES.PRIMARY} (or ${CONFIG_FILE_NAMES.FALLBACK}) found in ${sitePath}`
+      )
+    }
   }
 
   let content

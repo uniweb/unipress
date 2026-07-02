@@ -1,0 +1,6 @@
+name: "Default Article"
+format: pdf
+paths:
+  pages: .
+content:
+  - intro

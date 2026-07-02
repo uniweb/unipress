@@ -1,0 +1,9 @@
+name: "Book Cut"
+format: pdf
+paths:
+  pages: .
+book:
+  covers:
+    front: assets/cover.png
+content:
+  - intro

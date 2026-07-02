@@ -52,10 +52,13 @@ export async function compile({
   typstBinaryPath: cliTypstBinaryPath = null,
   keepTemp = false,
   configPath: cliConfigPath = null,
+  documentConfig = null,
   onProgress = () => {}
 } = {}) {
   onProgress('loading content...')
-  const { content, sitePath, configFile } = await loadContent(dir)
+  const { content, sitePath, configFile } = await loadContent(dir, {
+    configFile: documentConfig
+  })
   onProgress(`  ${content.pages.length} page(s) from ${sitePath} (${configFile})`)
 
   // A config exists but nothing was collected — almost always the markdown

@@ -43,3 +43,45 @@ describe('content-loader — local collection resolution', () => {
     expect(childData.length).toBe(parentData.length)
   })
 })
+
+describe('content-loader — alternate document config (--document)', () => {
+  const dir = fixture('alt-document-config')
+
+  it('reads document.yml by default', async () => {
+    const { content, configFile } = await loadContent(dir)
+    expect(configFile).toBe('document.yml')
+    expect(content.config.name).toBe('Default Article')
+    // Document profile: the root-level chapter is collected.
+    const home = content.pages.find((p) => p.route === '/')
+    expect(home?.sections?.some((s) => s.type === 'Chapter')).toBe(true)
+  })
+
+  it('reads an explicit alternate config and keeps the document profile', async () => {
+    const { content, configFile } = await loadContent(dir, {
+      configFile: 'document-book.yml',
+    })
+    expect(configFile).toBe('document-book.yml')
+    expect(content.config.name).toBe('Book Cut')
+    // Prefix-matched to the document profile (not the site fallback), so the
+    // root chapter still resolves from the alternate config.
+    const home = content.pages.find((p) => p.route === '/')
+    expect(home?.sections?.some((s) => s.type === 'Chapter')).toBe(true)
+  })
+
+  it('scans config-declared cover assets from the alternate config', async () => {
+    const { content } = await loadContent(dir, { configFile: 'document-book.yml' })
+    // book.covers.front must land in the asset manifest so the foundation's
+    // loadAsset can resolve it at compile time. This is the exact path that
+    // silently dropped when covers rode a `--config` override instead of the
+    // config unipress actually reads.
+    const cover = content.assets['assets/cover.png']
+    expect(cover, 'cover should be registered in website.assets').toBeTruthy()
+    expect(cover.resolved.endsWith('/assets/cover.png')).toBe(true)
+  })
+
+  it('throws when the named --document config does not exist', async () => {
+    await expect(
+      loadContent(dir, { configFile: 'document-missing.yml' }),
+    ).rejects.toThrow(/document-missing\.yml/)
+  })
+})
