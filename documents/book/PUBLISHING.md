@@ -4,6 +4,11 @@ Once you have a finished book — the writing done, the cover artwork in place, 
 
 unipress produces the files. What you do with them is up to you. These are notes on the most common paths.
 
+> **The full guide is online.** This file is a quick map that ships in your project.
+> For the end-to-end walkthrough — the proof → final workflow, cover and image
+> sizing, trim sizes, EPUB validation, print-on-demand step by step, ISBNs, and
+> metadata — see [**Publishing your book**](https://github.com/uniweb/unipress/blob/main/docs/publishing/README.md).
+
 ## What you'll need
 
 You'll typically end up needing some or all of these:

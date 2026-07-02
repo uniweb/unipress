@@ -62,6 +62,10 @@ cd my-book && unipress compile .
 
 Equations work in the standard LaTeX style — `$E = mc^2$` for inline, `$$...$$` for displayed. Tables, lists, footnotes, code blocks, and images all behave the way you'd expect from markdown.
 
+## Publishing your book
+
+Making the files is half the job; getting your book onto Amazon, Apple Books, and print-on-demand is the other half. The **[Publishing your book](./docs/publishing/README.md)** guide is an end-to-end walkthrough written for authors — the proof → final workflow, covers and images, trim sizes, EPUB validation, print-on-demand, ISBNs, and metadata — with links to every store and service.
+
 ## Two ways to use it
 
 **For authors.** unipress is a tool. Pick a template, write markdown, compile. The template knows the conventions for its kind of document — typography, structure, the bits that make a book look like a book and a directory look like a directory. You handle the content; the template handles everything else.
