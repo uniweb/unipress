@@ -49,6 +49,8 @@ cd my-book && unipress compile .
 
 `create` writes a content-only directory — markdown, a `document.yml`, optional `theme.yml` and `assets/`; no `package.json`, no `node_modules`. Pick the template that matches your document (see [Pick a template](#pick-a-template)) — it carries the typography and structure so a book reads like a book and a directory like a directory.
 
+> **Planning to publish?** There's a full author's guide that takes a book from your folder all the way to Amazon and print — [Publishing your book](./docs/publishing/README.md).
+
 ## What it makes
 
 | Format | What it's for |
@@ -268,9 +270,12 @@ unipress is **pre-1.0**. The CLI is stable enough to write real documents with �
 
 **Foundations are fetched on first use.** The bundled templates pin foundations served from `https://uniweb.github.io/unipress/foundations/…`; the first compile downloads and caches the one your `document.yml` names (alongside the Typst binary). To iterate on a foundation locally, pass `--foundation <path>` pointing at a built foundation directory; to point at a different registry, set `UNIWEB_REGISTRY_URL`.
 
-## Troubleshooting
+## Documentation
 
-See [docs/troubleshooting.md](./docs/troubleshooting.md) for common errors and fixes — every named error class maps to a cause and a concrete next step.
+- **[Publishing your book](./docs/publishing/README.md)** — the end-to-end guide for authors: the proof → final workflow, covers and images, trim sizes, EPUB, print-on-demand, ISBNs, and metadata.
+- **Template guides** — conventions and settings per document kind: [article](./docs/templates/article.md), [book](./docs/templates/book.md), [monograph](./docs/templates/monograph.md), [report](./docs/templates/report.md), [data-report](./docs/templates/data-report.md), [directory](./docs/templates/directory.md).
+- **[Troubleshooting](./docs/troubleshooting.md)** — common errors and fixes; every named error class maps to a cause and a concrete next step.
+- **[For developers](./docs/for-developers.md)** — building a foundation: section types, data sources, and custom output formats.
 
 ## See also
 
