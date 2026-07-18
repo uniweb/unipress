@@ -12494,7 +12494,7 @@ function k_(e) {
 /* Code element inside shiki */
 .shiki code {
   display: block;
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-code, ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace);
 }
 `, document.head.appendChild(r), dl = !0;
 }
