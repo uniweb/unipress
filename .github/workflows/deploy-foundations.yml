@@ -32,6 +32,12 @@ name: Deploy Foundations
 on:
   push:
     branches: [main]
+    # A commit that only touches CI config cannot change a foundation's output,
+    # so it should not republish one. Without this, editing a workflow file
+    # redeploys every foundation as a side effect. Use the manual trigger to
+    # verify a change to this file.
+    paths-ignore:
+      - '.github/**'
   workflow_dispatch:
 
 permissions:
