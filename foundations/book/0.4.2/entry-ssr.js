@@ -17146,6 +17146,11 @@ function e4(e, n = {}) {
         type: "document-group",
         documents: e.content?.filter((u) => u.type === "document").map((u) => l4(u.attrs)) || []
       };
+    // The editor renamed this node to `StructuredContent` (2026-07-31,
+    // editor-internal). Both are accepted: the new name is what the editor
+    // emits now, and the old one still arrives from documents authored
+    // before the rename, which the framework never rewrites.
+    case "StructuredContent":
     case "FormBlock":
       let o = t?.data;
       if (typeof o == "string")
