@@ -9066,8 +9066,8 @@ const $D = {
   latex: { load: () => Promise.resolve().then(() => Kle), consumes: "latex", ir: !0 },
   // Paged.js consumes 'html' — an input shape shared with EPUB below.
   // Foundations register once under 'html' and both adapters read it.
-  pagedjs: { load: () => Promise.resolve().then(() => Qle), consumes: "html", ir: !1 },
-  epub: { load: () => Promise.resolve().then(() => oue), consumes: "html", ir: !1 }
+  pagedjs: { load: () => Promise.resolve().then(() => tue), consumes: "html", ir: !1 },
+  epub: { load: () => Promise.resolve().then(() => uue), consumes: "html", ir: !1 }
 };
 function Qy(e) {
   const r = $D[e];
@@ -9845,7 +9845,7 @@ function Va(e) {
     loading: i.where ? o : !1
   };
 }
-function sde({ content: e, block: r }) {
+function lde({ content: e, block: r }) {
   const { members: t, activeView: n, activeLabel: a, totalCount: i } = Va(e), s = Array.isArray(e?.paragraphs) ? e.paragraphs : [], o = t.reduce(
     (h, d) => h + (Array.isArray(d.publications) ? d.publications.length : 0),
     0
@@ -28700,7 +28700,7 @@ const oee = "funding", lee = ["Source", "Grants", "Total (GBP)"], uee = [32, 10,
   currency: "GBP",
   maximumFractionDigits: 0
 });
-function ode({ content: e, block: r }) {
+function ude({ content: e, block: r }) {
   const t = Zs(oee), { members: n, activeLabel: a } = Va(e), i = e?.title || "Funding received", s = hee(n), o = s.reduce((l, c) => l + c.total, 0);
   nn(
     r,
@@ -28847,7 +28847,7 @@ function hee(e) {
   );
 }
 const dee = "members", Hb = ["Name", "Rank", "Department", "Tenured", "Start year"], pee = [28, 14, 18, 10, 12], gee = ["text", "text", "text", "text", "number"];
-function lde({ content: e, block: r }) {
+function cde({ content: e, block: r }) {
   const t = Zs(dee), { members: n, activeLabel: a } = Va(e), i = e?.title || "Members", s = [...n].sort((u, l) => {
     const c = u?.name || "", f = l?.name || "";
     return c.localeCompare(f);
@@ -28928,7 +28928,7 @@ function mee(e, r = {}) {
   return t;
 }
 const bee = "publications-by-journal", vee = 10, yee = ["Venue", "Count"], _ee = [48, 10], wee = ["text", "number"];
-function ude({ content: e, block: r }) {
+function fde({ content: e, block: r }) {
   const t = Zs(bee), { members: n, activeLabel: a } = Va(e), [i] = Mc(), s = e?.title || "Publications by journal", o = xee(n, vee, i);
   nn(
     r,
@@ -29053,7 +29053,7 @@ const See = "publications-by-type", gS = [
   "#64748b"
   // slate (fallback)
 ], Aee = ["Publication type", "Count"], Tee = [24, 10], Oee = ["text", "number"];
-function cde({ content: e, block: r }) {
+function hde({ content: e, block: r }) {
   const t = Zs(See), { members: n, activeLabel: a } = Va(e), [i] = Mc(), s = e?.title || "Publications by type", o = Cee(n, i);
   nn(
     r,
@@ -29174,7 +29174,7 @@ function sy(e) {
   return String(e).charAt(0).toUpperCase() + String(e).slice(1);
 }
 const Iee = "publications-by-year", Pee = ["Year", "Count", "Cumulative"], Nee = [10, 10, 12], Ree = ["number", "number", "number"];
-function fde({ content: e, block: r }) {
+function dde({ content: e, block: r }) {
   const t = Zs(Iee), { members: n, activeLabel: a } = Va(e), [i] = Mc(), s = e?.title || "Publications by year", { series: o, total: u } = Dee(n, i);
   return nn(
     r,
@@ -29296,23 +29296,23 @@ function Bee(e) {
   }).filter(Boolean) : [];
 }
 const Fee = "publications-list", mS = {
-  apa: () => Promise.resolve().then(() => pce),
-  mla: () => Promise.resolve().then(() => jce),
-  "chicago-author-date": () => Promise.resolve().then(() => Lfe),
-  ieee: () => Promise.resolve().then(() => Gfe),
-  vancouver: () => Promise.resolve().then(() => nhe),
-  harvard: () => Promise.resolve().then(() => phe),
-  nature: () => Promise.resolve().then(() => Che)
+  apa: () => Promise.resolve().then(() => mce),
+  mla: () => Promise.resolve().then(() => Fce),
+  "chicago-author-date": () => Promise.resolve().then(() => Bfe),
+  ieee: () => Promise.resolve().then(() => Yfe),
+  vancouver: () => Promise.resolve().then(() => ahe),
+  harvard: () => Promise.resolve().then(() => mhe),
+  nature: () => Promise.resolve().then(() => Phe)
 }, Wb = /* @__PURE__ */ new Map();
 async function Uee(e) {
   if (Wb.has(e)) return Wb.get(e);
   const r = mS[e] || mS.apa, [{ formatAll: t }, n] = await Promise.all([
-    Promise.resolve().then(() => tde),
+    Promise.resolve().then(() => nde),
     r()
   ]), a = { formatAll: t, style: n };
   return Wb.set(e, a), a;
 }
-function hde({ content: e, block: r }) {
+function pde({ content: e, block: r }) {
   const t = Zs(Fee), { members: n, activeLabel: a } = Va(e), [i] = Mc(), s = e?.title || "Publications", o = [...mee(n, i)].sort((g, p) => {
     const b = Number(g.year) || 0;
     return (Number(p.year) || 0) - b;
@@ -29413,7 +29413,7 @@ function hde({ content: e, block: r }) {
   ] });
 }
 const zee = "supervisions", bS = ["#1e40af", "#0f766e", "#ea580c", "#9333ea", "#be123c", "#0ea5e9"];
-function dde({ content: e, block: r }) {
+function gde({ content: e, block: r }) {
   const t = Zs(zee), { members: n, activeLabel: a } = Va(e), i = e?.title || "Supervisions", { levels: s, rows: o, grandTotal: u } = Hee(n), l = ["Member", ...s.map(oy), "Total"], c = o.map((v) => [
     v.member,
     ...s.map((y) => v.counts[y] || 0),
@@ -30024,7 +30024,7 @@ function nte({ body: e, page: r }) {
     /* @__PURE__ */ me(rte, { title: n, filename: a })
   ] });
 }
-const ite = { ...lh, vars: tR || lh?.vars, layouts: { MetricsLayout: nte } }, ate = {}, ste = {}, pde = { meta: ate, capabilities: ite, layoutMeta: ste };
+const ite = { ...lh, vars: tR || lh?.vars, layouts: { MetricsLayout: nte } }, ate = {}, ste = {}, mde = { meta: ate, capabilities: ite, layoutMeta: ste };
 var ote = Object.create, ak = Object.defineProperty, lte = Object.getOwnPropertyDescriptor, ute = Object.getOwnPropertyNames, cte = Object.getPrototypeOf, fte = Object.prototype.hasOwnProperty, sk = (e, r) => () => (e && (r = e(e = 0)), r), Be = (e, r) => () => (r || (e((r = { exports: {} }).exports, r), e = null), r.exports), hte = (e, r, t, n) => {
   if (r && typeof r == "object" || typeof r == "function") for (var a = ute(r), i = 0, s = a.length, o; i < s; i++)
     o = a[i], !fte.call(e, o) && o !== t && ak(e, o, {
@@ -70481,55 +70481,353 @@ const UC = `% Minimal default preamble.
   buildBundle: BC,
   compileLatex: jle,
   markRawLatex: Lle
-}, Symbol.toStringTag, { value: "Module" })), $C = `/* Temml's own class hooks — without these an aligned environment neither
-   aligns nor breathes. */
-.tml-right { text-align: right; }
-.tml-left { text-align: left; }
-.tml-sml-pad { padding-left: 0.05em; }
-/* Row spacing. The browser gives mtd no vertical padding, so state the
-   MathML-Core default here; Temml's own CSS only adjusts it for jot. */
-math mtd { padding-top: 0.5ex; padding-bottom: 0.5ex; }
-math mtable.tml-jot mtd { padding-top: 0.7ex; padding-bottom: 0.7ex; }
-/* AMS auto-numbering, for lanes that keep our CSS counter.
+}, Symbol.toStringTag, { value: "Module" })), Yle = `math {
+  font-family: "Cambria Math", 'STIXTwoMath-Regular', 'NotoSansMath-Regular', math;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size-adjust: none;
+  text-indent: 0;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  direction: ltr;
+  /* Prevent Firefox from omitting the dot on i or j. */
+  font-feature-settings: "dtls" off;
+}
 
-   Scoped to :empty because the document lanes cannot rely on it -- Paged.js
-   rewrites counters for its own pagination and strips counter-increment, so
-   every equation rendered as "(0)" (measured 2026-07-31; the declaration
-   survives intact without the polyfill). press therefore writes the numbers
-   into the spans as text, and a span carrying a number is no longer :empty, so
-   the two can never both fire.
+math * {
+  border-color: currentColor;
+}
 
-   AMS auto-numbering. Which equations number is the AUTHOR's choice, made in
-   LaTeX: align and equation number, aligned and the starred forms do not.
-   Without these two rules that choice was discarded -- align and align-star
-   rendered identically, so an author who asked for numbers silently got none.
-   (No backticks in here: this string is a JS template literal.) */
+/* display: block is necessary in Firefox and Safari.
+ * Not in Chromium, which recognizes display: "block math" written inline. */
+ math.tml-display {
+  display: block;
+  width: 100%;
+}
+
+*.mathcal {
+  /* NotoSans */
+  font-feature-settings: 'ss01';
+}
+
+math .mathscr {
+  font-family: "Temml";
+}
+
+mo.tml-prime {
+  font-family: Temml;
+}
+
+/* Cramped superscripts in WebKit */
+mfrac > :nth-child(2),
+msqrt,
+mover > :first-child {
+  math-shift: compact
+}
+
+.menclose {
+  display: inline-block;
+  position: relative;
+  padding: 0.5ex 0ex;
+}
+.tml-cancelto {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.5ex 0ex;
+  background-color: currentColor;
+  /* Use the SVG as an alpha mask (painted by background-color) */
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><defs><marker id='a' markerHeight='5' markerUnits='strokeWidth' markerWidth='7' orient='auto' refX='7' refY='2.5'><path fill='black' d='m0 0 7 2.5L0 5z'/></marker></defs><line x2='100%25' y1='100%25' stroke='black' stroke-width='.06em' marker-end='url(%23a)' vector-effect='non-scaling-stroke'/></svg>");
+          mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><defs><marker id='a' markerHeight='5' markerUnits='strokeWidth' markerWidth='7' orient='auto' refX='7' refY='2.5'><path fill='black' d='m0 0 7 2.5L0 5z'/></marker></defs><line x2='100%25' y1='100%25' stroke='black' stroke-width='.06em' marker-end='url(%23a)' vector-effect='non-scaling-stroke'/></svg>");
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
+  -webkit-mask-position: 0 0;
+          mask-position: 0 0;
+}
+
+@supports (-moz-appearance: none) {
+  /* \vec w/o italic correction for Firefox */
+  .tml-vec {
+    transform: scale(0.75)
+  }
+  /* Fix cancelto in Firefox */
+  .ff-narrow {
+    width: 0em;
+  }
+  .ff-nudge-left {
+    margin-left: -0.2em;
+  }
+}
+
+@supports (not (-moz-appearance: none)) {
+  /* Chromium and WebKit */
+  /* prime vertical alignment */
+  mo.tml-prime {
+    font-family: Temml;
+  }
+  /* Italic correction on superscripts */
+  .tml-sml-pad {
+    padding-left: 0.05em;
+  }
+  .tml-med-pad {
+    padding-left: 0.10em;
+  }
+  .tml-lrg-pad {
+    padding-left: 0.15em;
+  }
+}
+
+@supports (-webkit-backdrop-filter: blur(1px)) {
+  /* WebKit vertical & italic correction on accents */
+  .wbk-acc {
+    /* lower by x-height distance */
+    transform: translate(0em, 0.431em);
+  }
+  .wbk-sml {
+    transform: translate(0.07em, 0);
+  }
+  .wbk-sml-acc {
+    transform: translate(0.07em, 0.431em);
+  }
+  .wbk-sml-vec {
+    transform: scale(0.75) translate(0.07em, 0);
+  }
+  .wbk-med {
+    transform: translate(0.14em, 0);
+  }
+  .wbk-med-acc {
+    transform: translate(0.14em, 0.431em);
+  }
+  .wbk-med-vec {
+    transform: scale(0.75) translate(0.14em, 0);
+  }
+  .wbk-lrg {
+    transform: translate(0.21em, 0);
+  }
+  .wbk-lrg-acc {
+    transform: translate(0.21em, 0.431em);
+  }
+  .wbk-lrg-vec {
+    transform: scale(0.75) translate(0.21em, 0);
+  }
+}
+
+/* cancel & phase use background images. Get them to print. */
+menclose {
+  -webkit-print-color-adjust: exact;  /* Chrome & Edge */
+          print-color-adjust: exact;
+}
+
+/* Array cell justification in Firefox & WebKit */
+.tml-right {
+  text-align: right;
+}
+.tml-left {
+  text-align: left;
+}
+
+/* For CD labels that grow to the left in Firefox and WebKit */
+.tml-shift-left { margin-left:-200% }
+
+/* Styles for Chromium only */
+@supports (not (-webkit-backdrop-filter: blur(1px))) and (not (-moz-appearance: none)) {
+  /* Italic correction on accents */
+  .chr-sml {
+    transform: translate(0.07em, 0)
+  }
+  .chr-sml-vec {
+    transform: scale(0.75) translate(0.07em, 0)
+  }
+  .chr-med {
+    transform: translate(0.14em, 0)
+  }
+  .chr-med-vec {
+    transform: scale(0.75) translate(0.14em, 0)
+  }
+  .chr-lrg {
+    transform: translate(0.21em, 0)
+  }
+  .chr-lrg-vec {
+    transform: scale(0.75) translate(0.21em, 0)
+  }
+
+  /* For CD labels that grow to the left */
+  .tml-shift-left { margin-left:-100% }
+
+  /* MathML Core & Chromium do not support the MathML 3.0 element <menclose> attributes. */
+  /* So use styles. */
+  menclose {
+    position: relative;
+    padding: 0.5ex 0ex;
+  }
+  
+    .tml-overline {
+    padding: 0.1em 0 0 0;
+    border-top: 0.065em solid;
+  }
+
+  .tml-underline {
+    padding: 0 0 0.1em 0;
+    border-bottom: 0.065em solid;
+  }
+
+  .tml-cancel {
+    display: inline-block;
+    position: absolute;
+    left: 0.5px;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-color: currentColor;
+  }
+  .upstrike {
+    clip-path: polygon(0.05em 100%, 0em calc(100% - 0.05em), calc(100% - 0.05em) 0em, 100% 0.05em);
+  }
+  .downstrike {
+    clip-path: polygon(0em 0.05em, 0.05em 0em, 100% calc(100% - 0.05em), calc(100% - 0.05em) 100%);
+  }
+  .sout {
+    clip-path: polygon(0em calc(55% + 0.0333em), 0em calc(55% - 0.0333em), 100% calc(55% - 0.0333em), 100% calc(55% + 0.0333em));
+  }
+  .tml-xcancel {
+    clip-path: polygon(0.05em 0em, 0em 0.05em, calc(50% - 0.05em) 50%, 0em calc(100% - 0.05em), 0.05em 100%, 50% calc(50% + 0.05em), calc(100% - 0.05em) 100%, 100% calc(100% - 0.05em), calc(50% + 0.05em) 50%, 100% 0.05em, calc(100% - 0.05em) 0%, 50% calc(50% - 0.05em));
+  }
+
+  .longdiv-top {
+    border-top: 0.067em solid;
+    padding: 0.1em 0.2em 0.2em 0.433em;
+  }
+  .longdiv-arc {
+    position: absolute;
+    top: 0;
+    bottom: 0.1em;
+    left: -0.4em;
+    width: 0.7em;
+    border: 0.067em solid;
+    transform: translateY(-0.067em);
+    border-radius: 70%;
+    clip-path: inset(0 0 0 0.4em);
+    box-sizing: border-box;}
+    .menclose {display: inline-block;
+    text-align: left;
+    position: relative;
+  }
+  
+  .phasor-bottom {
+    border-bottom: 0.067em solid;
+    padding: 0.2em 0.2em 0.1em 0.6em;
+  }
+  .phasor-angle {
+    display: inline-block;
+    position: absolute;
+    left: 0.5px;
+    bottom: -0.04em;
+    height: 100%;
+    aspect-ratio: 0.5;
+    background-color: currentColor;
+    clip-path: polygon(0.05em 100%, 0em calc(100% - 0.05em), calc(100% - 0.05em) 0em, 100% 0.05em);
+  }
+
+  .tml-fbox {
+    padding: 3pt;
+    border: 1px solid;
+  }
+
+  .circle-pad {
+    padding: 0.267em;
+  }
+  .textcircle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    border: 0.067em solid;
+    border-radius: 50%;
+   }
+
+   .actuarial {
+    padding: 0.03889em 0.03889em 0 0.03889em;
+    border-width: 0.08em 0.08em 0em 0em;
+    border-style: solid;
+    margin-right: 0.03889em;
+   }
+
+   /* Stretch widetilde */
+  .tml-crooked-2 {
+    transform: scale(2.0, 1.1)
+  }
+  .tml-crooked-3 {
+    transform: scale(3.0, 1.3)
+  }
+  .tml-crooked-4 {
+    transform: scale(4.0, 1.4)
+  }
+  /* set array cell justification */
+  .tml-right {
+    text-align: -webkit-right;
+  }
+  .tml-left {
+    text-align: -webkit-left;
+  }
+}
+
+.special-fraction {
+  font-family: 'STIX TWO', 'Times New Roman', Times, Tinos, serif;
+}
+
+/* flex-wrap for line-breaking in Chromium */
+math {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+math > mrow {
+  padding: 0.5ex 0ex;
+}
+
+/* Default mtd top padding is 0.5ex per MathML-Core and user-agent CSS */
+/* We adjust for jot and small */
+mtable.tml-jot mtd {
+  padding-top: 0.7ex;
+  padding-bottom: 0.7ex;
+}
+mtable.tml-small mtd {
+  padding-top: 0.35ex;
+  padding-bottom: 0.35ex;
+}
+
+/* Firefox */
+@-moz-document url-prefix() {
+  /* Avoid flex-wrap */
+  math { display: inline; }
+  math > mrow { padding: 0 }
+  /* Adjust Firefox spacing between array rows */
+  mtd, mtable.tml-small mtd { padding-top: 0; padding-bottom: 0; }
+  mtable.tml-jot mtd { padding-top: 0.2ex; padding-bottom: 0.ex; }
+}
+
+/* AMS environment auto-numbering via CSS counter. */
 .tml-eqn:empty::before {
   counter-increment: tmlEqnNo;
   content: "(" counter(tmlEqnNo) ")";
 }
+
 body {
   counter-reset: tmlEqnNo;
+}`, Xle = `@supports (not (-moz-appearance: none)) {
+  math mtd { padding-top: 0.5ex; padding-bottom: 0.5ex; }
 }
-/* Display math needs CSS block layout, not MathML layout, for an equation TAG
-   to reach the right margin: the tag rides in an mtable whose width:100%
-   Chromium ignores under display: block math, collapsing the spacer cells so
-   "(1)" sits glued to the equation instead of at the margin.
-
-   !important is not decoration. Temml emits style=display:block math on
-   every display formula unconditionally — no option turns it off — so an inline
-   style beats any rule we write, including Temml's own math.tml-display { display: block }, which is exactly what this restores. Fixing it here
-   rather than in the generator also repairs math that was already built.
-
-   Scoped with :has() to formulas that actually carry a tag. Switching every
-   display formula to CSS block layout would left-align the lot -- MathML layout
-   is what centres them -- so an unnumbered derivation or matrix keeps
-   display: block math and stays centred. Where :has() is unsupported the tag
-   simply does not reach the margin; nothing else changes. */
 math.tml-display:has(.tml-eqn) {
   display: block !important;
   width: 100%;
-}`;
+}`, $C = `${Yle}
+${Xle}`;
 function HC(e, r = 1) {
   let t = r;
   return { html: String(e ?? "").replace(
@@ -70537,7 +70835,7 @@ function HC(e, r = 1) {
     () => `<span class="tml-eqn">(${t++})</span>`
   ), next: t };
 }
-async function Yle(e, r = {}) {
+async function Zle(e, r = {}) {
   const { mode: t = "html", meta: n = {}, stylesheet: a, polyfillUrl: i, ...s } = r, u = (e && e.sections || []).join(`
 `), l = { ...e?.metadata || {}, ...n }, c = WC({
     body: u,
@@ -70548,12 +70846,12 @@ async function Yle(e, r = {}) {
   if (t === "html")
     return new Blob([c], { type: "text/html; charset=utf-8" });
   if (t === "server")
-    return Xle(c, s);
+    return Jle(c, s);
   throw new Error(
     `pagedjs adapter: unknown mode "${t}". Valid modes: 'html' (returns paged-ready HTML), 'server' (POSTs HTML to endpoint, receives PDF).`
   );
 }
-async function Xle(e, r = {}) {
+async function Jle(e, r = {}) {
   const t = r.endpoint || "/__press/pagedjs/compile", n = new FormData();
   n.append(
     "document.html",
@@ -70587,15 +70885,15 @@ ${t || GC}`, o = n || VC;
   <head>
     <meta charset="utf-8" />
     <title>${qC(i)}</title>
-${Zle(r)}    <style>${s}</style>
+${Qle(r)}    <style>${s}</style>
     <script src="${Bo(o)}" defer><\/script>
   </head>
   <body>
-${Jle(r)}${e}
+${eue(r)}${e}
   </body>
 </html>`;
 }
-function Zle(e) {
+function Qle(e) {
   const r = [];
   return e?.author && r.push(`    <meta name="author" content="${Bo(e.author)}" />`), e?.description && r.push(
     `    <meta name="description" content="${Bo(e.description)}" />`
@@ -70605,7 +70903,7 @@ function Zle(e) {
 `) + `
 ` : "";
 }
-function Jle(e) {
+function eue(e) {
   if (!e || typeof e != "object") return "";
   const r = Object.entries(e).filter(
     ([, n]) => n != null && typeof n != "object"
@@ -70685,21 +70983,21 @@ blockquote {
 }
 ul, ol { margin: 0.5em 0 0.75em 1.5em; }
 figure { break-inside: avoid; }
-`, Qle = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+`, tue = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   DEFAULT_POLYFILL_URL: VC,
   DEFAULT_STYLESHEET: GC,
-  compilePagedjs: Yle,
+  compilePagedjs: Zle,
   emitDocument: WC
 }, Symbol.toStringTag, { value: "Module" }));
-async function eue(e, r = {}) {
+async function rue(e, r = {}) {
   const { sections: t = [], metadata: n = null } = e || {}, { meta: a = {}, stylesheet: i, identifier: s, cover: o, loadAsset: u } = r, l = { ...n || {}, ...a }, c = `${$C}
-${i || nI}`, f = s || l.identifier || sue(), h = o || l.cover || l.coverImage;
+${i || nI}`, f = s || l.identifier || lue(), h = o || l.cover || l.coverImage;
   let d = 1;
   const g = t.map((C) => {
     const x = HC(C, d);
     return d = x.next, x.html;
-  }).map((C, x) => tue(C, x)), p = /* @__PURE__ */ new Set();
+  }).map((C, x) => nue(C, x)), p = /* @__PURE__ */ new Set();
   for (const C of g)
     for (const x of C.images) p.add(x);
   h && p.add(h);
@@ -70747,7 +71045,7 @@ ${i || nI}`, f = s || l.identifier || sue(), h = o || l.cover || l.coverImage;
     }),
     isCover: !0
   } : null, P = M ? [M, ...A] : A, $ = new T_();
-  $.file("mimetype", "application/epub+zip", { compression: "STORE" }), $.file("META-INF/container.xml", aue());
+  $.file("mimetype", "application/epub+zip", { compression: "STORE" }), $.file("META-INF/container.xml", oue());
   const V = $.folder("OEBPS");
   V.file("content.opf", JC({
     id: f,
@@ -70777,7 +71075,7 @@ ${i || nI}`, f = s || l.identifier || sue(), h = o || l.cover || l.coverImage;
     compressionOptions: { level: 6 }
   });
 }
-function tue(e, r) {
+function nue(e, r) {
   const t = RT(e || ""), n = { title: "", images: /* @__PURE__ */ new Set() };
   return KC(t, n), {
     tree: t,
@@ -70804,7 +71102,7 @@ function YC(e, r, t) {
     if (a.nodeName === "#text") continue;
     if ((a.tagName || "").toLowerCase() === "img") {
       const s = ZC(a, "src"), o = s && r.get(s);
-      o && rue(a, "src", t + o);
+      o && iue(a, "src", t + o);
     }
     a.childNodes && YC(a, r, t);
   }
@@ -70820,7 +71118,7 @@ function ZC(e, r) {
     if (t.name === r) return t.value;
   return null;
 }
-function rue(e, r, t) {
+function iue(e, r, t) {
   e.attrs || (e.attrs = []);
   for (const n of e.attrs)
     if (n.name === r) {
@@ -70829,7 +71127,7 @@ function rue(e, r, t) {
     }
   e.attrs.push({ name: r, value: t });
 }
-const nue = /* @__PURE__ */ new Set([
+const aue = /* @__PURE__ */ new Set([
   "area",
   "base",
   "br",
@@ -70852,13 +71150,13 @@ function ju(e) {
   const r = (e.tagName || "").toLowerCase();
   if (!r)
     return (e.childNodes || []).map(ju).join("");
-  const t = iue(e.attrs || []);
-  if (nue.has(r))
+  const t = sue(e.attrs || []);
+  if (aue.has(r))
     return `<${r}${t}/>`;
   const n = (e.childNodes || []).map(ju).join("");
   return `<${r}${t}>${n}</${r}>`;
 }
-function iue(e) {
+function sue(e) {
   if (!e.length) return "";
   let r = "";
   for (const t of e) {
@@ -70873,7 +71171,7 @@ function Vr(e) {
 function wr(e) {
   return String(e).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
-function aue() {
+function oue() {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
   <rootfiles>
@@ -71018,7 +71316,7 @@ ${t}
 function VS(e) {
   return String(e).padStart(2, "0");
 }
-function sue() {
+function lue() {
   if (globalThis.crypto?.randomUUID)
     return "urn:uuid:" + globalThis.crypto.randomUUID();
   const e = () => Math.floor(Math.random() * 65536).toString(16).padStart(4, "0");
@@ -71058,14 +71356,14 @@ pre {
   overflow: auto;
   white-space: pre-wrap;
 }
-`, oue = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+`, uue = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   DEFAULT_STYLESHEET: nI,
   buildCoverXhtml: tI,
   buildNav: QC,
   buildNcx: eI,
   buildOpf: JC,
-  compileEpub: eue,
+  compileEpub: rue,
   serializeXhtml: ju,
   wrapChapterXhtml: rI
 }, Symbol.toStringTag, { value: "Module" }));
@@ -71100,7 +71398,7 @@ function ce(e, r = {}) {
       let S = iI(R);
       return S = Ey(S, "family", p), S;
     }
-    return lue(R, {
+    return cue(R, {
       initialize: T,
       initializeWith: E,
       nameAsSortOrder: f,
@@ -71131,11 +71429,11 @@ function ce(e, r = {}) {
   const M = A.slice(0, -1), P = A[A.length - 1], V = a === "always" || a === "after-inverted-name" || a === "contextual" && A.length > 2 ? n + N + " " : " " + N + " ";
   return M.join(n) + V + P;
 }
-function lue(e, r) {
+function cue(e, r) {
   const { initialize: t, initializeWith: n, nameAsSortOrder: a, sortSeparator: i = ", ", index: s, nameParts: o = [] } = r;
   if (e.literal) return e.literal;
   let u = iI(e), l = e.given || "";
-  return t && n != null && l && (l = uue(l, n)), u = Ey(u, "family", o), l = Ey(l, "given", o), l ? a === "all" || a === "first" && s === 0 ? u + i + l : l + " " + u : u;
+  return t && n != null && l && (l = fue(l, n)), u = Ey(u, "family", o), l = Ey(l, "given", o), l ? a === "all" || a === "first" && s === 0 ? u + i + l : l + " " + u : u;
 }
 function iI(e) {
   let r = e.family || "";
@@ -71147,7 +71445,7 @@ function Ey(e, r, t) {
   const n = t.find((a) => a.name === r);
   return n && (n.textCase === "uppercase" ? e = e.toUpperCase() : n.textCase === "lowercase" ? e = e.toLowerCase() : n.textCase === "capitalize-first" ? e = e.charAt(0).toUpperCase() + e.slice(1) : n.textCase === "capitalize-all" && (e = e.split(" ").map((a) => a.charAt(0).toUpperCase() + a.slice(1)).join(" ")), n.fontStyle === "italic" && (e = "" + e + ""), n.fontWeight === "bold" && (e = "" + e + ""), n.fontVariant === "small-caps" && (e = "" + e + "")), e;
 }
-function uue(e, r) {
+function fue(e, r) {
   const t = r.trimEnd(), n = r === "" ? "" : " ";
   return e.split(/\s+/).filter(Boolean).map((a) => a.includes("-") ? a.split("-").map((i) => i ? i.charAt(0).toUpperCase() + t : "").join("-") : a.charAt(0).toUpperCase() + t).join(n);
 }
@@ -71158,8 +71456,8 @@ function it(e, r = {}) {
   if (!t || !t.length || !t[0].length) return "";
   const {
     dateParts: n = [{ name: "year" }],
-    monthTerms: a = fue,
-    seasonTerms: i = hue
+    monthTerms: a = due,
+    seasonTerms: i = pue
   } = r, s = t[0], o = s[0], u = s.length > 1 ? s[1] : void 0, l = s.length > 2 ? s[2] : void 0, c = t.length > 1 && t[1].length > 0, f = c ? t[1] : null, h = f ? f[0] : void 0, d = f && f.length > 1 ? f[1] : void 0, m = f && f.length > 2 ? f[2] : void 0, g = [];
   for (const p of n) {
     const b = GS(p, { year: o, month: u, day: l, date: e }, { monthTerms: a, seasonTerms: i });
@@ -71188,13 +71486,13 @@ function GS(e, r, t) {
     let l = String(i);
     return a === "short" && (l = l.slice(-2)), l;
   }
-  return n === "month" ? u && u.season ? t.seasonTerms[String(u.season)] || "" : s == null ? "" : a === "numeric" ? String(s) : a === "numeric-leading-zeros" ? String(s).padStart(2, "0") : a === "short" ? (t.monthTerms[String(s)] || "").slice(0, 3) : t.monthTerms[String(s)] || "" : n === "day" ? o == null ? "" : a === "numeric-leading-zeros" ? String(o).padStart(2, "0") : a === "ordinal" ? cue(o) : String(o) : "";
+  return n === "month" ? u && u.season ? t.seasonTerms[String(u.season)] || "" : s == null ? "" : a === "numeric" ? String(s) : a === "numeric-leading-zeros" ? String(s).padStart(2, "0") : a === "short" ? (t.monthTerms[String(s)] || "").slice(0, 3) : t.monthTerms[String(s)] || "" : n === "day" ? o == null ? "" : a === "numeric-leading-zeros" ? String(o).padStart(2, "0") : a === "ordinal" ? hue(o) : String(o) : "";
 }
-function cue(e) {
+function hue(e) {
   const r = ["th", "st", "nd", "rd"], t = e % 100;
   return e + (r[(t - 20) % 10] || r[t] || r[0]);
 }
-const fue = {
+const due = {
   1: "January",
   2: "February",
   3: "March",
@@ -71207,7 +71505,7 @@ const fue = {
   10: "October",
   11: "November",
   12: "December"
-}, hue = {
+}, pue = {
   1: "Spring",
   2: "Summer",
   3: "Autumn",
@@ -71253,7 +71551,7 @@ const aI = /* @__PURE__ */ new Set([
 ]);
 function sI(e) {
   if (!e) return "";
-  if (!e.includes('<span class="nocase">')) return due(e);
+  if (!e.includes('<span class="nocase">')) return gue(e);
   const r = oI(e), t = [];
   for (const o of r) {
     const u = o.text.split(/(\s+)/);
@@ -71272,7 +71570,7 @@ function sI(e) {
     return o.text.split(/(\s+)/).map((l) => !l.trim() || (s++, /[a-z][A-Z]|[A-Z][a-z].*[A-Z]/.test(l)) || /^[A-Z]{2,}$/.test(l) && !i ? l : s === 1 || s === n ? l.charAt(0).toUpperCase() + l.slice(1).toLowerCase() : aI.has(l.toLowerCase()) ? l.toLowerCase() : l.charAt(0).toUpperCase() + l.slice(1).toLowerCase()).join("");
   }).join("");
 }
-function due(e) {
+function gue(e) {
   if (!e) return "";
   const r = e.split(/(\s+)/);
   let t = 0;
@@ -71289,7 +71587,7 @@ function oI(e) {
 }
 function lI(e) {
   if (!e) return "";
-  if (!e.includes('<span class="nocase">')) return pue(e);
+  if (!e.includes('<span class="nocase">')) return mue(e);
   const r = oI(e), t = r.filter((s) => !s.protect).map((s) => s.text).join(""), n = t === t.toUpperCase() && /[a-zA-Z]/.test(t);
   let a = 0, i = !1;
   return r.map((s) => {
@@ -71302,7 +71600,7 @@ function lI(e) {
     return s.text.split(/(\s+)/).map((u) => u.trim() ? (a++, a === 1 || i ? (i = u.endsWith(":"), u.charAt(0).toUpperCase() + u.slice(1).toLowerCase()) : (u.endsWith(":") && (i = !0), /^[A-Z]{2,}$/.test(u) && !n || /[a-z][A-Z]|[A-Z][a-z].*[A-Z]/.test(u) ? u : u.toLowerCase())) : u).join("");
   }).join("");
 }
-function pue(e) {
+function mue(e) {
   if (!e) return "";
   const r = e === e.toUpperCase() && /[a-zA-Z]/.test(e), t = e.split(/(\s+)/);
   let n = 0, a = !1;
@@ -71340,19 +71638,19 @@ function an(e, r) {
   if (e == null) return "";
   if (e = Number(e), isNaN(e)) return String(e);
   if (r && r.terms) {
-    const a = gue(e, r.terms);
+    const a = bue(e, r.terms);
     if (a != null) return e + a;
   }
   const t = ["th", "st", "nd", "rd"], n = Math.abs(e) % 100;
   return e + (t[(n - 20) % 10] || t[n] || t[0]);
 }
-function gue(e, r) {
+function bue(e, r) {
   const t = Math.abs(e), n = String(t % 100).padStart(2, "0");
   if (r["ordinal-" + n] != null) return r["ordinal-" + n];
   const a = String(t % 10).padStart(2, "0");
   return r["ordinal-" + a] != null ? r["ordinal-" + a] : r.ordinal != null ? r.ordinal : null;
 }
-function mue(e, r) {
+function vue(e, r) {
   if (e == null) return "";
   if (e = Number(e), r && r.terms) {
     const n = String(Math.abs(e) % 100).padStart(2, "0"), a = r.terms["long-ordinal-" + n];
@@ -71373,7 +71671,7 @@ function mue(e, r) {
   ];
   return e >= 1 && e <= 10 ? t[e] : an(e, r);
 }
-function bue(e) {
+function yue(e) {
   if (e == null) return "";
   if (e = Number(e), isNaN(e) || e <= 0) return String(e);
   const r = [1e3, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1], t = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"];
@@ -71391,7 +71689,7 @@ function pi(e, r) {
   const n = e.match(/^(\d+)\s*[-\u2013]\s*(\d+)$/);
   if (!n) return t;
   const a = n[1], i = n[2];
-  return r === "minimal" ? a + "–" + xy(a, i, 1) : r === "minimal-two" ? a + "–" + xy(a, i, 2) : r === "chicago" ? a + "–" + vue(a, i) : t;
+  return r === "minimal" ? a + "–" + xy(a, i, 1) : r === "minimal-two" ? a + "–" + xy(a, i, 2) : r === "chicago" ? a + "–" + _ue(a, i) : t;
 }
 function xy(e, r, t) {
   let n = 0;
@@ -71399,7 +71697,7 @@ function xy(e, r, t) {
     n++;
   return r.slice(n);
 }
-function vue(e, r) {
+function _ue(e, r) {
   const t = parseInt(e, 10), n = parseInt(r, 10);
   if (t < 100) return r;
   const a = Math.floor(t / 100), i = Math.floor(n / 100);
@@ -71408,9 +71706,9 @@ function vue(e, r) {
 function fI(e) {
   return e ? e.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;") : "";
 }
-const yue = /[\uE000-\uE007]/g, _ue = /\uE020[^\uE021]*\uE021/g, wue = /\uE022/g;
+const wue = /[\uE000-\uE007]/g, Eue = /\uE020[^\uE021]*\uE021/g, xue = /\uE022/g;
 function gn(e) {
-  return e ? e.replace(_ue, "").replace(yue, "").replace(wue, "") : "";
+  return e ? e.replace(Eue, "").replace(wue, "").replace(xue, "") : "";
 }
 function mn(e) {
   if (!e) return "";
@@ -71439,7 +71737,7 @@ function mn(e) {
     (t, n) => `<span class="csl-${n}">`
   ), r = r.replace(/\uE022/g, "</span>"), r;
 }
-const Eue = /* @__PURE__ */ new Set([
+const Sue = /* @__PURE__ */ new Set([
   "article",
   "article-journal",
   "article-magazine",
@@ -71478,7 +71776,7 @@ const Eue = /* @__PURE__ */ new Set([
   "thesis",
   "treaty",
   "webpage"
-]), xue = [
+]), Aue = [
   "author",
   "editor",
   "translator",
@@ -71491,19 +71789,19 @@ const Eue = /* @__PURE__ */ new Set([
   "recipient",
   "illustrator",
   "original-author"
-], Sue = [
+], Tue = [
   "issued",
   "accessed",
   "original-date",
   "submitted",
   "event-date"
 ];
-function Aue(e) {
+function Oue(e) {
   const r = [];
   if (!e || typeof e != "object")
     return { valid: !1, warnings: ["Item must be an object"] };
-  (e.id == null || e.id === "") && r.push('Missing required field "id"'), e.type ? Eue.has(e.type) || r.push(`Unknown type "${e.type}"`) : r.push('Missing required field "type"');
-  for (const t of xue)
+  (e.id == null || e.id === "") && r.push('Missing required field "id"'), e.type ? Sue.has(e.type) || r.push(`Unknown type "${e.type}"`) : r.push('Missing required field "type"');
+  for (const t of Aue)
     if (e[t] != null)
       if (!Array.isArray(e[t]))
         r.push(`"${t}" must be an array of name objects`);
@@ -71512,7 +71810,7 @@ function Aue(e) {
           const a = e[t][n];
           !a || typeof a != "object" ? r.push(`${t}[${n}] must be a name object`) : !a.family && !a.literal && r.push(`${t}[${n}] must have "family" or "literal"`);
         }
-  for (const t of Sue)
+  for (const t of Tue)
     if (e[t] != null) {
       const n = e[t];
       if (typeof n != "object" || Array.isArray(n))
@@ -71530,7 +71828,7 @@ function Aue(e) {
     }
   return e.doi && !e.DOI && r.push('"doi" should be "DOI" (uppercase)'), e.url && !e.URL && r.push('"url" should be "URL" (uppercase)'), e.isbn && !e.ISBN && r.push('"isbn" should be "ISBN" (uppercase)'), e.issn && !e.ISSN && r.push('"issn" should be "ISSN" (uppercase)'), { valid: r.length === 0, warnings: r };
 }
-const Tue = {
+const kue = {
   id: "apa",
   title: "APA Style 7th edition",
   class: "in-text",
@@ -72410,11 +72708,11 @@ function O_(e, r) {
 function za(e, r) {
   return O_(e);
 }
-function Oue(e, r) {
+function Cue(e, r) {
   const t = De["article-locator"] != null ? typeof De["article-locator"] == "string" ? De["article-locator"] : De["article-locator"].single || "" : "", n = e.number != null && e.number !== "" ? String(e.number) : "";
   return e.number == null || e.number === "" ? "" : [ee(t, "capitalize-first"), X(n) ? "number" + X(n) + "" : ""].filter((i) => i !== "").join(" ");
 }
-function kue(e, r) {
+function Iue(e, r) {
   const t = [];
   if (e["number-of-volumes"] != null && /^\s*\d/.test(String(e["number-of-volumes"]))) {
     const a = (() => {
@@ -72432,7 +72730,7 @@ function kue(e, r) {
   }
   return t.filter((a) => a !== "").join(" ");
 }
-function Cue(e, r) {
+function Pue(e, r) {
   const t = (() => {
     const i = e.page;
     if (i == null || i === "" || Array.isArray(i) && i.length === 0) return "";
@@ -72678,7 +72976,7 @@ function QS(e, r) {
   }
   return t;
 }
-function Iue(e, r) {
+function Nue(e, r) {
   let t = "";
   return e.type === "bill" || e.type === "hearing" || e.type === "legal_case" || e.type === "legislation" || e.type === "regulation" || e.type === "treaty" ? t = Eu(e) : t = hI(e, r), t;
 }
@@ -72754,7 +73052,7 @@ function r8(e, r) {
   }
   return t.filter((a) => a !== "").join("-");
 }
-function Pue(e, r) {
+function Rue(e, r) {
   let t = "";
   if (e.type === "article" || e.type === "article-journal" || e.type === "book" || e.type === "chapter" || e.type === "entry" || e.type === "entry-dictionary" || e.type === "entry-encyclopedia" || e.type === "dataset" || e.type === "figure" || e.type === "graphic" || e.type === "manuscript" || e.type === "map" || e.type === "musical_score" || e.type === "patent" || e.type === "report" || e.type === "review" || e.type === "review-book" || e.type === "thesis") {
     const n = e.issued ? it(e.issued, { dateParts: [{ name: "year", form: null, prefix: "", suffix: "", rangeDelimiter: null }], monthTerms: { 1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June", 7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December" }, seasonTerms: { 1: "Spring", 2: "Summer", 3: "Autumn", 4: "Winter" } }) : "";
@@ -72771,11 +73069,11 @@ function Pue(e, r) {
     t = n8(e);
   return t;
 }
-function Nue(e, r) {
+function Mue(e, r) {
   let t = "";
   return e.issued != null && e.issued !== "" ? t = "1" : e.status != null && e.status !== "" ? t = "2" : t = "0", t;
 }
-function Rue(e, r) {
+function Due(e, r) {
   const t = [];
   if (e["event-date"] && e["event-date"].circa) {
     const i = De["circa:short"];
@@ -72845,7 +73143,7 @@ function md(e, r) {
 }
 function eu(e, r) {
   let t = "";
-  return e.title != null && e.title !== "" ? t = Mue(e, r) : e.type === "bill" || e.type === "report" ? t = Oy(e) : t = dI(e, r), t;
+  return e.title != null && e.title !== "" ? t = Lue(e, r) : e.type === "bill" || e.type === "report" ? t = Oy(e) : t = dI(e, r), t;
 }
 function Co(e, r) {
   let t = "";
@@ -72855,7 +73153,7 @@ function Co(e, r) {
   } else e.type === "article-journal" || e.type === "article-magazine" || e.type === "article-newspaper" || e.type === "periodical" || e.type === "post-weblog" || e.type === "review" || e.type === "review-book" ? t = s8(e) : e["collection-editor"] != null && e["collection-editor"] !== "" || e.compiler != null && e.compiler !== "" || e.editor != null && e.editor !== "" || e["editorial-director"] != null && e["editorial-director"] !== "" ? t = a8(e) : e.type === "interview" || e.type === "paper-conference" ? t = s8(e) : t = a8(e);
   return t;
 }
-function Mue(e, r) {
+function Lue(e, r) {
   let t = "";
   if (e.type === "review" || e.type === "review-book" || e["reviewed-author"] != null && e["reviewed-author"] !== "" || e["reviewed-genre"] != null && e["reviewed-genre"] !== "" || e["reviewed-title"] != null && e["reviewed-title"] !== "") {
     let n = "";
@@ -72899,7 +73197,7 @@ function u1(e, r) {
   const t = e.title != null && e.title !== "" ? String(e.title) : "", n = Fu(e);
   return (e.title == null || e.title === "") && !Fu(e) ? "" : [X(t) ? "title" + X(t) + "" : "", n].filter((i) => i !== "").join(": ");
 }
-function Due(e, r) {
+function jue(e, r) {
   const t = e.title != null && e.title !== "" ? String(e.title) : "", n = bd(e);
   return (e.title == null || e.title === "") && !bd(e) ? "" : [X(t) ? "title" + X(t) + "" : "", n].filter((i) => i !== "").join(": ");
 }
@@ -72909,7 +73207,7 @@ function a8(e, r) {
     const n = e.title != null && e.title !== "" ? String(e.title) : "";
     t = X(n) ? "title" + X(n) + "" : "";
   } else {
-    const n = Due(e);
+    const n = jue(e);
     t = n ? "" + n + "" : "";
   }
   return t;
@@ -72963,7 +73261,7 @@ function bd(e, r) {
 function Uu(e, r) {
   const t = [];
   if (e.type === "patent") {
-    const a = Lue(e);
+    const a = Bue(e);
     t.push(a);
   } else if (e.type === "post" || e.type === "webpage") {
     const a = go(e, r);
@@ -73211,7 +73509,7 @@ function l8(e, r) {
 }
 function u8(e, r) {
   let t = "";
-  return e.page != null && e.page !== "" ? t = Cue(e) : (e["chapter-number"] != null && e["chapter-number"] !== "" && e.genre != null && e.genre !== "" || e["chapter-number"] != null && e["chapter-number"] !== "" && e.title != null && e.title !== "") && (t = Sy(e)), t;
+  return e.page != null && e.page !== "" ? t = Pue(e) : (e["chapter-number"] != null && e["chapter-number"] !== "" && e.genre != null && e.genre !== "" || e["chapter-number"] != null && e["chapter-number"] !== "" && e.title != null && e.title !== "") && (t = Sy(e)), t;
 }
 function wu(e, r) {
   let t = "";
@@ -73238,9 +73536,9 @@ function vd(e, r) {
 }
 function f8(e, r) {
   let t = "";
-  return e.volume != null && e.volume !== "" && e["volume-title"] != null && e["volume-title"] !== "" ? t = [].filter((n) => n !== "").join("") : e["part-title"] != null && e["part-title"] !== "" && e.volume != null && e.volume !== "" ? t = [].filter((n) => n !== "").join("") : e.volume != null && /^\s*\d/.test(String(e.volume)) ? t = ms(e) : t = kue(e), t;
+  return e.volume != null && e.volume !== "" && e["volume-title"] != null && e["volume-title"] !== "" ? t = [].filter((n) => n !== "").join("") : e["part-title"] != null && e["part-title"] !== "" && e.volume != null && e.volume !== "" ? t = [].filter((n) => n !== "").join("") : e.volume != null && /^\s*\d/.test(String(e.volume)) ? t = ms(e) : t = Iue(e), t;
 }
-function Lue(e, r) {
+function Bue(e, r) {
   const t = [], n = e.authority != null && e.authority !== "" ? String(e.authority) : "";
   if (t.push(X(n) ? "authority" + X(n) + "" : ""), e.genre != null && e.genre !== "") {
     const s = e.genre != null && e.genre !== "" ? String(e.genre) : "";
@@ -73267,22 +73565,22 @@ function d8(e, r) {
 function c1(e, r) {
   const t = [];
   if (e.type === "interview" || e.interviewer != null && e.interviewer !== "") {
-    const a = jue(e, r);
-    t.push(a);
-  } else if (e.type === "review" || e.type === "review-book" || e["reviewed-author"] != null && e["reviewed-author"] !== "" || e["reviewed-genre"] != null && e["reviewed-genre"] !== "" || e["reviewed-title"] != null && e["reviewed-title"] !== "") {
-    const a = zue(e, r);
-    t.push(a);
-  } else if (e.type === "personal_communication") {
     const a = Fue(e, r);
     t.push(a);
+  } else if (e.type === "review" || e.type === "review-book" || e["reviewed-author"] != null && e["reviewed-author"] !== "" || e["reviewed-genre"] != null && e["reviewed-genre"] !== "" || e["reviewed-title"] != null && e["reviewed-title"] !== "") {
+    const a = Hue(e, r);
+    t.push(a);
+  } else if (e.type === "personal_communication") {
+    const a = zue(e, r);
+    t.push(a);
   } else if (e.type === "song" && e.composer != null && e.composer !== "") {
-    const a = Wue(e, r);
+    const a = Vue(e, r);
     t.push(a);
   } else if (e.type === "thesis") {
-    const a = que(e);
+    const a = Gue(e);
     t.push(a);
   } else if (e.type === "article-journal" || e.type === "article-magazine" || e.type === "article-newspaper" || e.type === "periodical" || e.type === "post-weblog" || e.type === "review" || e.type === "review-book") {
-    const a = Hue(e);
+    const a = que(e);
     t.push(a);
   } else if (e["container-title"] != null && e["container-title"] !== "") {
     if (!(e.type === "document" || e.type === "report" || e.type === "software" || e.type === "standard")) if (e.type === "event" || e.type === "paper-conference" || e.type === "performance" || e.type === "speech") {
@@ -73302,13 +73600,13 @@ function c1(e, r) {
 function dI(e, r) {
   const t = [];
   if (e.type === "interview" || e.interviewer != null && e.interviewer !== "") {
-    const a = Bue(e, r);
+    const a = Uue(e, r);
     t.push(a);
   } else if (e.type === "review" || e.type === "review-book" || e["reviewed-author"] != null && e["reviewed-author"] !== "" || e["reviewed-genre"] != null && e["reviewed-genre"] !== "" || e["reviewed-title"] != null && e["reviewed-title"] !== "") {
-    const a = $ue(e);
+    const a = Wue(e);
     t.push(a);
   } else if (e.type === "personal_communication") {
-    const a = Uue(e, r);
+    const a = $ue(e, r);
     t.push(a);
   } else if (e.type === "article-journal" || e.type === "article-magazine" || e.type === "article-newspaper" || e.type === "periodical" || e.type === "post-weblog" || e.type === "review" || e.type === "review-book") {
     const a = g8(e);
@@ -73419,7 +73717,7 @@ function pI(e, r) {
   }
   return t;
 }
-function jue(e, r) {
+function Fue(e, r) {
   const t = [];
   if (e.interviewer != null && e.interviewer !== "" && e.title != null && e.title !== "") {
     let a = "";
@@ -73454,7 +73752,7 @@ function jue(e, r) {
   }
   return t.filter((a) => a !== "").join("; ");
 }
-function Bue(e, r) {
+function Uue(e, r) {
   let t = "";
   if (e.interviewer && e.interviewer.length && (t = ce(e.interviewer, He(r, { and: "symbol", delimiter: ", ", etAlUseLast: !1, sortSeparator: ", ", form: "short" })), t && (t = "interviewer" + t + "")), !t) {
     const n = Ns(e);
@@ -73462,7 +73760,7 @@ function Bue(e, r) {
   }
   return t;
 }
-function Fue(e, r) {
+function zue(e, r) {
   let t = "";
   if (e.recipient != null && e.recipient !== "") {
     const n = Kn(e);
@@ -73474,7 +73772,7 @@ function Fue(e, r) {
     t = Kn(e);
   return t;
 }
-function Uue(e, r) {
+function $ue(e, r) {
   let t = "";
   if (e.recipient != null && e.recipient !== "") {
     const n = Ns(e);
@@ -73494,7 +73792,7 @@ function wl(e, r) {
   }
   return t;
 }
-function zue(e, r) {
+function Hue(e, r) {
   const t = [];
   if (e["reviewed-genre"] != null && e["reviewed-genre"] !== "") {
     const l = De["review-of"];
@@ -73527,7 +73825,7 @@ function zue(e, r) {
   const s = (e["reviewed-genre"] == null || e["reviewed-genre"] === "") && (e.genre == null || e.genre === "") && (e.medium == null || e.medium === "") && !f1(e) && (e["reviewed-author"] == null || e["reviewed-author"] === "" || Array.isArray(e["reviewed-author"]) && e["reviewed-author"].length === 0) ? "" : [a, i].filter((l) => l !== "").join(", "), o = wl(e);
   return (e["reviewed-genre"] == null || e["reviewed-genre"] === "") && (e.genre == null || e.genre === "") && (e.medium == null || e.medium === "") && !f1(e) && (e["reviewed-author"] == null || e["reviewed-author"] === "" || Array.isArray(e["reviewed-author"]) && e["reviewed-author"].length === 0) && !wl(e) ? "" : [s, o].filter((l) => l !== "").join("; ");
 }
-function $ue(e, r) {
+function Wue(e, r) {
   const t = De["review-of:short"], n = p8(e);
   return p8(e) ? [ee(t, "capitalize-first"), n].filter((i) => i !== "").join(" ") : "";
 }
@@ -73553,7 +73851,7 @@ function p8(e, r) {
   }
   return t;
 }
-function Hue(e, r) {
+function que(e, r) {
   const t = [], n = Kn(e);
   if (t.push(n), !(e.title != null && e.title !== "")) {
     const i = e.section != null && e.section !== "" ? String(e.section) : "";
@@ -73572,7 +73870,7 @@ function g8(e, r) {
     t = Ns(e);
   return t;
 }
-function Wue(e, r) {
+function Vue(e, r) {
   const t = [];
   if (e.genre != null && e.genre !== "" || e.medium != null && e.medium !== "") {
     let o = "";
@@ -73598,7 +73896,7 @@ function Wue(e, r) {
   const a = t.filter((o) => o !== "").join(" "), i = wl(e);
   return (e.genre == null || e.genre === "") && (e.medium == null || e.medium === "") && (e.author == null || e.author === "" || Array.isArray(e.author) && e.author.length === 0) && !wl(e) ? "" : [a, i].filter((o) => o !== "").join("; ");
 }
-function que(e, r) {
+function Gue(e, r) {
   const t = [], n = e.genre != null && e.genre !== "" ? String(e.genre) : "";
   if (t.push(ee(n, "capitalize-first") ? "genre" + ee(n, "capitalize-first") + "" : ""), e.archive != null && e.archive !== "" || e.DOI != null && e.DOI !== "" || e.URL != null && e.URL !== "") {
     const o = e.publisher != null && e.publisher !== "" ? String(e.publisher) : "";
@@ -73622,13 +73920,13 @@ function m8(e, r) {
     const u = v8(e, r);
     t.push(u);
   }
-  const n = Kue(e);
+  const n = Xue(e);
   t.push(n);
   const a = gI(e);
   t.push(a);
-  const i = Yue(e);
+  const i = Zue(e);
   t.push(i);
-  const s = Xue(e);
+  const s = Jue(e);
   return t.push(s), t.filter((u) => u !== "").join(". ");
 }
 function b8(e, r) {
@@ -73636,7 +73934,7 @@ function b8(e, r) {
   n.push(s ? "" + s + "" : "");
   const o = e.volume != null && e.volume !== "" ? String(e.volume) : "", u = e.issue != null && e.issue !== "" ? String(e.issue) : "", l = Bu(e), c = (e.issue == null || e.issue === "") && !Bu(e) ? "" : [X(u) ? "issue" + X(u) + "" : "", l].filter((m) => m !== "").join(", "), f = (e.volume == null || e.volume === "") && (e.issue == null || e.issue === "") && !Bu(e) ? "" : [X(o) && "" + X(o) + "" ? "volume" + (X(o) ? "" + X(o) + "" : "") + "" : "", c ? "(" + c + ")" : ""].filter((m) => m !== "").join("");
   if (n.push(f), e.number != null && e.number !== "") {
-    const m = Oue(e);
+    const m = Cue(e);
     n.push(m);
   } else {
     const m = e.page != null && e.page !== "" ? pi(X(String(e.page)), "expanded") : "";
@@ -73664,9 +73962,9 @@ function v8(e, r) {
     }
     const a = y8(e, r), i = _8(e), s = !y8(e, r) && !_8(e) ? "" : [a, i].filter((c) => c !== "").join(", ");
     n.push(s);
-    const o = Vue(e);
+    const o = Kue(e);
     n.push(o);
-    const u = Gue(e);
+    const u = Yue(e);
     n.push(u), t = n.filter((c) => c !== "").join(" ");
   }
   return t;
@@ -73705,7 +74003,7 @@ function _8(e, r) {
   const t = e["container-title"] != null && e["container-title"] !== "" ? String(e["container-title"]) : "", n = bd(e), a = (e["container-title"] == null || e["container-title"] === "") && !bd(e) ? "" : [X(t) ? "container-title" + X(t) + "" : "", n].filter((i) => i !== "").join(": ");
   return a ? "" + a + "" : "";
 }
-function Vue(e, r) {
+function Kue(e, r) {
   let t = "";
   if (e["container-title"] != null && e["container-title"] !== "") {
     const n = [];
@@ -73720,7 +74018,7 @@ function Vue(e, r) {
   }
   return t;
 }
-function Gue(e, r) {
+function Yue(e, r) {
   const t = [];
   if (e.type === "document" || e.type === "report" || e.type === "software" || e.type === "standard") {
     const a = Kn(e);
@@ -73734,7 +74032,7 @@ function Gue(e, r) {
   const n = t.filter((a) => a !== "").join("");
   return n ? "[" + n + "]" : "";
 }
-function Kue(e, r) {
+function Xue(e, r) {
   let t = "";
   if (e.type === "thesis") {
     let n = "";
@@ -73776,7 +74074,7 @@ function gI(e, r) {
   }
   return t.filter((a) => a !== "").join(", ");
 }
-function Yue(e, r) {
+function Zue(e, r) {
   let t = "";
   if (e.event != null && e.event !== "" || e["event-title"] != null && e["event-title"] !== "") {
     let n = "";
@@ -73800,10 +74098,10 @@ function w8(e, r) {
   }
   const n = e["event-place"] != null && e["event-place"] !== "" ? String(e["event-place"]) : "";
   t.push(X(n) ? "event-place" + X(n) + "" : "");
-  const a = Rue(e);
+  const a = Due(e);
   return t.push(a), t.filter((s) => s !== "").join(", ");
 }
-function Xue(e, r) {
+function Jue(e, r) {
   let t = "";
   if (e.type === "post" || e.type === "webpage") {
     const n = e["container-title"] != null && e["container-title"] !== "" ? String(e["container-title"]) : "";
@@ -73829,7 +74127,7 @@ function E8(e, r) {
   }
   return t;
 }
-function Zue(e, r) {
+function Que(e, r) {
   const t = [];
   if (e.type === "patent") {
     const a = e.references != null && e.references !== "" ? String(e.references) : "";
@@ -73856,7 +74154,7 @@ function Zue(e, r) {
   const n = t.filter((a) => a !== "").join("; ");
   return n ? "(" + n + ")" : "";
 }
-function Jue(e, r) {
+function ece(e, r) {
   const t = [];
   if (e.type === "treaty") {
     const o = Eu(e);
@@ -73886,7 +74184,7 @@ function h1(e, r) {
   if (e.type === "treaty")
     t = gd(e);
   else if (e.type === "legal_case")
-    t = Que(e);
+    t = tce(e);
   else if (e.type === "bill" || e.type === "hearing" || e.type === "legislation" || e.type === "regulation") {
     const n = [], a = Ps(e), i = De["and:symbol"], s = Ps(e) ? [a, i].filter((u) => u !== "").join(" ") : "";
     if (n.push(s), e.issued != null && e.issued !== "") {
@@ -73901,7 +74199,7 @@ function h1(e, r) {
   }
   return t;
 }
-function Que(e, r) {
+function tce(e, r) {
   const t = [], n = e.authority != null && e.authority !== "" ? String(e.authority) : "";
   if (t.push(X(n) ? "authority" + X(n) + "" : ""), e["container-title"] != null && e["container-title"] !== "") {
     const i = Is(e);
@@ -73951,13 +74249,13 @@ function Oy(e, r) {
 }
 function Pf(e, r) {
   let t = "";
-  return e.type === "bill" ? t = ece(e) : e.type === "hearing" ? t = rce(e) : e.type === "legal_case" ? t = tce(e) : e.type === "legislation" ? t = nce(e) : e.type === "regulation" ? t = ice(e) : e.type === "treaty" && (t = ace(e)), t;
+  return e.type === "bill" ? t = rce(e) : e.type === "hearing" ? t = ice(e) : e.type === "legal_case" ? t = nce(e) : e.type === "legislation" ? t = ace(e) : e.type === "regulation" ? t = sce(e) : e.type === "treaty" && (t = oce(e)), t;
 }
-function ece(e, r) {
+function rce(e, r) {
   const t = Oy(e), n = e.authority != null && e.authority !== "" ? String(e.authority) : "", a = e["chapter-number"] != null && e["chapter-number"] !== "" ? String(e["chapter-number"]) : "", i = (e.authority == null || e.authority === "") && (e["chapter-number"] == null || e["chapter-number"] === "") ? "" : [X(n) ? "authority" + X(n) + "" : "", X(a) ? "chapter-number" + X(a) + "" : ""].filter((f) => f !== "").join(" "), s = e.volume != null && e.volume !== "" ? String(e.volume) : "", o = e["container-title"] != null && e["container-title"] !== "" ? String(e["container-title"]) : "", u = e.page != null && e.page !== "" ? X(String(e.page)).split(/[-–,\s]/)[0] : "", l = (e.volume == null || e.volume === "") && (e["container-title"] == null || e["container-title"] === "") && (e["page-first"] == null || e["page-first"] === "") ? "" : [X(s) ? "volume" + X(s) + "" : "", X(o) ? "container-title" + X(o) + "" : "", X(u) ? "page-first" + X(u) + "" : ""].filter((f) => f !== "").join(" ");
   return !Oy(e) && (e.authority == null || e.authority === "") && (e["chapter-number"] == null || e["chapter-number"] === "") && (e.volume == null || e.volume === "") && (e["container-title"] == null || e["container-title"] === "") && (e["page-first"] == null || e["page-first"] === "") ? "" : [t, i, l].filter((f) => f !== "").join(", ");
 }
-function tce(e, r) {
+function nce(e, r) {
   const t = [];
   if (e["container-title"] != null && e["container-title"] !== "") {
     const a = e.volume != null && e.volume !== "" ? String(e.volume) : "";
@@ -73979,11 +74277,11 @@ function tce(e, r) {
   }
   return t.filter((a) => a !== "").join(" ");
 }
-function rce(e, r) {
+function ice(e, r) {
   const t = e.authority != null && e.authority !== "" ? String(e.authority) : "", n = e["chapter-number"] != null && e["chapter-number"] !== "" ? String(e["chapter-number"]) : "";
   return (e.authority == null || e.authority === "") && (e["chapter-number"] == null || e["chapter-number"] === "") ? "" : [X(t) ? "authority" + X(t) + "" : "", X(n) ? "chapter-number" + X(n) + "" : ""].filter((i) => i !== "").join(" ");
 }
-function nce(e, r) {
+function ace(e, r) {
   let t = "";
   if (e.number != null && e.number !== "") {
     const n = [];
@@ -74013,7 +74311,7 @@ function nce(e, r) {
   }
   return t;
 }
-function ice(e, r) {
+function sce(e, r) {
   const t = e.genre != null && e.genre !== "" ? String(e.genre) : "", n = za(e), a = (e.genre == null || e.genre === "") && !za(e) ? "" : [X(t) ? "genre" + X(t) + "" : "", n].filter((c) => c !== "").join(" "), i = [], s = e.volume != null && e.volume !== "" ? String(e.volume) : "";
   i.push(X(s) ? "volume" + X(s) + "" : "");
   const o = e["container-title"] != null && e["container-title"] !== "" ? String(e["container-title"]) : "";
@@ -74027,7 +74325,7 @@ function ice(e, r) {
   const u = i.filter((c) => c !== "").join(" ");
   return (e.genre == null || e.genre === "") && !za(e) && (e.volume == null || e.volume === "") && (e["container-title"] == null || e["container-title"] === "") && !pd(e) && (e["page-first"] == null || e["page-first"] === "") ? "" : [a, u].filter((c) => c !== "").join(", ");
 }
-function ace(e, r) {
+function oce(e, r) {
   const t = [], n = e.volume != null ? String(e.volume) : "";
   t.push(n ? "volume" + n + "" : "");
   const a = e["container-title"] != null && e["container-title"] !== "" ? String(e["container-title"]) : "";
@@ -74043,7 +74341,7 @@ function ace(e, r) {
 function S8(e, r) {
   const t = [];
   if (e.type === "bill" || e.type === "hearing" || e.type === "legal_case" || e.type === "legislation" || e.type === "regulation" || e.type === "treaty") {
-    const a = Jue(e, r);
+    const a = ece(e, r);
     t.push(a ? a + "." : "");
     const i = E8(e);
     t.push(i);
@@ -74054,25 +74352,25 @@ function S8(e, r) {
     t.push(u ? u + "." : "");
     const l = E8(e);
     t.push(l);
-    const c = Zue(e);
+    const c = Que(e);
     t.push(c);
   }
   return t.filter((a) => a !== "").join(" ");
 }
-const sce = { namesDelimiter: ", ", initializeWith: ". ", etAlMin: 21, etAlUseFirst: 19, etAlUseLast: !0 };
-function oce(e, r = {}) {
-  r = { ...r, _secOpts: sce };
+const lce = { namesDelimiter: ", ", initializeWith: ". ", etAlMin: 21, etAlUseFirst: 19, etAlUseLast: !0 };
+function uce(e, r = {}) {
+  r = { ...r, _secOpts: lce };
   let t = "";
   e.archive != null && e.archive !== "" || e["archive-place"] != null && e["archive-place"] !== "" || e["container-title"] != null && e["container-title"] !== "" || e.DOI != null && e.DOI !== "" || e.number != null && e.number !== "" || e.publisher != null && e.publisher !== "" || e.references != null && e.references !== "" || e.URL != null && e.URL !== "" ? t = S8(e, r) : e.type === "interview" || e.type === "personal_communication" ? t = [].filter((u) => u !== "").join("") : t = S8(e, r);
-  const a = [t].filter((u) => u !== "").join(""), i = cce(a), s = gn(i), o = '<div class="csl-entry">' + mn(i) + "</div>";
+  const a = [t].filter((u) => u !== "").join(""), i = hce(a), s = gn(i), o = '<div class="csl-entry">' + mn(i) + "</div>";
   return {
     text: s,
     html: o,
-    parts: lce(e),
-    links: uce(e)
+    parts: cce(e),
+    links: fce(e)
   };
 }
-function lce(e) {
+function cce(e) {
   return {
     authors: e.author || [],
     year: e.issued?.["date-parts"]?.[0]?.[0]?.toString() || "",
@@ -74085,23 +74383,23 @@ function lce(e) {
     url: e.URL || ""
   };
 }
-function uce(e) {
+function fce(e) {
   return {
     doi: e.DOI ? "https://doi.org/" + e.DOI : null,
     url: e.URL || null,
     pdf: e.extended?.pdf_url || null
   };
 }
-function cce(e) {
+function hce(e) {
   if (!e) return "";
   const r = "[--]*";
   return e.replace(new RegExp("([.!?])(" + r + ")\\. ", "g"), "$1$2 ").replace(new RegExp("\\.(" + r + ")\\.", "g"), ".$1").replace(/ +/g, " ").trim();
 }
-function fce(e, r) {
+function dce(e, r) {
   const t = [
-    { fn: (n) => Iue(n, {}), dir: 1 },
-    { fn: (n) => Nue(n), dir: 1 },
-    { fn: (n) => Pue(n), dir: 1 },
+    { fn: (n) => Nue(n, {}), dir: 1 },
+    { fn: (n) => Mue(n), dir: 1 },
+    { fn: (n) => Rue(n), dir: 1 },
     { fn: (n) => String(n.status || ""), dir: 1 },
     { fn: (n) => Co(n), dir: 1 },
     { fn: (n) => String(n.volume || ""), dir: 1 },
@@ -74126,9 +74424,9 @@ function fce(e, r) {
   }
   return 0;
 }
-const hce = { namesDelimiter: ", ", initializeWith: ". ", etAlMin: 3, etAlUseFirst: 1 };
-function dce(e, r = {}) {
-  const t = { ...r, _secOpts: hce }, a = "(" + e.map((o) => {
+const pce = { namesDelimiter: ", ", initializeWith: ". ", etAlMin: 3, etAlUseFirst: 1 };
+function gce(e, r = {}) {
+  const t = { ...r, _secOpts: pce }, a = "(" + e.map((o) => {
     let u = o._disambig ? { ...t, _disambig: o._disambig } : t, l = o.item || o;
     o.locator != null && (l = { ...l, locator: o.locator, _locatorLabel: o.label || "page" });
     const c = QS(l, u), f = r8(l), h = Ay(l, u);
@@ -74136,13 +74434,13 @@ function dce(e, r = {}) {
   }).join("; ") + ")", i = gn(a), s = '<span class="csl-citation">' + mn(a) + "</span>";
   return { text: i, html: s };
 }
-const pce = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const mce = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  bibliography: oce,
-  bibliographySort: fce,
-  citation: dce,
-  meta: Tue
-}, Symbol.toStringTag, { value: "Module" })), gce = {
+  bibliography: uce,
+  bibliographySort: dce,
+  citation: gce,
+  meta: kue
+}, Symbol.toStringTag, { value: "Module" })), bce = {
   id: "modern-language-association",
   title: "MLA Handbook 9th edition (in-text citations)",
   class: "in-text",
@@ -74902,7 +75200,7 @@ function Dt(e, r) {
   const t = Object.assign({}, A8, e._secOpts || {}, r);
   return (r.initialize === !1 || (e._secOpts || {}).initialize === !1 || A8.initialize === !1) && (t.initialize = !1), t.and === "text" ? t.andTerm = ut.and : t.and === "symbol" && (t.andTerm = "&"), t.etAlTerm || (t.etAlTerm = ut[r._etAlTerm || "et-al"] || "et al."), e._disambig && (t._disambig = e._disambig), t;
 }
-function mce(e, r) {
+function vce(e, r) {
   const t = [];
   if (e.edition != null && /^\s*\d/.test(String(e.edition))) {
     const a = e.edition != null ? String(e.edition) : "";
@@ -74920,7 +75218,7 @@ function mce(e, r) {
   }
   return t.filter((a) => a !== "").join(" ");
 }
-function bce(e, r) {
+function yce(e, r) {
   const t = (() => {
     const i = e.issue;
     if (i == null || i === "" || Array.isArray(i) && i.length === 0) return "";
@@ -74938,7 +75236,7 @@ function T8(e, r) {
   })(), n = e.locator != null && e.locator !== "" ? String(e.locator) : "";
   return e.locator == null || e.locator === "" ? "" : [t, X(n) ? "locator" + X(n) + "" : ""].filter((i) => i !== "").join(" ");
 }
-function vce(e, r) {
+function _ce(e, r) {
   const t = [];
   if (e.type !== "standard") {
     if (e.number != null && /^\s*\d/.test(String(e.number))) {
@@ -74954,7 +75252,7 @@ function vce(e, r) {
   const n = e.number != null && e.number !== "" ? String(e.number) : "";
   return t.push(X(n) ? "number" + X(n) + "" : ""), t.filter((i) => i !== "").join(" ");
 }
-function yce(e, r) {
+function wce(e, r) {
   const t = [], n = e["number-of-volumes"] != null && e["number-of-volumes"] !== "" ? String(e["number-of-volumes"]) : "";
   if (t.push(X(n) ? "number-of-volumes" + X(n) + "" : ""), e["number-of-volumes"] != null && /^\s*\d/.test(String(e["number-of-volumes"]))) {
     const i = (() => {
@@ -74967,7 +75265,7 @@ function yce(e, r) {
   }
   return t.filter((i) => i !== "").join(" ");
 }
-function _ce(e, r) {
+function Ece(e, r) {
   const t = (() => {
     const i = e.page;
     if (i == null || i === "" || Array.isArray(i) && i.length === 0) return "";
@@ -74994,7 +75292,7 @@ function d1(e, r) {
   const n = e["part-number"] != null && e["part-number"] !== "" ? String(e["part-number"]) : "";
   return t.push(ee(n, "capitalize-first") ? "part-number" + ee(n, "capitalize-first") + "" : ""), t.filter((i) => i !== "").join(" ");
 }
-function wce(e, r) {
+function xce(e, r) {
   const t = [];
   if (e["supplement-number"] != null && /^\s*\d/.test(String(e["supplement-number"]))) {
     const i = ut["supplement:short"] != null ? typeof ut["supplement:short"] == "string" ? ut["supplement:short"] : ut["supplement:short"].single || "" : "";
@@ -75003,7 +75301,7 @@ function wce(e, r) {
   const n = e["supplement-number"] != null && e["supplement-number"] !== "" ? String(e["supplement-number"]) : "";
   return t.push(X(n) ? "supplement-number" + X(n) + "" : ""), t.filter((i) => i !== "").join(" ");
 }
-function Ece(e, r) {
+function Sce(e, r) {
   const t = (() => {
     const i = e.version;
     if (i == null || i === "" || Array.isArray(i) && i.length === 0) return "";
@@ -75012,7 +75310,7 @@ function Ece(e, r) {
   })(), n = e.version != null && e.version !== "" ? String(e.version) : "";
   return e.version == null || e.version === "" ? "" : [t, X(n) ? "version" + X(n) + "" : ""].filter((i) => i !== "").join(" ");
 }
-function xce(e, r) {
+function Ace(e, r) {
   const t = (() => {
     const i = e.version;
     if (i == null || i === "" || Array.isArray(i) && i.length === 0) return "";
@@ -75119,7 +75417,7 @@ function O8(e, r) {
     } else
       n = M8(e);
     t = n;
-  } else e.title != null && e.title !== "" ? t = Sce(e) : t = M8(e);
+  } else e.title != null && e.title !== "" ? t = Tce(e) : t = M8(e);
   return t;
 }
 function p1(e, r) {
@@ -75192,7 +75490,7 @@ function Rs(e, r) {
   }
   return t;
 }
-function Sce(e, r) {
+function Tce(e, r) {
   let t = "";
   if (e.type === "bill" || e.type === "collection" || e.type === "legislation" || e.type === "regulation" || e.type === "treaty") {
     const n = e.title != null && e.title !== "" ? String(e.title) : "";
@@ -75244,7 +75542,7 @@ function N8(e, r) {
 function R8(e, r) {
   let t = "";
   if (e.type === "review" || e.type === "review-book" || e["reviewed-author"] != null && e["reviewed-author"] !== "" || e["reviewed-genre"] != null && e["reviewed-genre"] !== "" || e["reviewed-title"] != null && e["reviewed-title"] !== "")
-    t = Ace(e, r);
+    t = Oce(e, r);
   else if (e.type === "thesis")
     t = [].filter((n) => n !== "").join("");
   else if (e.number != null && e.number !== "")
@@ -75258,14 +75556,14 @@ function R8(e, r) {
 function M8(e, r) {
   let t = "";
   if (e.type === "review" || e.type === "review-book" || e["reviewed-author"] != null && e["reviewed-author"] !== "" || e["reviewed-genre"] != null && e["reviewed-genre"] !== "" || e["reviewed-title"] != null && e["reviewed-title"] !== "")
-    t = Tce(e);
+    t = kce(e);
   else {
     const n = e.genre != null && e.genre !== "" ? String(e.genre) : "";
     t = ee(n, "capitalize-first") ? "genre" + ee(n, "capitalize-first") + "" : "";
   }
   return t;
 }
-function Ace(e, r) {
+function Oce(e, r) {
   const t = [];
   if (e["reviewed-genre"] != null && e["reviewed-genre"] !== "") {
     const i = ut["review-of"];
@@ -75308,7 +75606,7 @@ function Ace(e, r) {
   }
   return [n, a].filter((i) => i !== "").join("");
 }
-function Tce(e, r) {
+function kce(e, r) {
   const t = [], n = ut["review-of"];
   if (t.push(n), e["reviewed-genre"] != null && e["reviewed-genre"] !== "" || e["reviewed-title"] != null && e["reviewed-title"] !== "") {
     const i = e["reviewed-title"] != null && e["reviewed-title"] !== "" ? String(e["reviewed-title"]) : "";
@@ -75485,12 +75783,12 @@ function B8(e, r) {
   return t.filter((i) => i !== "").join(", ");
 }
 function F8(e, r) {
-  const t = [], n = mce(e);
+  const t = [], n = vce(e);
   if (t.push(n), e.edition != null && e.edition !== "") {
-    const i = Ece(e);
+    const i = Sce(e);
     t.push(i);
   } else {
-    const i = xce(e);
+    const i = Ace(e);
     t.push(i);
   }
   return t.filter((i) => i !== "").join(", ");
@@ -75523,9 +75821,9 @@ function U8(e, r) {
     const u = Jf(e);
     t.push(u);
   }
-  const n = bce(e);
+  const n = yce(e);
   t.push(n);
-  const a = wce(e);
+  const a = xce(e);
   t.push(a);
   const i = [];
   if (e.type === "broadcast" && e.genre != null && e.genre !== "" && e.number != null && /^\s*\d/.test(String(e.number))) {
@@ -75540,7 +75838,7 @@ function U8(e, r) {
   } else if (e.number != null && e.number !== "") {
     const u = e.genre != null && e.genre !== "" ? String(e.genre) : "";
     i.push(X(u) ? "genre" + X(u) + "" : "");
-    const l = vce(e);
+    const l = _ce(e);
     i.push(l);
   }
   const s = i.filter((u) => u !== "").join(" ");
@@ -75617,7 +75915,7 @@ function W8(e, r) {
   t.push(X(i) ? "archive_collection" + X(i) + "" : "");
   const s = e.archive_location != null && e.archive_location !== "" ? String(e.archive_location) : "";
   t.push(X(s) ? "archive_location" + X(s) + "" : "");
-  const o = _ce(e);
+  const o = Ece(e);
   if (t.push(o), !(e.source != null && e.source !== "")) {
     const l = mI(e);
     t.push(l);
@@ -75678,9 +75976,9 @@ function Ry(e, r) {
   return t.filter((a) => a !== "").join(", ");
 }
 function My(e, r) {
-  const t = [], n = Oce(e);
+  const t = [], n = Cce(e);
   t.push(n);
-  const a = kce(e);
+  const a = Ice(e);
   if (t.push(a), !(e.source != null && e.source !== "")) {
     const s = bI(e, r);
     t.push(s);
@@ -75712,7 +76010,7 @@ function bI(e, r) {
   }
   return t.filter((a) => a !== "").join(", ");
 }
-function Oce(e, r) {
+function Cce(e, r) {
   let t = "";
   if (!(e.issued != null && e.issued !== "")) {
     const n = ut.accessed, a = e.accessed ? it(e.accessed, { dateParts: [{ name: "month", form: null, prefix: "", suffix: " ", rangeDelimiter: null }, { name: "day", form: null, prefix: "", suffix: ", ", rangeDelimiter: null }, { name: "year", form: null, prefix: "", suffix: "", rangeDelimiter: null }], monthTerms: { 1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June", 7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December" }, seasonTerms: { 1: "Spring", 2: "Summer", 3: "Autumn", 4: "Winter" } }) : "";
@@ -75720,7 +76018,7 @@ function Oce(e, r) {
   }
   return t;
 }
-function kce(e, r) {
+function Ice(e, r) {
   const t = e.medium != null && e.medium !== "" ? String(e.medium) : "";
   return ee(t, "capitalize-first") ? "medium" + ee(t, "capitalize-first") + "" : "";
 }
@@ -75829,23 +76127,23 @@ function Y8(e, r) {
     t.push(u);
   }
   if (!(e.volume != null && e.volume !== "")) {
-    const a = yce(e);
+    const a = wce(e);
     t.push(a);
   }
   return t.filter((a) => a !== "").join(", ");
 }
-const Cce = { initializeWith: ". ", and: "text", etAlMin: 3, etAlUseFirst: 1 };
-function Ice(e, r = {}) {
-  r = { ...r, _secOpts: Cce };
-  const t = ky(e, r), n = _d(e), a = Cy(e, r), i = Iy(e, r), s = Ny(e, r), o = Ry(e), u = My(e, r), f = [!ky(e, r) && !_d(e) && !Cy(e, r) && !Iy(e, r) && !Ny(e, r) && !Ry(e) && !My(e, r) ? "" : [t, n, a, i, s, o, u].filter((g) => g !== "").join(". ")].filter((g) => g !== "").join("") + ".", h = Rce(f), d = gn(h), m = '<div class="csl-entry">' + mn(h) + "</div>";
+const Pce = { initializeWith: ". ", and: "text", etAlMin: 3, etAlUseFirst: 1 };
+function Nce(e, r = {}) {
+  r = { ...r, _secOpts: Pce };
+  const t = ky(e, r), n = _d(e), a = Cy(e, r), i = Iy(e, r), s = Ny(e, r), o = Ry(e), u = My(e, r), f = [!ky(e, r) && !_d(e) && !Cy(e, r) && !Iy(e, r) && !Ny(e, r) && !Ry(e) && !My(e, r) ? "" : [t, n, a, i, s, o, u].filter((g) => g !== "").join(". ")].filter((g) => g !== "").join("") + ".", h = Dce(f), d = gn(h), m = '<div class="csl-entry">' + mn(h) + "</div>";
   return {
     text: d,
     html: m,
-    parts: Pce(e),
-    links: Nce(e)
+    parts: Rce(e),
+    links: Mce(e)
   };
 }
-function Pce(e) {
+function Rce(e) {
   return {
     authors: e.author || [],
     year: e.issued?.["date-parts"]?.[0]?.[0]?.toString() || "",
@@ -75858,19 +76156,19 @@ function Pce(e) {
     url: e.URL || ""
   };
 }
-function Nce(e) {
+function Mce(e) {
   return {
     doi: e.DOI ? "https://doi.org/" + e.DOI : null,
     url: e.URL || null,
     pdf: e.extended?.pdf_url || null
   };
 }
-function Rce(e) {
+function Dce(e) {
   if (!e) return "";
   const r = "[--]*";
   return e.replace(new RegExp("([.!?])(" + r + ")\\. ", "g"), "$1$2 ").replace(new RegExp("\\.(" + r + ")\\.", "g"), ".$1").replace(/ +/g, " ").trim();
 }
-function Mce(e, r) {
+function Lce(e, r) {
   const t = [
     { fn: (n) => ky(n, {}), dir: 1 },
     { fn: (n) => _d(n), dir: 1 },
@@ -75886,9 +76184,9 @@ function Mce(e, r) {
   }
   return 0;
 }
-const Dce = { initializeWith: ". ", and: "text", etAlMin: 3, etAlUseFirst: 1 };
-function Lce(e, r = {}) {
-  const t = { ...r, _secOpts: Dce }, a = "(" + e.map((o) => {
+const jce = { initializeWith: ". ", and: "text", etAlMin: 3, etAlUseFirst: 1 };
+function Bce(e, r = {}) {
+  const t = { ...r, _secOpts: jce }, a = "(" + e.map((o) => {
     let u = o._disambig ? { ...t, _disambig: o._disambig } : t, l = o.item || o;
     o.locator != null && (l = { ...l, locator: o.locator, _locatorLabel: o.label || "page" });
     let c = "";
@@ -75903,13 +76201,13 @@ function Lce(e, r = {}) {
   }).join("; ") + ")", i = gn(a), s = '<span class="csl-citation">' + mn(a) + "</span>";
   return { text: i, html: s };
 }
-const jce = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const Fce = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  bibliography: Ice,
-  bibliographySort: Mce,
-  citation: Lce,
-  meta: gce
-}, Symbol.toStringTag, { value: "Module" })), Bce = {
+  bibliography: Nce,
+  bibliographySort: Lce,
+  citation: Bce,
+  meta: bce
+}, Symbol.toStringTag, { value: "Module" })), Uce = {
   id: "chicago-author-date",
   title: "Chicago Manual of Style 18th edition (author-date)",
   class: "in-text",
@@ -76686,7 +76984,7 @@ function vI(e, r) {
   const n = e["chapter-number"] != null && e["chapter-number"] !== "" ? String(e["chapter-number"]) : "";
   return t.push(X(n) ? "chapter-number" + X(n) + "" : ""), t.filter((i) => i !== "").join(" ");
 }
-function Fce(e, r) {
+function zce(e, r) {
   const t = [];
   if (e.type === "song" && e["chapter-number"] != null && /^\s*\d/.test(String(e["chapter-number"])))
     t.push(ee("track", "capitalize-first"));
@@ -76890,7 +77188,7 @@ function _I(e, r) {
   }
   return t.filter((i) => i !== "").join(" ");
 }
-function Uce(e, r) {
+function $ce(e, r) {
   const t = (() => {
     const i = e.page;
     if (i == null || i === "" || Array.isArray(i) && i.length === 0) return "";
@@ -76958,7 +77256,7 @@ function m1(e, r) {
   const n = e["supplement-number"] != null && e["supplement-number"] !== "" ? String(e["supplement-number"]) : "";
   return t.push(X(n) ? "supplement-number" + X(n) + "" : ""), t.filter((i) => i !== "").join(" ");
 }
-function zce(e, r) {
+function Hce(e, r) {
   const t = [];
   if (e.type === "software") {
     const i = (() => {
@@ -77114,7 +77412,7 @@ function ba(e, r) {
   if (e.type === "bill" || e.type === "hearing" || e.type === "legal_case" || e.type === "legislation" || e.type === "regulation" || e.type === "treaty")
     t = Ms(e, r);
   else if (e.type === "interview" || e.type === "personal_communication")
-    t = Hce(e, r);
+    t = qce(e, r);
   else {
     let n = "";
     if (e.composer && e.composer.length && (n = ce(e.composer, Ae(r, { and: "text", delimiter: ", ", etAlUseLast: !1, sortSeparator: ", ", form: "short" })), n && (n = "composer" + n + "")), !n) {
@@ -77189,22 +77487,22 @@ function ba(e, r) {
         p = X(_) ? "authority" + X(_) + "" : "";
       }
       n || (n = p);
-      const b = Wce(e);
+      const b = Vce(e);
       n || (n = b);
       const v = Q8(e, r);
       n || (n = v);
       let y = "";
-      e["container-title"] != null && e["container-title"] !== "" || e["event-date"] != null && e["event-date"] !== "" || e["event-place"] != null && e["event-place"] !== "" || e["event-title"] != null && e["event-title"] !== "" || e.genre != null && e.genre !== "" || e.title != null && e.title !== "" || e.publisher != null && e.publisher !== "" || e["publisher-place"] != null && e["publisher-place"] !== "" ? y = [].filter((_) => _ !== "").join("") : e.type === "manuscript" && (y = mfe(e, r)), n || (n = y);
+      e["container-title"] != null && e["container-title"] !== "" || e["event-date"] != null && e["event-date"] !== "" || e["event-place"] != null && e["event-place"] !== "" || e["event-title"] != null && e["event-title"] !== "" || e.genre != null && e.genre !== "" || e.title != null && e.title !== "" || e.publisher != null && e.publisher !== "" || e["publisher-place"] != null && e["publisher-place"] !== "" ? y = [].filter((_) => _ !== "").join("") : e.type === "manuscript" && (y = vfe(e, r)), n || (n = y);
     }
     t = n;
   }
   return t;
 }
-function $ce(e, r) {
+function Wce(e, r) {
   let t = "";
   return e.type === "bill" || e.type === "hearing" || e.type === "legal_case" || e.type === "legislation" || e.type === "regulation" || e.type === "treaty" ? t = xu(e) : t = wI(e, r), t;
 }
-function Hce(e, r) {
+function qce(e, r) {
   const t = [];
   if (!(e.archive != null && e.archive !== "") && !(e["archive-place"] != null && e["archive-place"] !== "") && !(e["container-title"] != null && e["container-title"] !== "") && !(e.DOI != null && e.DOI !== "") && !(e.number != null && e.number !== "") && !(e.publisher != null && e.publisher !== "") && !(e.references != null && e.references !== "") && !(e.URL != null && e.URL !== "")) {
     let a = "";
@@ -77290,7 +77588,7 @@ function Qf(e, r) {
   }
   return t;
 }
-function Wce(e, r) {
+function Vce(e, r) {
   let t = "";
   if (e.type === "article-magazine" || e.type === "article-newspaper") {
     const n = e["container-title"] != null && e["container-title"] !== "" ? String(e["container-title"]) : "";
@@ -77408,11 +77706,11 @@ function fs(e, r) {
   }
   return t.filter((a) => a !== "").join("-");
 }
-function qce(e, r) {
+function Gce(e, r) {
   let t = "";
   return e.issued != null && e.issued !== "" ? t = "0" : e.status != null && e.status !== "" ? t = "2" : t = "1", t;
 }
-function Vce(e, r) {
+function Kce(e, r) {
   let t = "";
   if (e.type === "personal_communication" && e["event-date"] != null && e["event-date"] !== "" && e.issued != null && e.issued !== "") {
     const n = e["event-date"] ? it(e["event-date"], { dateParts: [{ name: "year", form: null, prefix: "", suffix: "", rangeDelimiter: null }], monthTerms: { 1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June", 7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December" }, seasonTerms: { 1: "Spring", 2: "Summer", 3: "Autumn", 4: "Winter" } }) : "";
@@ -77454,7 +77752,7 @@ function xl(e, r) {
   }
   return t;
 }
-function Gce(e, r) {
+function Yce(e, r) {
   const t = e.issued ? it(e.issued, { dateParts: [{ name: "month", form: null, prefix: "", suffix: "", rangeDelimiter: null }], monthTerms: { 1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June", 7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December" }, seasonTerms: { 1: "Spring", 2: "Summer", 3: "Autumn", 4: "Winter" } }) : "";
   return t ? "issued" + t + "" : "";
 }
@@ -77520,7 +77818,7 @@ function Ms(e, r) {
   let t = "";
   return e.title != null && e.title !== "" ? t = eh(e, r) : e.type === "bill" || e.type === "report" ? t = zy(e) : t = SI(e, r), t;
 }
-function Kce(e, r) {
+function Xce(e, r) {
   const t = [];
   if (e.type === "broadcast" && e["container-title"] != null && e["container-title"] !== "" && e.number != null && e.number !== "" && e.title != null && e.title !== "") {
     const c = th(e);
@@ -77557,11 +77855,11 @@ function Kce(e, r) {
       }
     }
   }
-  const a = ffe(e, r);
+  const a = dfe(e, r);
   n.push(a);
   const i = n.filter((c) => c !== "").join(", ");
   t.push(i);
-  const s = pfe(e);
+  const s = mfe(e);
   t.push(s);
   const o = k_(e, r);
   t.push(o);
@@ -77586,7 +77884,7 @@ function eh(e, r) {
       n = SI(e, r);
     t = n;
   } else
-    t = Yce(e);
+    t = Zce(e);
   return t;
 }
 function b1(e, r) {
@@ -77698,7 +77996,7 @@ function Ds(e, r) {
   }
   return t;
 }
-function Yce(e, r) {
+function Zce(e, r) {
   let t = "";
   if (e.type === "patent") {
     const n = e.title != null && e.title !== "" ? String(e.title) : "";
@@ -77759,19 +78057,19 @@ function na(e, r) {
 function $u(e, r) {
   let t = "";
   if (e.type === "interview" || e.interviewer != null && e.interviewer !== "")
-    t = Xce(e, r);
-  else if (e.type === "review" || e.type === "review-book" || e["reviewed-author"] != null && e["reviewed-author"] !== "" || e["reviewed-genre"] != null && e["reviewed-genre"] !== "" || e["reviewed-title"] != null && e["reviewed-title"] !== "")
-    t = tfe(e, r);
-  else if (e.type === "personal_communication")
     t = Jce(e, r);
-  else if (e.type === "song" && e.composer != null && e.composer !== "")
+  else if (e.type === "review" || e.type === "review-book" || e["reviewed-author"] != null && e["reviewed-author"] !== "" || e["reviewed-genre"] != null && e["reviewed-genre"] !== "" || e["reviewed-title"] != null && e["reviewed-title"] !== "")
     t = nfe(e, r);
+  else if (e.type === "personal_communication")
+    t = efe(e, r);
+  else if (e.type === "song" && e.composer != null && e.composer !== "")
+    t = afe(e, r);
   else if (e.type === "thesis")
     t = [].filter((n) => n !== "").join("");
   else if (e.type === "article-journal" || e.type === "article-magazine" || e.type === "article-newspaper" || e.type === "periodical" || e.type === "post-weblog" || e.type === "review" || e.type === "review-book")
     t = Ly(e);
   else if (e.type === "paper-conference")
-    t = efe(e);
+    t = rfe(e);
   else if (!(e["container-title"] != null && e["container-title"] !== ""))
     t = hi(e);
   else if (e.type === "document" || e.type === "report" || e.type === "software" || e.type === "standard")
@@ -77791,10 +78089,10 @@ function SI(e, r) {
       n = nA(e, r);
     else {
       let a = "";
-      r.position === "first" ? a = Zce(e, r) : a = nA(e, r), n = a;
+      r.position === "first" ? a = Qce(e, r) : a = nA(e, r), n = a;
     }
     t = n;
-  } else e.type === "review" || e.type === "review-book" || e["reviewed-author"] != null && e["reviewed-author"] !== "" || e["reviewed-genre"] != null && e["reviewed-genre"] !== "" || e["reviewed-title"] != null && e["reviewed-title"] !== "" ? t = rfe(e, r) : e.type === "personal_communication" ? t = Qce(e, r) : e.type === "article-journal" || e.type === "article-magazine" || e.type === "article-newspaper" || e.type === "periodical" || e.type === "post-weblog" || e.type === "review" || e.type === "review-book" ? t = aA(e, r) : e["collection-editor"] != null && e["collection-editor"] !== "" || e.compiler != null && e.compiler !== "" || e.editor != null && e.editor !== "" || e["editorial-director"] != null && e["editorial-director"] !== "" ? t = $a(e, r) : e.type === "paper-conference" ? t = aA(e, r) : t = $a(e, r);
+  } else e.type === "review" || e.type === "review-book" || e["reviewed-author"] != null && e["reviewed-author"] !== "" || e["reviewed-genre"] != null && e["reviewed-genre"] !== "" || e["reviewed-title"] != null && e["reviewed-title"] !== "" ? t = ife(e, r) : e.type === "personal_communication" ? t = tfe(e, r) : e.type === "article-journal" || e.type === "article-magazine" || e.type === "article-newspaper" || e.type === "periodical" || e.type === "post-weblog" || e.type === "review" || e.type === "review-book" ? t = aA(e, r) : e["collection-editor"] != null && e["collection-editor"] !== "" || e.compiler != null && e.compiler !== "" || e.editor != null && e.editor !== "" || e["editorial-director"] != null && e["editorial-director"] !== "" ? t = $a(e, r) : e.type === "paper-conference" ? t = aA(e, r) : t = $a(e, r);
   return t;
 }
 function hi(e, r) {
@@ -77870,7 +78168,7 @@ function $a(e, r) {
   }
   return t.filter((a) => a !== "").join(" ");
 }
-function Xce(e, r) {
+function Jce(e, r) {
   const t = [];
   if (e.genre != null && e.genre !== "" && e.number != null && e.number !== "") {
     let i = "";
@@ -77891,7 +78189,7 @@ function Xce(e, r) {
   const n = kd(e);
   return t.push(n), t.filter((i) => i !== "").join(", ");
 }
-function Zce(e, r) {
+function Qce(e, r) {
   const t = [];
   if (e.genre != null && e.genre !== "" && e.number != null && e.number !== "") {
     let i = "";
@@ -77928,7 +78226,7 @@ function nA(e, r) {
     t = Oe.interview;
   return t;
 }
-function Jce(e, r) {
+function efe(e, r) {
   let t = "";
   if (e.recipient != null && e.recipient !== "") {
     const n = [];
@@ -77953,7 +78251,7 @@ function Jce(e, r) {
     t = hi(e);
   return t;
 }
-function Qce(e, r) {
+function tfe(e, r) {
   const t = [];
   if (e.genre != null && e.genre !== "" && e.recipient != null && e.recipient !== "") {
     const i = $a(e, r);
@@ -77975,7 +78273,7 @@ function Qce(e, r) {
   }
   return t.filter((i) => i !== "").join(", ");
 }
-function efe(e, r) {
+function rfe(e, r) {
   let t = "";
   if (e["collection-editor"] != null && e["collection-editor"] !== "" || e.compiler != null && e.compiler !== "" || e.editor != null && e.editor !== "" || e["editorial-director"] != null && e["editorial-director"] !== "")
     t = hi(e);
@@ -77985,7 +78283,7 @@ function efe(e, r) {
   }
   return t;
 }
-function tfe(e, r) {
+function nfe(e, r) {
   const t = [], n = v1(e, r), a = _1(e), i = !v1(e, r) && !_1(e) ? "" : [n, a].filter((c) => c !== "").join(" ");
   if (t.push(i), e["reviewed-genre"] != null && e["reviewed-genre"] !== "" && e["reviewed-title"] != null && e["reviewed-title"] !== "" && e.title != null && e.title !== "") {
     let c = "";
@@ -78019,7 +78317,7 @@ function v1(e, r) {
     t = y1(e);
   return t;
 }
-function rfe(e, r) {
+function ife(e, r) {
   let t = "";
   if (r.position === "ibid" || r.position === "ibid-with-locator")
     t = Oe.review;
@@ -78078,7 +78376,7 @@ function aA(e, r) {
   }
   return t;
 }
-function nfe(e, r) {
+function afe(e, r) {
   const t = [];
   if (e.genre != null && e.genre !== "") {
     const i = e.genre != null && e.genre !== "" ? String(e.genre) : "";
@@ -78099,10 +78397,10 @@ function nfe(e, r) {
 function w1(e, r) {
   const t = [];
   if (e.type === "patent") {
-    const a = afe(e);
+    const a = ofe(e);
     t.push(a);
   } else if (e.type === "report") {
-    const a = sfe(e, r);
+    const a = lfe(e, r);
     t.push(a);
   } else if (e.type === "post" || e.type === "webpage") {
     const a = Ha(e);
@@ -78379,7 +78677,7 @@ function Fy(e, r) {
 function sA(e, r) {
   const t = [], n = By(e, r);
   t.push(n);
-  const a = [], i = ofe(e);
+  const a = [], i = ufe(e);
   if (a.push(i), e["number-of-volumes"] != null && e["number-of-volumes"] !== "" || e["part-number"] != null && e["part-number"] !== "" || e["part-title"] != null && e["part-title"] !== "" || e.volume != null && e.volume !== "" || e["volume-title"] != null && e["volume-title"] !== "") {
     let u = "";
     e["collection-editor"] && e["collection-editor"].length && (u = ce(e["collection-editor"], Ae(r, { and: "text", delimiter: ", ", etAlUseLast: !1, initialize: !1, sortSeparator: ", " })), u && (u = "collection-editor" + u + "")), a.push(u);
@@ -78395,7 +78693,7 @@ function Od(e, r) {
   let t = "";
   return e["original-title"] != null && e["original-title"] !== "" ? t = El(e) : e.issued != null && e.issued !== "" && e["original-date"] != null && e["original-date"] !== "" ? t = [].filter((n) => n !== "").join("") : t = El(e), t;
 }
-function ife(e, r) {
+function sfe(e, r) {
   let t = "";
   return e["original-title"] != null && e["original-title"] !== "" ? t = Z8(e) : e.issued != null && e.issued !== "" && e["original-date"] != null && e["original-date"] !== "" ? t = [].filter((n) => n !== "").join("") : t = Z8(e), t;
 }
@@ -78420,7 +78718,7 @@ function Ha(e, r) {
   }
   return t.filter((a) => a !== "").join(" ");
 }
-function afe(e, r) {
+function ofe(e, r) {
   const t = [], n = e.authority != null && e.authority !== "" ? String(e.authority) : "";
   if (t.push(X(n) ? "authority" + X(n) + "" : ""), e.genre != null && e.genre !== "") {
     const m = e.genre != null && e.genre !== "" ? String(e.genre) : "";
@@ -78442,7 +78740,7 @@ function afe(e, r) {
   const h = l.filter((m) => m !== "").join(" ");
   return (e.authority == null || e.authority === "") && (e.genre == null || e.genre === "") && (e.number == null || e.number === "") && (e.submitted == null || e.submitted === "") && !xl(e) ? "" : [i, u, h].filter((m) => m !== "").join(", ");
 }
-function sfe(e, r) {
+function lfe(e, r) {
   const t = [];
   if (e["container-title"] != null && e["container-title"] !== "") {
     const a = jy(e, r);
@@ -78466,7 +78764,7 @@ function sfe(e, r) {
   }
   return t.filter((a) => a !== "").join(". ");
 }
-function ofe(e, r) {
+function ufe(e, r) {
   const t = [];
   if (e["part-number"] != null && e["part-number"] !== "" && e["part-title"] != null && e["part-title"] !== "" && e.volume != null && e.volume !== "" && e["volume-title"] != null && e["volume-title"] !== "") {
     const a = Ss(e), i = "of", s = na(e), o = !Ss(e) && !na(e) ? "" : [a, i, s].filter((h) => h !== "").join(" ");
@@ -78508,7 +78806,7 @@ function yo(e, r) {
   return e.type === "patent" || e.type === "post" || e.type === "webpage" ? t = [].filter((n) => n !== "").join("") : e.type === "article-journal" || e.type === "article-magazine" || e.type === "article-newspaper" || e.type === "periodical" || e.type === "post-weblog" || e.type === "review" || e.type === "review-book" ? t = oA(e, r) : e["collection-editor"] != null && e["collection-editor"] !== "" || e.compiler != null && e.compiler !== "" || e.editor != null && e.editor !== "" || e["editorial-director"] != null && e["editorial-director"] !== "" ? t = uA(e, r) : e.type === "interview" || e.type === "paper-conference" ? t = oA(e, r) : t = uA(e, r), t;
 }
 function oA(e, r) {
-  const t = [], n = lfe(e, r);
+  const t = [], n = cfe(e, r);
   if (t.push(n), e.type === "article-magazine" || e.type === "article-newspaper") {
     const i = va(e), s = ya(e, r), o = !va(e) && !ya(e, r) ? "" : [i, s].filter((u) => u !== "").join(", ");
     t.push(o);
@@ -78560,7 +78858,7 @@ function va(e, r) {
   }
   return t.filter((i) => i !== "").join(", ");
 }
-function lfe(e, r) {
+function cfe(e, r) {
   let t = "";
   if (e["volume-title"] != null && e["volume-title"] !== "") {
     const n = zo(e), a = na(e), i = !zo(e) && !na(e) ? "" : [n, a].filter((u) => u !== "").join(" "), s = Pc(e, r);
@@ -78722,7 +79020,7 @@ function zo(e, r) {
     }
     t = n;
   } else if (e["chapter-number"] != null && e["chapter-number"] !== "") {
-    const n = [], a = Fce(e);
+    const n = [], a = zce(e);
     if (n.push(a), e.type === "song") {
       const s = Oe.on;
       n.push(s);
@@ -78786,11 +79084,11 @@ function fA(e, r) {
       const u = Ha(e);
       n.push(u);
     }
-    const a = zce(e);
+    const a = Hce(e);
     n.push(a);
-    const i = ife(e);
+    const i = sfe(e);
     n.push(i);
-    const s = ufe(e, r);
+    const s = ffe(e, r);
     n.push(s), t = n.filter((u) => u !== "").join(", ");
   }
   return t;
@@ -78978,10 +79276,10 @@ function AI(e, r) {
   }
   return t;
 }
-function ufe(e, r) {
+function ffe(e, r) {
   const t = [], n = Pc(e, r);
   t.push(n);
-  const a = cfe(e);
+  const a = hfe(e);
   if (t.push(a), e["number-of-volumes"] != null && e["number-of-volumes"] !== "" || e["part-number"] != null && e["part-number"] !== "" || e["part-title"] != null && e["part-title"] !== "" || e.volume != null && e.volume !== "" || e["volume-title"] != null && e["volume-title"] !== "") {
     let s = "";
     e["collection-editor"] && e["collection-editor"].length && (s = ce(e["collection-editor"], Ae(r, { and: "text", delimiter: ", ", etAlUseLast: !1, initialize: !1, sortSeparator: ", " })), s && (s = "collection-editor" + s + "")), t.push(s);
@@ -78994,7 +79292,7 @@ function ufe(e, r) {
   }
   return t.filter((s) => s !== "").join(", ");
 }
-function cfe(e, r) {
+function hfe(e, r) {
   const t = [];
   if (e["part-number"] != null && e["part-number"] !== "" && e["part-title"] != null && e["part-title"] !== "" && e.volume != null && e.volume !== "" && e["volume-title"] != null && e["volume-title"] !== "") {
     const a = Wi(e), i = "of", s = na(e), o = !Wi(e) && !na(e) ? "" : [a, i, s].filter((h) => h !== "").join(" ");
@@ -79222,7 +79520,7 @@ function bA(e, r) {
   const a = e["event-place"] != null && e["event-place"] !== "" ? String(e["event-place"]) : "";
   return t.push(X(a) ? "event-place" + X(a) + "" : ""), t.filter((s) => s !== "").join(", ");
 }
-function ffe(e, r) {
+function dfe(e, r) {
   const t = [];
   if (e.type !== "patent") {
     if (!(e.type === "article-journal" || e.type === "article-magazine" || e.type === "article-newspaper" || e.type === "periodical" || e.type === "post-weblog" || e.type === "review" || e.type === "review-book")) {
@@ -79235,7 +79533,7 @@ function ffe(e, r) {
       }
     }
   }
-  const n = hfe(e, r);
+  const n = pfe(e, r);
   return t.push(n), t.filter((i) => i !== "").join(". ");
 }
 function vA(e, r) {
@@ -79300,7 +79598,7 @@ function ru(e, r) {
   }
   return t;
 }
-function hfe(e, r) {
+function pfe(e, r) {
   let t = "";
   if (e["original-title"] != null && e["original-title"] !== "") {
     const n = Oe["original-work-published"];
@@ -79363,12 +79661,12 @@ function Df(e, r) {
 }
 function yA(e, r) {
   let t = "";
-  return e.type === "article-magazine" || e.type === "article-newspaper" ? t = Ad(e) : e.issue != null && e.issue !== "" || e["supplement-number"] != null && e["supplement-number"] !== "" || e.volume != null && e.volume !== "" ? t = Gce(e) : t = Ad(e), t;
+  return e.type === "article-magazine" || e.type === "article-newspaper" ? t = Ad(e) : e.issue != null && e.issue !== "" || e["supplement-number"] != null && e["supplement-number"] !== "" || e.volume != null && e.volume !== "" ? t = Yce(e) : t = Ad(e), t;
 }
 function Ca(e, r) {
-  return dfe(e);
+  return gfe(e);
 }
-function dfe(e, r) {
+function gfe(e, r) {
   let t = "";
   if (e.type === "personal_communication" && e["event-date"] != null && e["event-date"] !== "" && e["original-date"] != null && e["original-date"] !== "")
     t = Ks(e);
@@ -79442,11 +79740,11 @@ function nu(e, r) {
     t = Cc(e, r);
   return t;
 }
-function pfe(e, r) {
+function mfe(e, r) {
   const t = e.medium != null && e.medium !== "" ? String(e.medium) : "", n = e.scale != null && e.scale !== "" ? String(e.scale) : "", a = e.dimensions != null && e.dimensions !== "" ? String(e.dimensions) : "";
   return (e.medium == null || e.medium === "") && (e.scale == null || e.scale === "") && (e.dimensions == null || e.dimensions === "") ? "" : [ee(t, "capitalize-first") ? "medium" + ee(t, "capitalize-first") + "" : "", X(n) ? "scale" + X(n) + "" : "", X(a) ? "dimensions" + X(a) + "" : ""].filter((s) => s !== "").join(", ");
 }
-function gfe(e, r) {
+function bfe(e, r) {
   const t = e.medium != null && e.medium !== "" ? String(e.medium) : "", n = e.scale != null && e.scale !== "" ? String(e.scale) : "", a = e.dimensions != null && e.dimensions !== "" ? String(e.dimensions) : "";
   return (e.medium == null || e.medium === "") && (e.scale == null || e.scale === "") && (e.dimensions == null || e.dimensions === "") ? "" : [X(t) ? "medium" + X(t) + "" : "", X(n) ? "scale" + X(n) + "" : "", X(a) ? "dimensions" + X(a) + "" : ""].filter((s) => s !== "").join(", ");
 }
@@ -79456,19 +79754,19 @@ function k_(e, r) {
     const i = kI(e, r);
     t.push(i);
   } else {
-    const i = bfe(e, r);
+    const i = yfe(e, r);
     t.push(i);
   }
   const n = OI(e);
   return t.push(n ? "(" + n + ")" : ""), t.filter((i) => i !== "").join(" ");
 }
-function mfe(e, r) {
+function vfe(e, r) {
   const t = [];
   if (e.type === "graphic") {
     const i = kI(e, r);
     t.push(i);
   } else {
-    const i = vfe(e, r);
+    const i = _fe(e, r);
     t.push(i);
   }
   const n = OI(e);
@@ -79500,7 +79798,7 @@ function Ls(e, r) {
   else if (e.archive != null && e.archive !== "" && e.archive_location != null && e.archive_location !== "" && e.page != null && e.page !== "") {
     let n = "";
     if (e.page != null && /^\s*\d/.test(String(e.page)))
-      n = Uce(e);
+      n = $ce(e);
     else {
       const a = e.page != null && e.page !== "" ? pi(X(String(e.page)), "chicago-16") : "";
       n = X(a) ? "page" + X(a) + "" : "";
@@ -79513,11 +79811,11 @@ function kI(e, r) {
   const t = e.archive != null && e.archive !== "" ? String(e.archive) : "", n = e["archive-place"] != null && e["archive-place"] !== "" ? String(e["archive-place"]) : "", a = e.archive_collection != null && e.archive_collection !== "" ? String(e.archive_collection) : "", i = e.archive_location != null && e.archive_location !== "" ? String(e.archive_location) : "", s = Ls(e, r);
   return (e.archive == null || e.archive === "") && (e["archive-place"] == null || e["archive-place"] === "") && (e.archive_collection == null || e.archive_collection === "") && (e.archive_location == null || e.archive_location === "") && !Ls(e, r) ? "" : [X(t) ? "archive" + X(t) + "" : "", X(n) ? "archive-place" + X(n) + "" : "", X(a) ? "archive_collection" + X(a) + "" : "", X(i) ? "archive_location" + X(i) + "" : "", s].filter((u) => u !== "").join(", ");
 }
-function bfe(e, r) {
+function yfe(e, r) {
   const t = e.archive_location != null && e.archive_location !== "" ? String(e.archive_location) : "", n = Ls(e, r), a = (e.archive_location == null || e.archive_location === "") && !Ls(e, r) ? "" : [ee(t, "capitalize-first") ? "archive_location" + ee(t, "capitalize-first") + "" : "", n].filter((c) => c !== "").join(", "), i = e.archive_collection != null && e.archive_collection !== "" ? String(e.archive_collection) : "", s = e.archive != null && e.archive !== "" ? String(e.archive) : "", o = e["archive-place"] != null && e["archive-place"] !== "" ? String(e["archive-place"]) : "", u = (e.archive == null || e.archive === "") && (e["archive-place"] == null || e["archive-place"] === "") ? "" : [X(s) ? "archive" + X(s) + "" : "", X(o) ? "archive-place" + X(o) + "" : ""].filter((c) => c !== "").join(", ");
   return (e.archive_location == null || e.archive_location === "") && !Ls(e, r) && (e.archive_collection == null || e.archive_collection === "") && (e.archive == null || e.archive === "") && (e["archive-place"] == null || e["archive-place"] === "") ? "" : [a, X(i) ? "archive_collection" + X(i) + "" : "", u].filter((c) => c !== "").join(". ");
 }
-function vfe(e, r) {
+function _fe(e, r) {
   const t = e.archive_location != null && e.archive_location !== "" ? String(e.archive_location) : "", n = Ls(e, r), a = e.archive_collection != null && e.archive_collection !== "" ? String(e.archive_collection) : "", i = e.archive != null && e.archive !== "" ? String(e.archive) : "", s = e["archive-place"] != null && e["archive-place"] !== "" ? String(e["archive-place"]) : "";
   return (e.archive_location == null || e.archive_location === "") && !Ls(e, r) && (e.archive_collection == null || e.archive_collection === "") && (e.archive == null || e.archive === "") && (e["archive-place"] == null || e["archive-place"] === "") ? "" : [X(t) ? "archive_location" + X(t) + "" : "", n, X(a) ? "archive_collection" + X(a) + "" : "", X(i) ? "archive" + X(i) + "" : "", X(s) ? "archive-place" + X(s) + "" : ""].filter((u) => u !== "").join(", ");
 }
@@ -79531,10 +79829,10 @@ function CI(e, r) {
       }
     }
   }
-  const n = yfe(e);
+  const n = wfe(e);
   return t.push(n), t.filter((i) => i !== "").join(". ");
 }
-function yfe(e, r) {
+function wfe(e, r) {
   let t = "";
   if (e.DOI != null && e.DOI !== "") {
     const n = e.DOI != null && e.DOI !== "" ? String(e.DOI) : "";
@@ -79545,7 +79843,7 @@ function yfe(e, r) {
   }
   return t;
 }
-function _fe(e, r) {
+function Efe(e, r) {
   const t = [];
   if (e.type === "treaty") {
     const o = xu(e);
@@ -79575,7 +79873,7 @@ function x1(e, r) {
   if (e.type === "treaty")
     t = xl(e);
   else if (e.type === "legal_case")
-    t = wfe(e);
+    t = xfe(e);
   else if (e.type === "bill" || e.type === "hearing" || e.type === "legislation" || e.type === "regulation") {
     const n = [], a = Ks(e), i = Oe["and:symbol"], s = Ks(e) ? [a, i].filter((u) => u !== "").join(" ") : "";
     if (n.push(s), e.issued != null && e.issued !== "") {
@@ -79590,7 +79888,7 @@ function x1(e, r) {
   }
   return t;
 }
-function wfe(e, r) {
+function xfe(e, r) {
   const t = [], n = e.authority != null && e.authority !== "" ? String(e.authority) : "";
   if (t.push(X(n) ? "authority" + X(n) + "" : ""), e["container-title"] != null && e["container-title"] !== "") {
     const i = ra(e);
@@ -79640,13 +79938,13 @@ function zy(e, r) {
 }
 function Lf(e, r) {
   let t = "";
-  return e.type === "bill" ? t = Efe(e) : e.type === "hearing" ? t = Sfe(e) : e.type === "legal_case" ? t = xfe(e) : e.type === "legislation" ? t = Afe(e) : e.type === "regulation" ? t = Tfe(e) : e.type === "treaty" && (t = Ofe(e)), t;
+  return e.type === "bill" ? t = Sfe(e) : e.type === "hearing" ? t = Tfe(e) : e.type === "legal_case" ? t = Afe(e) : e.type === "legislation" ? t = Ofe(e) : e.type === "regulation" ? t = kfe(e) : e.type === "treaty" && (t = Cfe(e)), t;
 }
-function Efe(e, r) {
+function Sfe(e, r) {
   const t = zy(e), n = e.authority != null && e.authority !== "" ? String(e.authority) : "", a = e["chapter-number"] != null && e["chapter-number"] !== "" ? String(e["chapter-number"]) : "", i = (e.authority == null || e.authority === "") && (e["chapter-number"] == null || e["chapter-number"] === "") ? "" : [X(n) ? "authority" + X(n) + "" : "", X(a) ? "chapter-number" + X(a) + "" : ""].filter((f) => f !== "").join(" "), s = e.volume != null && e.volume !== "" ? String(e.volume) : "", o = e["container-title"] != null && e["container-title"] !== "" ? String(e["container-title"]) : "", u = e.page != null && e.page !== "" ? X(String(e.page)).split(/[-–,\s]/)[0] : "", l = (e.volume == null || e.volume === "") && (e["container-title"] == null || e["container-title"] === "") && (e["page-first"] == null || e["page-first"] === "") ? "" : [X(s) ? "volume" + X(s) + "" : "", X(o) ? "container-title" + X(o) + "" : "", X(u) ? "page-first" + X(u) + "" : ""].filter((f) => f !== "").join(" ");
   return !zy(e) && (e.authority == null || e.authority === "") && (e["chapter-number"] == null || e["chapter-number"] === "") && (e.volume == null || e.volume === "") && (e["container-title"] == null || e["container-title"] === "") && (e["page-first"] == null || e["page-first"] === "") ? "" : [t, i, l].filter((f) => f !== "").join(", ");
 }
-function xfe(e, r) {
+function Afe(e, r) {
   const t = [];
   if (e["container-title"] != null && e["container-title"] !== "") {
     const a = e.volume != null && e.volume !== "" ? String(e.volume) : "";
@@ -79668,11 +79966,11 @@ function xfe(e, r) {
   }
   return t.filter((a) => a !== "").join(" ");
 }
-function Sfe(e, r) {
+function Tfe(e, r) {
   const t = e.authority != null && e.authority !== "" ? String(e.authority) : "", n = e["chapter-number"] != null && e["chapter-number"] !== "" ? String(e["chapter-number"]) : "";
   return (e.authority == null || e.authority === "") && (e["chapter-number"] == null || e["chapter-number"] === "") ? "" : [X(t) ? "authority" + X(t) + "" : "", X(n) ? "chapter-number" + X(n) + "" : ""].filter((i) => i !== "").join(" ");
 }
-function Afe(e, r) {
+function Ofe(e, r) {
   let t = "";
   if (e.number != null && e.number !== "") {
     const n = [];
@@ -79702,7 +80000,7 @@ function Afe(e, r) {
   }
   return t;
 }
-function Tfe(e, r) {
+function kfe(e, r) {
   const t = e.genre != null && e.genre !== "" ? String(e.genre) : "", n = ta(e), a = (e.genre == null || e.genre === "") && !ta(e) ? "" : [X(t) ? "genre" + X(t) + "" : "", n].filter((c) => c !== "").join(" "), i = [], s = e.volume != null && e.volume !== "" ? String(e.volume) : "";
   i.push(X(s) ? "volume" + X(s) + "" : "");
   const o = e["container-title"] != null && e["container-title"] !== "" ? String(e["container-title"]) : "";
@@ -79716,7 +80014,7 @@ function Tfe(e, r) {
   const u = i.filter((c) => c !== "").join(" ");
   return (e.genre == null || e.genre === "") && !ta(e) && (e.volume == null || e.volume === "") && (e["container-title"] == null || e["container-title"] === "") && !xd(e) && (e["page-first"] == null || e["page-first"] === "") ? "" : [a, u].filter((c) => c !== "").join(", ");
 }
-function Ofe(e, r) {
+function Cfe(e, r) {
   const t = [], n = e.volume != null ? String(e.volume) : "";
   t.push(n ? "volume" + n + "" : "");
   const a = e["container-title"] != null && e["container-title"] !== "" ? String(e["container-title"]) : "";
@@ -79754,7 +80052,7 @@ function iu(e, r) {
       if (r.position === "first") {
         let u = "";
         e.type === "interview" && (u = fs(e));
-        const l = gfe(e);
+        const l = bfe(e);
         o = [u, l].filter((c) => c !== "").join("");
       }
       a = [i, s, o].filter((u) => u !== "").join("");
@@ -79774,7 +80072,7 @@ function iu(e, r) {
 function au(e, r) {
   const t = [];
   if (e.type === "bill" || e.type === "hearing" || e.type === "legal_case" || e.type === "legislation" || e.type === "regulation" || e.type === "treaty") {
-    const a = _fe(e, r);
+    const a = Efe(e, r);
     t.push(a);
     const i = CI(e);
     t.push(i);
@@ -79785,16 +80083,16 @@ function au(e, r) {
     t.push(a);
     const i = EI(e);
     t.push(i);
-    const s = Kce(e, r);
+    const s = Xce(e, r);
     t.push(s);
     const o = e.references != null && e.references !== "" ? String(e.references) : "";
     t.push(X(o) ? "references" + X(o) + "" : "");
   }
   return t.filter((a) => a !== "").join(". ");
 }
-const kfe = { initializeWith: ". ", etAlMin: 7, etAlUseFirst: 3 };
-function Cfe(e, r = {}) {
-  r = { ...r, _secOpts: kfe };
+const Ife = { initializeWith: ". ", etAlMin: 7, etAlUseFirst: 3 };
+function Pfe(e, r = {}) {
+  r = { ...r, _secOpts: Ife };
   let t = "";
   if (e.type === "classic") {
     let u = "";
@@ -79803,15 +80101,15 @@ function Cfe(e, r = {}) {
     let u = "";
     (e.author != null && e.author !== "" || e.DOI != null && e.DOI !== "" || e.URL != null && e.URL !== "") && (u = au(e, r)), t = u;
   } else e.archive != null && e.archive !== "" || e["archive-place"] != null && e["archive-place"] !== "" || e["container-title"] != null && e["container-title"] !== "" || e.DOI != null && e.DOI !== "" || e.number != null && e.number !== "" || e.publisher != null && e.publisher !== "" || e.references != null && e.references !== "" || e.URL != null && e.URL !== "" ? t = au(e, r) : e.type === "interview" || e.type === "personal_communication" ? t = [].filter((u) => u !== "").join("") : t = au(e, r);
-  const a = [t].filter((u) => u !== "").join("") + ".", i = Nfe(a), s = gn(i), o = '<div class="csl-entry">' + mn(i) + "</div>";
+  const a = [t].filter((u) => u !== "").join("") + ".", i = Mfe(a), s = gn(i), o = '<div class="csl-entry">' + mn(i) + "</div>";
   return {
     text: s,
     html: o,
-    parts: Ife(e),
-    links: Pfe(e)
+    parts: Nfe(e),
+    links: Rfe(e)
   };
 }
-function Ife(e) {
+function Nfe(e) {
   return {
     authors: e.author || [],
     year: e.issued?.["date-parts"]?.[0]?.[0]?.toString() || "",
@@ -79824,23 +80122,23 @@ function Ife(e) {
     url: e.URL || ""
   };
 }
-function Pfe(e) {
+function Rfe(e) {
   return {
     doi: e.DOI ? "https://doi.org/" + e.DOI : null,
     url: e.URL || null,
     pdf: e.extended?.pdf_url || null
   };
 }
-function Nfe(e) {
+function Mfe(e) {
   if (!e) return "";
   const r = "[--]*";
   return e.replace(new RegExp("([.!?])(" + r + ")\\. ", "g"), "$1$2 ").replace(new RegExp("\\.(" + r + ")\\.", "g"), ".$1").replace(/ +/g, " ").trim();
 }
-function Rfe(e, r) {
+function Dfe(e, r) {
   const t = [
-    { fn: (n) => $ce(n, {}), dir: 1 },
-    { fn: (n) => qce(n), dir: 1 },
-    { fn: (n) => Vce(n), dir: 1 },
+    { fn: (n) => Wce(n, {}), dir: 1 },
+    { fn: (n) => Gce(n), dir: 1 },
+    { fn: (n) => Kce(n), dir: 1 },
     { fn: (n) => EI(n), dir: 1 },
     { fn: (n) => Vi(n, {}), dir: 1 },
     { fn: (n) => yo(n, {}), dir: 1 },
@@ -79866,9 +80164,9 @@ function Rfe(e, r) {
   }
   return 0;
 }
-const Mfe = { initializeWith: ". ", etAlMin: 3, etAlUseFirst: 1 };
-function Dfe(e, r = {}) {
-  const t = { ...r, _secOpts: Mfe }, a = "(" + e.map((o) => {
+const Lfe = { initializeWith: ". ", etAlMin: 3, etAlUseFirst: 1 };
+function jfe(e, r = {}) {
+  const t = { ...r, _secOpts: Lfe }, a = "(" + e.map((o) => {
     let u = o._disambig ? { ...t, _disambig: o._disambig } : t, l = o.item || o;
     o.locator != null && (l = { ...l, locator: o.locator, _locatorLabel: o.label || "page" });
     const c = [];
@@ -79895,13 +80193,13 @@ function Dfe(e, r = {}) {
   }).join("; ") + ")", i = gn(a), s = '<span class="csl-citation">' + mn(a) + "</span>";
   return { text: i, html: s };
 }
-const Lfe = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const Bfe = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  bibliography: Cfe,
-  bibliographySort: Rfe,
-  citation: Dfe,
-  meta: Bce
-}, Symbol.toStringTag, { value: "Module" })), jfe = {
+  bibliography: Pfe,
+  bibliographySort: Dfe,
+  citation: jfe,
+  meta: Uce
+}, Symbol.toStringTag, { value: "Module" })), Ffe = {
   id: "ieee",
   title: "IEEE Reference Guide version 11.29.2023",
   class: "in-text",
@@ -80698,14 +80996,14 @@ function lr(e, r) {
   }
   return t;
 }
-function Bfe(e, r) {
+function Ufe(e, r) {
   let t = "";
   if (e.author && e.author.length && (t = ce(e.author, Hu(r, { and: "text", delimiter: ", ", etAlMin: 7, etAlUseFirst: 1, etAlUseLast: !1, initializeWith: ". ", sortSeparator: ", " })), t && (t = "author" + t + "")), !t) {
     let n = "";
     e.editor && e.editor.length && (n = ce(e.editor, Hu(r, { and: "text", delimiter: ", ", etAlMin: 7, etAlUseFirst: 1, etAlUseLast: !1, initializeWith: ". ", sortSeparator: ", " })), n && (n = "editor" + n + "")), t || (t = n);
     let a = "";
     e.translator && e.translator.length && (a = ce(e.translator, Hu(r, { and: "text", delimiter: ", ", etAlMin: 7, etAlUseFirst: 1, etAlUseLast: !1, initializeWith: ". ", sortSeparator: ", " })), a && (a = "translator" + a + "")), t || (t = a);
-    const i = Ffe(e, r);
+    const i = zfe(e, r);
     t || (t = i);
   }
   return t;
@@ -80714,7 +81012,7 @@ function Bf(e, r) {
   let t = "";
   return e.editor && e.editor.length && (t = ce(e.editor, Hu(r, { and: "text", delimiter: ", ", etAlUseLast: !1, initializeWith: ". ", sortSeparator: ", " })), t && (t = "editor" + t + "")), t;
 }
-function Ffe(e, r) {
+function zfe(e, r) {
   let t = "";
   return e.director && e.director.length && (t = ce(e.director, Hu(r, { and: "text", delimiter: ", ", etAlMin: 7, etAlUseFirst: 1, etAlUseLast: !1, initializeWith: ". ", sortSeparator: ", " })), t && (t = "director" + t + "")), t;
 }
@@ -80849,10 +81147,10 @@ function su(e, r) {
   }
   return t;
 }
-const Ufe = {};
-function zfe(e, r = {}) {
-  r = { ...r, _secOpts: Ufe };
-  const t = e["citation-number"] != null && e["citation-number"] !== "" ? String(e["citation-number"]) : "", n = Bfe(e, r);
+const $fe = {};
+function Hfe(e, r = {}) {
+  r = { ...r, _secOpts: $fe };
+  const t = e["citation-number"] != null && e["citation-number"] !== "" ? String(e["citation-number"]) : "", n = Ufe(e, r);
   let a = "";
   if (e.type === "article-journal") {
     const f = ir(e), h = e["container-title"] != null && e["container-title"] !== "" ? String(e["container-title"]) : "", d = vi(e), m = zn(e), g = lr(e), p = jf(e), b = !ir(e) && (e["container-title"] == null || e["container-title"] === "") && !vi(e) && !zn(e) && !lr(e) && !jf(e) ? "" : [f, X(h) && "" + X(h) + "" ? "container-title" + (X(h) ? "" + X(h) + "" : "") + "" : "", d, m, g, p].filter((_) => _ !== "").join(", ");
@@ -80905,15 +81203,15 @@ function zfe(e, r = {}) {
     const f = ir(e), h = e["container-title"] != null && e["container-title"] !== "" ? String(e["container-title"]) : "", d = vi(e), m = !ir(e) && (e["container-title"] == null || e["container-title"] === "") && !vi(e) ? "" : [f, X(h) && "" + X(h) + "" ? "container-title" + (X(h) ? "" + X(h) + "" : "") + "" : "", d].filter((w) => w !== "").join(", "), g = su(e), p = Pr(e), b = zn(e), v = lr(e), y = !Pr(e) && !zn(e) && !lr(e) ? "" : [p, b, v].filter((w) => w !== "").join(", "), _ = _n(e);
     a = [m ? m + ". " : "", g, y ? y + "." : "", _].filter((w) => w !== "").join("");
   }
-  const i = X(t) && "[" + X(t) + "]" ? "citation-number" + (X(t) ? "[" + X(t) + "]" : "") + "" : "", s = [n ? n + ", " : "", a].filter((f) => f !== "").join(""), o = (i ? i + (/\s[\uE000-\uE007\uE020-\uE022]*$/.test(i) ? "" : " ") : "") + s, u = Wfe(o), l = gn(u), c = '<div class="csl-entry">' + mn(u) + "</div>";
+  const i = X(t) && "[" + X(t) + "]" ? "citation-number" + (X(t) ? "[" + X(t) + "]" : "") + "" : "", s = [n ? n + ", " : "", a].filter((f) => f !== "").join(""), o = (i ? i + (/\s[\uE000-\uE007\uE020-\uE022]*$/.test(i) ? "" : " ") : "") + s, u = Vfe(o), l = gn(u), c = '<div class="csl-entry">' + mn(u) + "</div>";
   return {
     text: l,
     html: c,
-    parts: $fe(e),
-    links: Hfe(e)
+    parts: Wfe(e),
+    links: qfe(e)
   };
 }
-function $fe(e) {
+function Wfe(e) {
   return {
     authors: e.author || [],
     year: e.issued?.["date-parts"]?.[0]?.[0]?.toString() || "",
@@ -80926,21 +81224,21 @@ function $fe(e) {
     url: e.URL || ""
   };
 }
-function Hfe(e) {
+function qfe(e) {
   return {
     doi: e.DOI ? "https://doi.org/" + e.DOI : null,
     url: e.URL || null,
     pdf: e.extended?.pdf_url || null
   };
 }
-function Wfe(e) {
+function Vfe(e) {
   if (!e) return "";
   const r = "[--]*";
   return e.replace(new RegExp("([.!?])(" + r + ")\\. ", "g"), "$1$2 ").replace(new RegExp("\\.(" + r + ")\\.", "g"), ".$1").replace(/ +/g, " ").trim();
 }
-const qfe = {};
-function Vfe(e, r = {}) {
-  const t = { ...r, _secOpts: qfe }, a = e.map((o) => {
+const Gfe = {};
+function Kfe(e, r = {}) {
+  const t = { ...r, _secOpts: Gfe }, a = e.map((o) => {
     let u = o._disambig ? { ...t, _disambig: o._disambig } : t, l = o.item || o;
     o.locator != null && (l = { ...l, locator: o.locator, _locatorLabel: o.label || "page" });
     const c = l["citation-number"] != null && l["citation-number"] !== "" ? String(l["citation-number"]) : "", f = SA(l, u), h = (l["citation-number"] == null || l["citation-number"] === "") && !SA(l, u) ? "" : [X(c) ? "citation-number" + X(c) + "" : "", f].filter((d) => d !== "").join(", ");
@@ -80948,12 +81246,12 @@ function Vfe(e, r = {}) {
   }).join(", "), i = gn(a), s = '<span class="csl-citation">' + mn(a) + "</span>";
   return { text: i, html: s };
 }
-const Gfe = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const Yfe = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  bibliography: zfe,
-  citation: Vfe,
-  meta: jfe
-}, Symbol.toStringTag, { value: "Module" })), Kfe = {
+  bibliography: Hfe,
+  citation: Kfe,
+  meta: Ffe
+}, Symbol.toStringTag, { value: "Module" })), Xfe = {
   id: "elsevier-vancouver",
   title: "Elsevier - NLM/Vancouver (citation-sequence)",
   class: "in-text",
@@ -81710,7 +82008,7 @@ function rh(e, r) {
   const t = Object.assign({}, AA, e._secOpts || {}, r);
   return (r.initialize === !1 || (e._secOpts || {}).initialize === !1 || AA.initialize === !1) && (t.initialize = !1), t.and === "text" ? t.andTerm = Rn.and : t.and === "symbol" && (t.andTerm = "&"), t.etAlTerm || (t.etAlTerm = Rn[r._etAlTerm || "et-al"] || "et al."), e._disambig && (t._disambig = e._disambig), t;
 }
-function Yfe(e, r) {
+function Zfe(e, r) {
   let t = "";
   if (e.author && e.author.length && (t = ce(e.author, rh(r, { delimiter: ", ", delimiterPrecedesLast: "always", etAlUseLast: !1, initializeWith: "", nameAsSortOrder: "all", sortSeparator: " " })), t && (t = "author" + t + "")), !t) {
     let n = "";
@@ -81748,7 +82046,7 @@ function ou(e, r) {
   }
   return t;
 }
-function Xfe(e, r) {
+function Jfe(e, r) {
   let t = "";
   if (e.DOI != null && e.DOI !== "") {
     const n = e.DOI != null && e.DOI !== "" ? String(e.DOI) : "";
@@ -81763,10 +82061,10 @@ function Xfe(e, r) {
   }
   return t;
 }
-const Zfe = { etAlMin: 7, etAlUseFirst: 6 };
-function Jfe(e, r = {}) {
-  r = { ...r, _secOpts: Zfe };
-  const t = e["citation-number"] != null && e["citation-number"] !== "" ? String(e["citation-number"]) : "", n = Yfe(e, r);
+const Qfe = { etAlMin: 7, etAlUseFirst: 6 };
+function ehe(e, r = {}) {
+  r = { ...r, _secOpts: Qfe };
+  const t = e["citation-number"] != null && e["citation-number"] !== "" ? String(e["citation-number"]) : "", n = Zfe(e, r);
   let a = "";
   if (e.type === "bill" || e.type === "book" || e.type === "graphic" || e.type === "legal_case" || e.type === "legislation" || e.type === "motion_picture" || e.type === "report" || e.type === "song") {
     const h = e.title != null && e.title !== "" ? String(e.title) : "", d = e.volume != null && e.volume !== "" ? String(e.volume) : "", m = ou(e), g = Uf(e);
@@ -81784,15 +82082,15 @@ function Jfe(e, r = {}) {
     const h = e.title != null && e.title !== "" ? String(e.title) : "", d = e["container-title"] != null && e["container-title"] !== "" ? String(e["container-title"]) : "", m = (e.title == null || e.title === "") && (e["container-title"] == null || e["container-title"] === "") ? "" : [X(h) ? "title" + X(h) + "" : "", ee(d, "title").replace(/\./g, "") ? "container-title" + ee(d, "title").replace(/\./g, "") + "" : ""].filter((w) => w !== "").join(". "), g = yi(e), p = e.volume != null && e.volume !== "" ? String(e.volume) : "", b = !yi(e) && (e.volume == null || e.volume === "") ? "" : [g, X(p) ? "volume" + X(p) + "" : ""].filter((w) => w !== "").join(";"), v = (e.title == null || e.title === "") && (e["container-title"] == null || e["container-title"] === "") && !yi(e) && (e.volume == null || e.volume === "") ? "" : [m, b].filter((w) => w !== "").join(" "), y = e.page != null && e.page !== "" ? pi(X(String(e.page)), "minimal") : "";
     a = (e.title == null || e.title === "") && (e["container-title"] == null || e["container-title"] === "") && !yi(e) && (e.volume == null || e.volume === "") && (e.page == null || e.page === "") ? "" : [v, X(y) ? "page" + X(y) + "" : ""].filter((w) => w !== "").join(":");
   }
-  const i = Xfe(e), s = X(t) && "[" + X(t) + "]" ? "citation-number" + (X(t) ? "[" + X(t) + "]" : "") + "" : "", o = [n ? n + ". " : "", a, i ? ". " + i : ""].filter((h) => h !== "").join(""), u = (s ? s + (/\s[\uE000-\uE007\uE020-\uE022]*$/.test(s) ? "" : " ") : "") + o + ".", l = the(u), c = gn(l), f = '<div class="csl-entry">' + mn(l) + "</div>";
+  const i = Jfe(e), s = X(t) && "[" + X(t) + "]" ? "citation-number" + (X(t) ? "[" + X(t) + "]" : "") + "" : "", o = [n ? n + ". " : "", a, i ? ". " + i : ""].filter((h) => h !== "").join(""), u = (s ? s + (/\s[\uE000-\uE007\uE020-\uE022]*$/.test(s) ? "" : " ") : "") + o + ".", l = nhe(u), c = gn(l), f = '<div class="csl-entry">' + mn(l) + "</div>";
   return {
     text: c,
     html: f,
-    parts: Qfe(e),
-    links: ehe(e)
+    parts: the(e),
+    links: rhe(e)
   };
 }
-function Qfe(e) {
+function the(e) {
   return {
     authors: e.author || [],
     year: e.issued?.["date-parts"]?.[0]?.[0]?.toString() || "",
@@ -81805,19 +82103,19 @@ function Qfe(e) {
     url: e.URL || ""
   };
 }
-function ehe(e) {
+function rhe(e) {
   return {
     doi: e.DOI ? "https://doi.org/" + e.DOI : null,
     url: e.URL || null,
     pdf: e.extended?.pdf_url || null
   };
 }
-function the(e) {
+function nhe(e) {
   if (!e) return "";
   const r = "[--]*";
   return e.replace(new RegExp("([.!?])(" + r + ")\\. ", "g"), "$1$2 ").replace(new RegExp("\\.(" + r + ")\\.", "g"), ".$1").replace(/ +/g, " ").trim();
 }
-function rhe(e, r = {}) {
+function ihe(e, r = {}) {
   const t = { ...r }, a = "[" + e.map((o) => {
     o._disambig && o._disambig;
     let u = o.item || o;
@@ -81827,12 +82125,12 @@ function rhe(e, r = {}) {
   }).join(",") + "]", i = gn(a), s = '<span class="csl-citation">' + mn(a) + "</span>";
   return { text: i, html: s };
 }
-const nhe = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const ahe = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  bibliography: Jfe,
-  citation: rhe,
-  meta: Kfe
-}, Symbol.toStringTag, { value: "Module" })), ihe = {
+  bibliography: ehe,
+  citation: ihe,
+  meta: Xfe
+}, Symbol.toStringTag, { value: "Module" })), she = {
   id: "harvard-cite-them-right",
   title: "Cite Them Right 12th edition (author-date/Harvard)",
   class: "in-text",
@@ -82682,7 +82980,7 @@ function A1(e, r) {
   }
   return t;
 }
-function ahe(e, r) {
+function ohe(e, r) {
   let t = "";
   if (e.DOI != null && e.DOI !== "") {
     const n = Kr["available at"], a = e.DOI != null && e.DOI !== "" ? String(e.DOI) : "";
@@ -82802,18 +83100,18 @@ function Id(e, r) {
   }
   return t;
 }
-const she = { and: "text", etAlMin: 4, etAlUseFirst: 1 };
-function ohe(e, r = {}) {
-  r = { ...r, _secOpts: she };
-  const t = nh(e, r), n = js(e), a = Po(e), i = lu(e, r), s = uu(e), o = !lu(e, r) && !uu(e) ? "" : [i, s].filter((N) => N !== "").join(" "), u = !Po(e) && !lu(e, r) && !uu(e) ? "" : [a, o].filter((N) => N !== "").join(", "), l = !nh(e, r) && !js(e) && !Po(e) && !lu(e, r) && !uu(e) ? "" : [t, n ? "(" + n + ")" : "", u].filter((N) => N !== "").join(" "), c = OA(e, r), f = kA(e), h = !nh(e, r) && !js(e) && !Po(e) && !lu(e, r) && !uu(e) && !OA(e, r) && !kA(e) ? "" : [l, c, f].filter((N) => N !== "").join(". "), d = CA(e), m = IA(e), g = PA(e), p = !CA(e) && !IA(e) && !PA(e) ? "" : [d, m, g].filter((N) => N !== "").join(", "), b = ahe(e), y = [h, p ? ", " + p : "", b ? ". " + b : ""].filter((N) => N !== "").join("") + ".", _ = che(y), w = gn(_), A = '<div class="csl-entry">' + mn(_) + "</div>";
+const lhe = { and: "text", etAlMin: 4, etAlUseFirst: 1 };
+function uhe(e, r = {}) {
+  r = { ...r, _secOpts: lhe };
+  const t = nh(e, r), n = js(e), a = Po(e), i = lu(e, r), s = uu(e), o = !lu(e, r) && !uu(e) ? "" : [i, s].filter((N) => N !== "").join(" "), u = !Po(e) && !lu(e, r) && !uu(e) ? "" : [a, o].filter((N) => N !== "").join(", "), l = !nh(e, r) && !js(e) && !Po(e) && !lu(e, r) && !uu(e) ? "" : [t, n ? "(" + n + ")" : "", u].filter((N) => N !== "").join(" "), c = OA(e, r), f = kA(e), h = !nh(e, r) && !js(e) && !Po(e) && !lu(e, r) && !uu(e) && !OA(e, r) && !kA(e) ? "" : [l, c, f].filter((N) => N !== "").join(". "), d = CA(e), m = IA(e), g = PA(e), p = !CA(e) && !IA(e) && !PA(e) ? "" : [d, m, g].filter((N) => N !== "").join(", "), b = ohe(e), y = [h, p ? ", " + p : "", b ? ". " + b : ""].filter((N) => N !== "").join("") + ".", _ = hhe(y), w = gn(_), A = '<div class="csl-entry">' + mn(_) + "</div>";
   return {
     text: w,
     html: A,
-    parts: lhe(e),
-    links: uhe(e)
+    parts: che(e),
+    links: fhe(e)
   };
 }
-function lhe(e) {
+function che(e) {
   return {
     authors: e.author || [],
     year: e.issued?.["date-parts"]?.[0]?.[0]?.toString() || "",
@@ -82826,19 +83124,19 @@ function lhe(e) {
     url: e.URL || ""
   };
 }
-function uhe(e) {
+function fhe(e) {
   return {
     doi: e.DOI ? "https://doi.org/" + e.DOI : null,
     url: e.URL || null,
     pdf: e.extended?.pdf_url || null
   };
 }
-function che(e) {
+function hhe(e) {
   if (!e) return "";
   const r = "[--]*";
   return e.replace(new RegExp("([.!?])(" + r + ")\\. ", "g"), "$1$2 ").replace(new RegExp("\\.(" + r + ")\\.", "g"), ".$1").replace(/ +/g, " ").trim();
 }
-function fhe(e, r) {
+function dhe(e, r) {
   const t = [
     { fn: (n) => nh(n, {}), dir: 1 },
     { fn: (n) => js(n), dir: 1 },
@@ -82850,9 +83148,9 @@ function fhe(e, r) {
   }
   return 0;
 }
-const hhe = { etAlMin: 4, etAlUseFirst: 1 };
-function dhe(e, r = {}) {
-  const t = { ...r, _secOpts: hhe }, a = "(" + e.map((o) => {
+const phe = { etAlMin: 4, etAlUseFirst: 1 };
+function ghe(e, r = {}) {
+  const t = { ...r, _secOpts: phe }, a = "(" + e.map((o) => {
     let u = o._disambig ? { ...t, _disambig: o._disambig } : t, l = o.item || o;
     o.locator != null && (l = { ...l, locator: o.locator, _locatorLabel: o.label || "page" });
     const c = A1(l, u), f = js(l), h = !A1(l, u) && !js(l) ? "" : [c, f].filter((b) => b !== "").join(", "), d = (() => {
@@ -82865,13 +83163,13 @@ function dhe(e, r = {}) {
   }).join("; ") + ")", i = gn(a), s = '<span class="csl-citation">' + mn(a) + "</span>";
   return { text: i, html: s };
 }
-const phe = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const mhe = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  bibliography: ohe,
-  bibliographySort: fhe,
-  citation: dhe,
-  meta: ihe
-}, Symbol.toStringTag, { value: "Module" })), ghe = {
+  bibliography: uhe,
+  bibliographySort: dhe,
+  citation: ghe,
+  meta: she
+}, Symbol.toStringTag, { value: "Module" })), bhe = {
   id: "nature",
   title: "Nature",
   class: "in-text",
@@ -83626,7 +83924,7 @@ function II(e, r) {
   const t = Object.assign({}, NA, e._secOpts || {}, r);
   return (r.initialize === !1 || (e._secOpts || {}).initialize === !1 || NA.initialize === !1) && (t.initialize = !1), t.and === "text" ? t.andTerm = Sl.and : t.and === "symbol" && (t.andTerm = "&"), t.etAlTerm || (t.etAlTerm = Sl[r._etAlTerm || "et-al"] || "et al."), e._disambig && (t._disambig = e._disambig), t;
 }
-function mhe(e, r) {
+function vhe(e, r) {
   let t = "";
   if (e.type === "bill" || e.type === "book" || e.type === "graphic" || e.type === "legal_case" || e.type === "legislation" || e.type === "motion_picture" || e.type === "report" || e.type === "song") {
     const n = e.title != null && e.title !== "" ? String(e.title) : "";
@@ -83637,11 +83935,11 @@ function mhe(e, r) {
   }
   return t;
 }
-function bhe(e, r) {
+function yhe(e, r) {
   let t = "";
   return e.author && e.author.length && (t = ce(e.author, II(r, { and: "symbol", delimiter: ", ", delimiterPrecedesLast: "never", etAlUseLast: !1, initializeWith: ". ", nameAsSortOrder: "all", sortSeparator: ", " })), t && (t = "author" + t + "")), t;
 }
-function vhe(e, r) {
+function _he(e, r) {
   let t = "";
   if (e.type === "article" || e.type === "dataset" || e.type === "software" || e.volume != null && e.volume !== "")
     t = [].filter((n) => n !== "").join("");
@@ -83659,7 +83957,7 @@ function RA(e, r) {
   }
   return t;
 }
-function yhe(e, r) {
+function whe(e, r) {
   let t = "";
   if (e.type === "bill" || e.type === "book" || e.type === "graphic" || e.type === "legal_case" || e.type === "legislation" || e.type === "motion_picture" || e.type === "song" || e.type === "thesis" || e.type === "chapter" || e.type === "paper-conference") {
     const n = e.publisher != null && e.publisher !== "" ? String(e.publisher) : "", a = e["publisher-place"] != null && e["publisher-place"] !== "" ? String(e["publisher-place"]) : "", i = e.issued ? it(e.issued, { dateParts: [{ name: "year", form: null, prefix: "", suffix: "", rangeDelimiter: null }], monthTerms: { 1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June", 7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December" }, seasonTerms: { 1: "Spring", 2: "Summer", 3: "Autumn", 4: "Winter" } }) : "", s = (e.publisher == null || e.publisher === "") && (e["publisher-place"] == null || e["publisher-place"] === "") && (e.issued == null || e.issued === "") ? "" : [X(n) ? "publisher" + X(n) + "" : "", X(a) ? "publisher-place" + X(a) + "" : "", i ? "issued" + i + "" : ""].filter((u) => u !== "").join(", "), o = (e.publisher == null || e.publisher === "") && (e["publisher-place"] == null || e["publisher-place"] === "") && (e.issued == null || e.issued === "") ? "" : [s ? "(" + s + ")" : ""].filter((u) => u !== "").join("; ");
@@ -83710,7 +84008,7 @@ function yhe(e, r) {
   }
   return t;
 }
-function _he(e, r) {
+function Ehe(e, r) {
   let t = "";
   if (e.type === "article-journal") {
     const n = e["container-title"] != null && e["container-title"] !== "" ? String(e["container-title"]) : "";
@@ -83721,7 +84019,7 @@ function _he(e, r) {
   }
   return t;
 }
-function whe(e, r) {
+function xhe(e, r) {
   let t = "";
   if (e.type === "chapter" || e.type === "paper-conference") {
     let n = "";
@@ -83729,7 +84027,7 @@ function whe(e, r) {
   }
   return t;
 }
-function Ehe(e, r) {
+function She(e, r) {
   let t = "";
   if (e.type === "article-journal") {
     const n = e.volume != null && e.volume !== "" ? String(e.volume) : "";
@@ -83745,37 +84043,37 @@ function Ehe(e, r) {
   }
   return t;
 }
-const xhe = { etAlMin: 6, etAlUseFirst: 1 };
-function She(e, r = {}) {
-  r = { ...r, _secOpts: xhe };
-  const t = e["citation-number"] != null && e["citation-number"] !== "" ? String(e["citation-number"]) : "", n = [], a = bhe(e, r);
+const Ahe = { etAlMin: 6, etAlUseFirst: 1 };
+function The(e, r = {}) {
+  r = { ...r, _secOpts: Ahe };
+  const t = e["citation-number"] != null && e["citation-number"] !== "" ? String(e["citation-number"]) : "", n = [], a = yhe(e, r);
   n.push(a ? a + "." : "");
-  const i = mhe(e);
+  const i = vhe(e);
   if (n.push(i ? i + "." : ""), e.type === "chapter" || e.type === "paper-conference") {
     const y = Sl.in;
     n.push(y);
   }
-  const s = _he(e);
+  const s = Ehe(e);
   n.push(s);
-  const o = whe(e, r);
+  const o = xhe(e, r);
   n.push(o);
-  const u = Ehe(e);
+  const u = She(e);
   n.push(u);
   const l = e.page != null && e.page !== "" ? String(e.page) : "";
   n.push(X(l) ? "page" + X(l) + "" : "");
-  const c = yhe(e);
+  const c = whe(e);
   n.push(c);
-  const f = vhe(e);
+  const f = _he(e);
   n.push(f);
-  const h = n.filter((y) => y !== "").join(" "), d = X(t) && X(t) + "." ? "citation-number" + (X(t) ? X(t) + "." : "") + "" : "", m = [h].filter((y) => y !== "").join(""), g = (d ? d + (/\s[\uE000-\uE007\uE020-\uE022]*$/.test(d) ? "" : " ") : "") + m + ".", p = Ohe(g), b = gn(p), v = '<div class="csl-entry">' + mn(p) + "</div>";
+  const h = n.filter((y) => y !== "").join(" "), d = X(t) && X(t) + "." ? "citation-number" + (X(t) ? X(t) + "." : "") + "" : "", m = [h].filter((y) => y !== "").join(""), g = (d ? d + (/\s[\uE000-\uE007\uE020-\uE022]*$/.test(d) ? "" : " ") : "") + m + ".", p = Che(g), b = gn(p), v = '<div class="csl-entry">' + mn(p) + "</div>";
   return {
     text: b,
     html: v,
-    parts: Ahe(e),
-    links: The(e)
+    parts: Ohe(e),
+    links: khe(e)
   };
 }
-function Ahe(e) {
+function Ohe(e) {
   return {
     authors: e.author || [],
     year: e.issued?.["date-parts"]?.[0]?.[0]?.toString() || "",
@@ -83788,19 +84086,19 @@ function Ahe(e) {
     url: e.URL || ""
   };
 }
-function The(e) {
+function khe(e) {
   return {
     doi: e.DOI ? "https://doi.org/" + e.DOI : null,
     url: e.URL || null,
     pdf: e.extended?.pdf_url || null
   };
 }
-function Ohe(e) {
+function Che(e) {
   if (!e) return "";
   const r = "[--]*";
   return e.replace(new RegExp("([.!?])(" + r + ")\\. ", "g"), "$1$2 ").replace(new RegExp("\\.(" + r + ")\\.", "g"), ".$1").replace(/ +/g, " ").trim();
 }
-function khe(e, r = {}) {
+function Ihe(e, r = {}) {
   const t = { ...r }, a = e.map((o) => {
     o._disambig && o._disambig;
     let u = o.item || o;
@@ -83810,13 +84108,13 @@ function khe(e, r = {}) {
   }).join(","), i = gn(a), s = '<span class="csl-citation"><sup>' + mn(a) + "</sup></span>";
   return { text: i, html: s };
 }
-const Che = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const Phe = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  bibliography: She,
-  citation: khe,
-  meta: ghe
+  bibliography: The,
+  citation: Ihe,
+  meta: bhe
 }, Symbol.toStringTag, { value: "Module" }));
-function Ihe(e, r = {}) {
+function Nhe(e, r = {}) {
   if (!e || !e.bibliography && !e.citation)
     throw new Error("createRegistry requires a compiled CSL style with bibliography() or citation()");
   const t = /* @__PURE__ */ new Map(), n = [], a = /* @__PURE__ */ new Map();
@@ -83850,7 +84148,7 @@ function Ihe(e, r = {}) {
       return E && (T._disambig = E), T;
     }), P = M.length > 0 && M.every((C) => C.suppressAuthor), $ = N.mode === "suppress-author" || P, V = e.meta?.collapse;
     let R;
-    return V === "citation-number" && M.length > 1 ? R = h(M, N) : (V === "year" || V === "year-suffix" || V === "year-suffix-ranged") && M.length > 1 ? R = d(M, N, V) : R = e.citation(M, N), $ && (R = Phe(R)), R;
+    return V === "citation-number" && M.length > 1 ? R = h(M, N) : (V === "year" || V === "year-suffix" || V === "year-suffix-ranged") && M.length > 1 ? R = d(M, N, V) : R = e.citation(M, N), $ && (R = Rhe(R)), R;
   }
   function h(A, N) {
     const M = [...A].sort(
@@ -83875,7 +84173,7 @@ function Ihe(e, r = {}) {
       return {
         cite: G,
         inner: re,
-        authorKey: Mhe(G.item),
+        authorKey: Lhe(G.item),
         year: W,
         yearSuffix: q,
         yearStr: W + q
@@ -83997,7 +84295,7 @@ function Ihe(e, r = {}) {
     for (const M of n) {
       const P = t.get(M);
       if (!P) continue;
-      const $ = jhe(P);
+      const $ = Fhe(P);
       $ && (N.has($) || N.set($, []), N.get($).push(P));
     }
     for (const [, M] of N) {
@@ -84015,7 +84313,7 @@ function Ihe(e, r = {}) {
     let N = n.map(($) => t.get($)).filter(Boolean);
     e.bibliographySort && (N = [...N].sort(e.bibliographySort));
     const M = N.map(($) => e.bibliography($, A)), P = r.subsequentAuthorSubstitute ?? e.meta?.subsequentAuthorSubstitute ?? null;
-    return P != null && Rhe(M, N, P), M;
+    return P != null && Dhe(M, N, P), M;
   }
   return {
     addItems: u,
@@ -84028,26 +84326,26 @@ function Ihe(e, r = {}) {
     }
   };
 }
-function Phe(e) {
+function Rhe(e) {
   if (!e || typeof e.html != "string") return e;
   let r = e.html;
   return r = r.replace(
     /<span class="csl-author"[^>]*>[\s\S]*?<\/span>(,\s*|\s+)?/g,
     ""
-  ), r = r.replace(/\(\s+/g, "(").replace(/\s{2,}/g, " ").replace(/\s+,/g, ",").replace(/\(,\s*/g, "("), { text: Nhe(r), html: r };
+  ), r = r.replace(/\(\s+/g, "(").replace(/\s{2,}/g, " ").replace(/\s+,/g, ",").replace(/\(,\s*/g, "("), { text: Mhe(r), html: r };
 }
-function Nhe(e) {
+function Mhe(e) {
   return e ? String(e).replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'") : "";
 }
-function Rhe(e, r, t) {
+function Dhe(e, r, t) {
   if (e.length < 2) return;
   let n = MA(r[0]);
   for (let a = 1; a < e.length; a++) {
     const i = MA(r[a]);
     i && i === n && (e[a] = {
       ...e[a],
-      text: Dhe(e[a].text, r[a], t),
-      html: Lhe(e[a].html, r[a], t)
+      text: jhe(e[a].text, r[a], t),
+      html: Bhe(e[a].html, r[a], t)
     }), n = i;
   }
 }
@@ -84055,7 +84353,7 @@ function MA(e) {
   const r = e.author || e.editor || [];
   return r.length ? r.map((t) => t.literal ? t.literal : [t.family, t.given, t["non-dropping-particle"], t["dropping-particle"]].filter(Boolean).join("|")).join(";") : "";
 }
-function Mhe(e) {
+function Lhe(e) {
   const r = e.author || e.editor || [];
   return r.length ? r.map((t) => {
     if (t.literal) return t.literal;
@@ -84063,7 +84361,7 @@ function Mhe(e) {
     return [t["dropping-particle"] || "", n, t.family].filter(Boolean).join(" ");
   }).join(";") : "";
 }
-function Dhe(e, r, t) {
+function jhe(e, r, t) {
   const n = r.author || r.editor || [];
   if (!n.length) return e;
   const a = n[0].literal || n[0].family || "";
@@ -84073,7 +84371,7 @@ function Dhe(e, r, t) {
   const s = e.indexOf(". (", i), o = e.indexOf(". ", i), u = s >= 0 ? s : o >= 0 ? o : -1;
   return u < 0 ? e : t + e.slice(u);
 }
-function Lhe(e, r, t) {
+function Bhe(e, r, t) {
   return e.replace(
     /<span class="csl-author">.*?<\/span>/,
     `<span class="csl-author">${ih(t)}</span>`
@@ -84082,24 +84380,24 @@ function Lhe(e, r, t) {
 function ih(e) {
   return e.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
-function jhe(e) {
+function Fhe(e) {
   const r = e.author || e.editor || [];
   if (!r.length) return "";
   const t = r.map((a) => a.literal ? a.literal : (a.family || "") + "|" + (a.given || "")).join(";"), n = e.issued?.["date-parts"]?.[0]?.[0];
   return n == null ? "" : t + "/" + n;
 }
-function Bhe(e, r, t = {}) {
+function Uhe(e, r, t = {}) {
   if (!e?.bibliography)
     throw new Error("format() requires a compiled style with a bibliography() function");
   return e.bibliography(r, t);
 }
-function Fhe(e, r, t = {}) {
+function zhe(e, r, t = {}) {
   if (!e?.bibliography)
     throw new Error("formatAll() requires a compiled style with a bibliography() function");
   let n = [...r];
   return e.bibliographySort && n.sort(e.bibliographySort), n = n.map((a, i) => ({ ...a, "citation-number": i + 1 })), n.map((a) => e.bibliography(a, t));
 }
-function Uhe(e, r, t = {}) {
+function $he(e, r, t = {}) {
   if (!e?.citation)
     throw new Error("formatCitation() requires a compiled style with a citation() function");
   const n = r.map((a, i) => a.item && a.item["citation-number"] == null ? { ...a, item: { ...a.item, "citation-number": i + 1 } } : a);
@@ -84155,7 +84453,7 @@ const zf = {
   LaTeX: "LaTeX",
   TeX: "TeX",
   BibTeX: "BibTeX"
-}, zhe = { "&": "&", "%": "%", $: "$", "#": "#", _: "_", "{": "{", "}": "}" }, PI = {
+}, Hhe = { "&": "&", "%": "%", $: "$", "#": "#", _: "_", "{": "{", "}": "}" }, PI = {
   jan: 1,
   feb: 2,
   mar: 3,
@@ -84168,7 +84466,7 @@ const zf = {
   oct: 10,
   nov: 11,
   dec: 12
-}, $he = {
+}, Whe = {
   article: "article-journal",
   book: "book",
   booklet: "pamphlet",
@@ -84186,12 +84484,12 @@ const zf = {
   unpublished: "manuscript"
 };
 function Ei(e) {
-  return e && (e = e.replace(/\\([&%$#_{}])/g, (r, t) => zhe[t] || t), e = e.replace(/\\([`'"^~=.uvcHkd])\{([a-zA-Z])\}/g, (r, t, n) => zf[t]?.[n] ?? `${t}${n}`), e = e.replace(/\\([`'"^~])\{\\([ij])\}/g, (r, t, n) => {
+  return e && (e = e.replace(/\\([&%$#_{}])/g, (r, t) => Hhe[t] || t), e = e.replace(/\\([`'"^~=.uvcHkd])\{([a-zA-Z])\}/g, (r, t, n) => zf[t]?.[n] ?? `${t}${n}`), e = e.replace(/\\([`'"^~])\{\\([ij])\}/g, (r, t, n) => {
     const a = $f[n] || n;
     return zf[t]?.[a] ?? `${t}${a}`;
   }), e = e.replace(/\\([`'"^~])([a-zA-Z])/g, (r, t, n) => zf[t]?.[n] ?? `${t}${n}`), e = e.replace(/\\([uvcHkd=.])\{([a-zA-Z])\}/g, (r, t, n) => zf[t]?.[n] ?? `${t}${n}`), e = e.replace(/\\([a-zA-Z]+)\{\}/g, (r, t) => $f[t] ?? `\\${t}`), e = e.replace(/\\([a-zA-Z]+)(?=[\s{},;.!?)]|$)/g, (r, t) => $f[t] != null ? $f[t] : `\\${t}`), e = e.replace(/\\url\{([^}]*)\}/g, "$1"), e = e.replace(/\\(?:emph|textit|textbf|textsc|texttt)\{([^}]*)\}/g, "$1"), e = e.replace(/[{}]/g, ""), e = e.replace(/~/g, " "), e = e.replace(/[\t\n\r ]+/g, " ").trim(), e);
 }
-function Hhe(e) {
+function qhe(e) {
   const r = { ...PI }, t = [];
   let n = 0;
   function a() {
@@ -84298,12 +84596,12 @@ function Hhe(e) {
   return { entries: t, strings: r };
 }
 function O1(e) {
-  return e ? Whe(e).map((t) => {
+  return e ? Vhe(e).map((t) => {
     if (t = t.trim(), !t) return null;
     if (t.startsWith("{") && t.endsWith("}"))
       return { literal: Ei(t.slice(1, -1)) };
     t = Ei(t);
-    const n = qhe(t, ",").map((a) => a.trim());
+    const n = Ghe(t, ",").map((a) => a.trim());
     if (n.length >= 3) {
       const { particle: a, family: i } = DA(n[0]);
       return $y({
@@ -84320,10 +84618,10 @@ function O1(e) {
         "non-dropping-particle": a
       });
     } else
-      return Vhe(t);
+      return Khe(t);
   }).filter(Boolean) : [];
 }
-function Whe(e) {
+function Vhe(e) {
   const r = [];
   let t = 0, n = "";
   for (let a = 0; a < e.length; a++) {
@@ -84335,7 +84633,7 @@ function Whe(e) {
   }
   return r.push(n), r;
 }
-function qhe(e, r) {
+function Ghe(e, r) {
   const t = [];
   let n = 0, a = "";
   for (const i of e)
@@ -84353,7 +84651,7 @@ function DA(e) {
     family: r.slice(t).join(" ")
   };
 }
-function Vhe(e) {
+function Khe(e) {
   const r = e.trim().split(/\s+/);
   if (r.length === 1) return { family: r[0] };
   let t = -1;
@@ -84383,13 +84681,13 @@ function $y(e) {
     n != null && n !== "" && (r[t] = n);
   return r;
 }
-function Ghe(e) {
+function Yhe(e) {
   const { type: r, key: t, fields: n } = e, a = {
     id: t,
-    type: $he[r] || "article"
+    type: Whe[r] || "article"
   };
   r === "phdthesis" ? a.genre = "PhD thesis" : r === "mastersthesis" && (a.genre = "Master's thesis"), n.author && (a.author = O1(n.author)), n.editor && (a.editor = O1(n.editor)), n.translator && (a.translator = O1(n.translator)), n.title && (a.title = Ei(n.title)), n.journal ? a["container-title"] = Ei(n.journal) : n.booktitle && (a["container-title"] = Ei(n.booktitle));
-  const i = n.year ? parseInt(n.year, 10) : null, s = n.month != null ? Khe(n.month) : null;
+  const i = n.year ? parseInt(n.year, 10) : null, s = n.month != null ? Xhe(n.month) : null;
   if (i) {
     const u = [i];
     s && u.push(s), a.issued = { "date-parts": [u] };
@@ -84423,17 +84721,17 @@ function Ghe(e) {
   }
   return a;
 }
-function Khe(e) {
+function Xhe(e) {
   if (typeof e == "number") return e;
   const r = String(e).trim().toLowerCase(), t = parseInt(r, 10);
   return !isNaN(t) && t >= 1 && t <= 12 ? t : PI[r.slice(0, 3)] || null;
 }
-function Yhe(e) {
+function Zhe(e) {
   if (!e || typeof e != "string") return [];
-  const { entries: r } = Hhe(e);
-  return r.map((t) => Ghe(t));
+  const { entries: r } = qhe(e);
+  return r.map((t) => Yhe(t));
 }
-const Xhe = {
+const Jhe = {
   "article-journal": "article",
   "article-magazine": "article",
   "article-newspaper": "article",
@@ -84455,14 +84753,14 @@ const Xhe = {
   bill: "misc",
   legislation: "misc",
   legal_case: "misc"
-}, Zhe = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
-function Jhe(e) {
+}, Qhe = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+function ede(e) {
   if (e.literal) return `{${e.literal}}`;
   const r = [], t = e["non-dropping-particle"] || e["dropping-particle"] || "", n = (t ? t + " " : "") + (e.family || "");
   return e.suffix ? (r.push(n), r.push(e.suffix), e.given && r.push(e.given), r.join(", ")) : e.given ? `${n}, ${e.given}` : n;
 }
 function LA(e) {
-  return !e || !e.length ? null : e.map(Jhe).join(" and ");
+  return !e || !e.length ? null : e.map(ede).join(" and ");
 }
 function k1(e) {
   return e == null ? null : String(e);
@@ -84470,7 +84768,7 @@ function k1(e) {
 function hs(e) {
   return `{${e}}`;
 }
-function Qhe(e) {
+function tde(e) {
   if (e.id && typeof e.id == "string" && !/\s/.test(e.id)) return e.id;
   let r = "";
   if (e.author && e.author.length) {
@@ -84480,11 +84778,11 @@ function Qhe(e) {
   const t = e.issued?.["date-parts"]?.[0]?.[0];
   return t && (r += t), r || "item";
 }
-function ede(e) {
+function rde(e) {
   return !e || !e.length ? "" : e.map((r) => {
-    let t = Xhe[r.type] || "misc";
+    let t = Jhe[r.type] || "misc";
     r.type === "thesis" && r.genre && (r.genre.toLowerCase().includes("master") ? t = "mastersthesis" : t = "phdthesis");
-    const n = Qhe(r), a = [];
+    const n = tde(r), a = [];
     if (r.author) {
       const u = LA(r.author);
       u && a.push(["author", hs(u)]);
@@ -84498,7 +84796,7 @@ function ede(e) {
       a.push([u, hs(k1(r["container-title"]))]);
     }
     const i = r.issued?.["date-parts"]?.[0];
-    i && (i[0] && a.push(["year", hs(String(i[0]))]), i[1] && i[1] >= 1 && i[1] <= 12 && a.push(["month", Zhe[i[1] - 1]]));
+    i && (i[0] && a.push(["year", hs(String(i[0]))]), i[1] && i[1] >= 1 && i[1] <= 12 && a.push(["month", Qhe[i[1] - 1]]));
     const s = [
       ["volume", "volume"],
       ["issue", "number"],
@@ -84533,41 +84831,41 @@ ${o}
 `) + `
 `;
 }
-const tde = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const nde = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   applyTextCase: ee,
   capitalize: uI,
   convertLatex: Ei,
-  createRegistry: Ihe,
+  createRegistry: Nhe,
   escapeHtml: fI,
-  exportBibtex: ede,
-  format: Bhe,
-  formatAll: Fhe,
-  formatCitation: Uhe,
+  exportBibtex: rde,
+  format: Uhe,
+  formatAll: zhe,
+  formatCitation: $he,
   formatDate: it,
   formatNames: ce,
-  longOrdinal: mue,
+  longOrdinal: vue,
   ordinal: an,
   pageRange: pi,
-  parseBibtex: Yhe,
-  roman: bue,
+  parseBibtex: Zhe,
+  roman: yue,
   sentenceCase: lI,
   stripFormatting: gn,
   stripNocaseSpans: X,
   titleCase: sI,
   toHtml: mn,
-  validateItem: Aue
+  validateItem: Oue
 }, Symbol.toStringTag, { value: "Module" }));
 export {
-  sde as Cover,
-  ode as Funding,
-  lde as Members,
-  ude as PublicationsByJournal,
-  cde as PublicationsByType,
-  fde as PublicationsByYear,
-  hde as PublicationsList,
-  dde as Supervisions,
+  lde as Cover,
+  ude as Funding,
+  cde as Members,
+  fde as PublicationsByJournal,
+  hde as PublicationsByType,
+  dde as PublicationsByYear,
+  pde as PublicationsList,
+  gde as Supervisions,
   ZD as compileDocument,
   uw as compileSubtree,
-  pde as default
+  mde as default
 };

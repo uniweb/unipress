@@ -8197,8 +8197,8 @@ const u3 = {
   latex: { load: () => Promise.resolve().then(() => xI), consumes: "latex", ir: !0 },
   // Paged.js consumes 'html' — an input shape shared with EPUB below.
   // Foundations register once under 'html' and both adapters read it.
-  pagedjs: { load: () => Promise.resolve().then(() => CI), consumes: "html", ir: !1 },
-  epub: { load: () => Promise.resolve().then(() => DI), consumes: "html", ir: !1 }
+  pagedjs: { load: () => Promise.resolve().then(() => II), consumes: "html", ir: !1 },
+  epub: { load: () => Promise.resolve().then(() => jI), consumes: "html", ir: !1 }
 };
 function Uf(e) {
   const n = u3[e];
@@ -18221,7 +18221,7 @@ function Rr({
   const u = qd[r] || qd.lg;
   return /* @__PURE__ */ ge(a, { className: Fr("prose", u, "max-w-none", i), ...o, children: s ?? /* @__PURE__ */ ge(M4, { content: n, block: e, components: t }) });
 }
-function HI({ content: e, params: n, block: t }) {
+function WI({ content: e, params: n, block: t }) {
   const { sequence: r } = e || {}, a = n?.title || e?.title || "Abstract";
   return qt(
     t,
@@ -18269,7 +18269,7 @@ function D4(e) {
     isFirst: s === 0
   };
 }
-function $I({ content: e, params: n, block: t }) {
+function qI({ content: e, params: n, block: t }) {
   const { title: r, sequence: a } = e || {}, i = D4(t), s = r ? `Appendix ${i.letter} — ${r}` : `Appendix ${i.letter}`, u = n?.auto !== !1 && i.isFirst;
   return qt(
     t,
@@ -18305,7 +18305,7 @@ function $I({ content: e, params: n, block: t }) {
     /* @__PURE__ */ ge(Rr, { content: e, block: t, className: "prose-book" })
   ] });
 }
-function WI({ content: e }) {
+function VI({ content: e }) {
   const { website: n } = ps(), t = n?.config?.book?.covers || {}, r = B4(t.back, n?.basePath), a = e && e.title || "Back cover of " + (n?.config?.book?.title || "the book");
   return r ? /* @__PURE__ */ ge("section", { className: "book-backcover-image flex justify-center px-4 py-12", children: /* @__PURE__ */ ge(
     "img",
@@ -18326,7 +18326,7 @@ function WI({ content: e }) {
 function B4(e, n) {
   return e ? /^https?:\/\//i.test(e) || e.startsWith("data:") ? e : e.startsWith("/") ? (n || "") + e : e : null;
 }
-function qI({ content: e, block: n }) {
+function KI({ content: e, block: n }) {
   const { title: t, sequence: r } = e || {};
   qt(
     n,
@@ -32647,7 +32647,7 @@ function nS(e) {
   const n = rS.exec(e);
   return n ? n[1].trim() : e;
 }
-function VI({ content: e, params: n, block: t }) {
+function GI({ content: e, params: n, block: t }) {
   const r = t?.website, a = r?.config?.book || {}, i = n?.data || "bibliography", s = n?.style || a.citationStyle || J1, o = tS(s), u = n?.sortBy || a.bibliography?.sortBy || "author", l = n?.title || e?.title || "Bibliography", c = an(() => {
     const m = e?.data?.[i];
     return Array.isArray(m) ? m : [];
@@ -32711,7 +32711,7 @@ function VI({ content: e, params: n, block: t }) {
     f.length === 0 ? /* @__PURE__ */ ge("p", { className: "text-subtle", children: "No bibliography entries." }) : /* @__PURE__ */ ge("ol", { className: "csl-bibliography", children: f.map((m, g) => /* @__PURE__ */ ge("li", { className: "csl-entry mb-3", children: /* @__PURE__ */ ge(Hs, { as: "span", value: m.html || m.text || "" }) }, g)) })
   ] });
 }
-function KI({ content: e, block: n }) {
+function YI({ content: e, block: n }) {
   const { website: t } = ps(), r = t?.config?.book?.covers || {}, a = sS(r.front, t?.basePath), i = e && e.title || t?.config?.book?.title || "Book cover";
   return a ? /* @__PURE__ */ ge("section", { className: "book-cover-image flex justify-center px-4 py-12", children: /* @__PURE__ */ ge(
     "img",
@@ -32844,7 +32844,7 @@ const z0 = {
   nature: mh,
   science: bh
 }, H0 = "chicago-author-date";
-function GI({ content: e, block: n, params: t }) {
+function XI({ content: e, block: n, params: t }) {
   const { title: r, subtitle: a, sequence: i } = e || {}, s = pS(n?.page), o = gS(r, s), u = n?.website?.config?.book?.citationStyle || H0, l = z0[u] || z0[H0], c = bf(
     i || [],
     n,
@@ -32925,7 +32925,7 @@ const $0 = {
 function mS(e) {
   return $0[e] || $0[tb];
 }
-function YI({ params: e, block: n }) {
+function JI({ params: e, block: n }) {
   const t = n?.website, r = t?.config?.book?.citationStyle || tb, a = mS(r), {
     key: i,
     page: s,
@@ -32961,7 +32961,7 @@ function YI({ params: e, block: n }) {
     }
   );
 }
-function XI({ content: e }) {
+function ZI({ content: e }) {
   const { website: n } = ps(), [t, r] = _n([]), [a, i] = _n(!0);
   Zs(() => {
     let o = !1;
@@ -33033,7 +33033,7 @@ function vS(e) {
 function _S(e) {
   return String(e).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
-function JI({ content: e, block: n }) {
+function QI({ content: e, block: n }) {
   const { title: t, subtitle: r, sequence: a } = e || {}, i = /* @__PURE__ */ Je(vr, { children: [
     /* @__PURE__ */ ge(Fn, { title: t, subtitle: r }),
     /* @__PURE__ */ ge(Vr, { data: a || [] })
@@ -33089,7 +33089,7 @@ function W0(e) {
 function q0(e) {
   return String(e).replace(/\\/g, "\\textbackslash{}").replace(/&/g, "\\&").replace(/%/g, "\\%").replace(/\$/g, "\\$").replace(/#/g, "\\#").replace(/_/g, "\\_").replace(/{/g, "\\{").replace(/}/g, "\\}");
 }
-function ZI({ content: e, params: n, block: t }) {
+function eO({ content: e, params: n, block: t }) {
   return _u("theorem", { content: e, params: n, block: t }), /* @__PURE__ */ Je("aside", { className: "book-theorem thm thm-theorem mx-auto max-w-[var(--max-content-width)] px-6 my-6 border-l-4 border-primary py-3", children: [
     /* @__PURE__ */ Je("p", { className: "thm-label font-semibold mb-2", children: [
       "Theorem",
@@ -33099,7 +33099,7 @@ function ZI({ content: e, params: n, block: t }) {
     /* @__PURE__ */ ge(Rr, { content: e, block: t, className: "prose-book" })
   ] });
 }
-function QI({ content: e, params: n, block: t }) {
+function tO({ content: e, params: n, block: t }) {
   return _u("definition", { content: e, params: n, block: t }), /* @__PURE__ */ Je("aside", { className: "book-definition thm thm-definition mx-auto max-w-[var(--max-content-width)] px-6 my-6 border-l-4 border-accent py-3", children: [
     /* @__PURE__ */ Je("p", { className: "thm-label font-semibold mb-2", children: [
       "Definition",
@@ -33109,7 +33109,7 @@ function QI({ content: e, params: n, block: t }) {
     /* @__PURE__ */ ge(Rr, { content: e, block: t, className: "prose-book" })
   ] });
 }
-function eO({ content: e, params: n, block: t }) {
+function rO({ content: e, params: n, block: t }) {
   return _u("lemma", { content: e, params: n, block: t }), /* @__PURE__ */ Je("aside", { className: "book-lemma thm thm-lemma mx-auto max-w-[var(--max-content-width)] px-6 my-6 border-l-4 border-secondary py-3", children: [
     /* @__PURE__ */ Je("p", { className: "thm-label font-semibold mb-2", children: [
       "Lemma",
@@ -33158,7 +33158,7 @@ function rb({ content: e, params: n, block: t }, r, a, i) {
 function wS(e) {
   return String(e).charAt(0).toUpperCase() + String(e).slice(1);
 }
-function tO({ content: e, params: n, block: t }) {
+function nO({ content: e, params: n, block: t }) {
   const { items: r, heading: a } = rb(
     { content: e, params: n, block: t },
     "figure",
@@ -33177,7 +33177,7 @@ function tO({ content: e, params: n, block: t }) {
     ] }) }, i.id)) })
   ] });
 }
-function rO({ content: e, params: n, block: t }) {
+function sO({ content: e, params: n, block: t }) {
   const { items: r, heading: a } = rb(
     { content: e, params: n, block: t },
     "table",
@@ -33196,7 +33196,7 @@ function rO({ content: e, params: n, block: t }) {
     ] }) }, i.id)) })
   ] });
 }
-function nO({ content: e, params: n, block: t }) {
+function iO({ content: e, params: n, block: t }) {
   return _u("proof", { content: e, params: n, block: t }), /* @__PURE__ */ Je("aside", { className: "book-proof thm thm-proof mx-auto max-w-[var(--max-content-width)] px-6 my-4 italic", children: [
     /* @__PURE__ */ ge("p", { className: "thm-label font-semibold mb-2 not-italic", children: "Proof." }),
     /* @__PURE__ */ ge(Rr, { content: e, block: t, className: "prose-book" }),
@@ -33257,7 +33257,7 @@ function SS(e) {
 function Is(e) {
   return String(e).replace(/\\/g, "\\\\").replace(/\*/g, "\\*").replace(/_/g, "\\_").replace(/\$/g, "\\$").replace(/#/g, "\\#").replace(/@/g, "\\@");
 }
-function sO({ content: e, params: n, block: t }) {
+function oO({ content: e, params: n, block: t }) {
   const r = ES({ content: e, params: n, block: t });
   return qt(t, "typst", /* @__PURE__ */ ge(Wr, { children: SS(r) })), qt(t, "latex", /* @__PURE__ */ ge(Wr, { children: xS(r) })), qt(
     t,
@@ -33510,7 +33510,7 @@ const MS = { ...Cl, vars: wv || Cl?.vars, layouts: { BookLayout: RS } }, PS = {
   Cite: {
     inset: !0
   }
-}, DS = {}, iO = { meta: PS, capabilities: MS, layoutMeta: DS };
+}, DS = {}, aO = { meta: PS, capabilities: MS, layoutMeta: DS };
 var BS = Object.create, nb = Object.defineProperty, jS = Object.getOwnPropertyDescriptor, FS = Object.getOwnPropertyNames, US = Object.getPrototypeOf, zS = Object.prototype.hasOwnProperty, sb = (e, n) => () => (e && (n = e(e = 0)), n), De = (e, n) => () => (n || (e((n = { exports: {} }).exports, n), e = null), n.exports), HS = (e, n, t, r) => {
   if (n && typeof n == "object" || typeof n == "function") for (var a = FS(n), i = 0, s = a.length, o; i < s; i++)
     o = a[i], !zS.call(e, o) && o !== t && nb(e, o, {
@@ -73968,55 +73968,353 @@ const j2 = `% Minimal default preamble.
   buildBundle: D2,
   compileLatex: hI,
   markRawLatex: _h
-}, Symbol.toStringTag, { value: "Module" })), U2 = `/* Temml's own class hooks — without these an aligned environment neither
-   aligns nor breathes. */
-.tml-right { text-align: right; }
-.tml-left { text-align: left; }
-.tml-sml-pad { padding-left: 0.05em; }
-/* Row spacing. The browser gives mtd no vertical padding, so state the
-   MathML-Core default here; Temml's own CSS only adjusts it for jot. */
-math mtd { padding-top: 0.5ex; padding-bottom: 0.5ex; }
-math mtable.tml-jot mtd { padding-top: 0.7ex; padding-bottom: 0.7ex; }
-/* AMS auto-numbering, for lanes that keep our CSS counter.
+}, Symbol.toStringTag, { value: "Module" })), SI = `math {
+  font-family: "Cambria Math", 'STIXTwoMath-Regular', 'NotoSansMath-Regular', math;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size-adjust: none;
+  text-indent: 0;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  direction: ltr;
+  /* Prevent Firefox from omitting the dot on i or j. */
+  font-feature-settings: "dtls" off;
+}
 
-   Scoped to :empty because the document lanes cannot rely on it -- Paged.js
-   rewrites counters for its own pagination and strips counter-increment, so
-   every equation rendered as "(0)" (measured 2026-07-31; the declaration
-   survives intact without the polyfill). press therefore writes the numbers
-   into the spans as text, and a span carrying a number is no longer :empty, so
-   the two can never both fire.
+math * {
+  border-color: currentColor;
+}
 
-   AMS auto-numbering. Which equations number is the AUTHOR's choice, made in
-   LaTeX: align and equation number, aligned and the starred forms do not.
-   Without these two rules that choice was discarded -- align and align-star
-   rendered identically, so an author who asked for numbers silently got none.
-   (No backticks in here: this string is a JS template literal.) */
+/* display: block is necessary in Firefox and Safari.
+ * Not in Chromium, which recognizes display: "block math" written inline. */
+ math.tml-display {
+  display: block;
+  width: 100%;
+}
+
+*.mathcal {
+  /* NotoSans */
+  font-feature-settings: 'ss01';
+}
+
+math .mathscr {
+  font-family: "Temml";
+}
+
+mo.tml-prime {
+  font-family: Temml;
+}
+
+/* Cramped superscripts in WebKit */
+mfrac > :nth-child(2),
+msqrt,
+mover > :first-child {
+  math-shift: compact
+}
+
+.menclose {
+  display: inline-block;
+  position: relative;
+  padding: 0.5ex 0ex;
+}
+.tml-cancelto {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.5ex 0ex;
+  background-color: currentColor;
+  /* Use the SVG as an alpha mask (painted by background-color) */
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><defs><marker id='a' markerHeight='5' markerUnits='strokeWidth' markerWidth='7' orient='auto' refX='7' refY='2.5'><path fill='black' d='m0 0 7 2.5L0 5z'/></marker></defs><line x2='100%25' y1='100%25' stroke='black' stroke-width='.06em' marker-end='url(%23a)' vector-effect='non-scaling-stroke'/></svg>");
+          mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><defs><marker id='a' markerHeight='5' markerUnits='strokeWidth' markerWidth='7' orient='auto' refX='7' refY='2.5'><path fill='black' d='m0 0 7 2.5L0 5z'/></marker></defs><line x2='100%25' y1='100%25' stroke='black' stroke-width='.06em' marker-end='url(%23a)' vector-effect='non-scaling-stroke'/></svg>");
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
+  -webkit-mask-position: 0 0;
+          mask-position: 0 0;
+}
+
+@supports (-moz-appearance: none) {
+  /* \vec w/o italic correction for Firefox */
+  .tml-vec {
+    transform: scale(0.75)
+  }
+  /* Fix cancelto in Firefox */
+  .ff-narrow {
+    width: 0em;
+  }
+  .ff-nudge-left {
+    margin-left: -0.2em;
+  }
+}
+
+@supports (not (-moz-appearance: none)) {
+  /* Chromium and WebKit */
+  /* prime vertical alignment */
+  mo.tml-prime {
+    font-family: Temml;
+  }
+  /* Italic correction on superscripts */
+  .tml-sml-pad {
+    padding-left: 0.05em;
+  }
+  .tml-med-pad {
+    padding-left: 0.10em;
+  }
+  .tml-lrg-pad {
+    padding-left: 0.15em;
+  }
+}
+
+@supports (-webkit-backdrop-filter: blur(1px)) {
+  /* WebKit vertical & italic correction on accents */
+  .wbk-acc {
+    /* lower by x-height distance */
+    transform: translate(0em, 0.431em);
+  }
+  .wbk-sml {
+    transform: translate(0.07em, 0);
+  }
+  .wbk-sml-acc {
+    transform: translate(0.07em, 0.431em);
+  }
+  .wbk-sml-vec {
+    transform: scale(0.75) translate(0.07em, 0);
+  }
+  .wbk-med {
+    transform: translate(0.14em, 0);
+  }
+  .wbk-med-acc {
+    transform: translate(0.14em, 0.431em);
+  }
+  .wbk-med-vec {
+    transform: scale(0.75) translate(0.14em, 0);
+  }
+  .wbk-lrg {
+    transform: translate(0.21em, 0);
+  }
+  .wbk-lrg-acc {
+    transform: translate(0.21em, 0.431em);
+  }
+  .wbk-lrg-vec {
+    transform: scale(0.75) translate(0.21em, 0);
+  }
+}
+
+/* cancel & phase use background images. Get them to print. */
+menclose {
+  -webkit-print-color-adjust: exact;  /* Chrome & Edge */
+          print-color-adjust: exact;
+}
+
+/* Array cell justification in Firefox & WebKit */
+.tml-right {
+  text-align: right;
+}
+.tml-left {
+  text-align: left;
+}
+
+/* For CD labels that grow to the left in Firefox and WebKit */
+.tml-shift-left { margin-left:-200% }
+
+/* Styles for Chromium only */
+@supports (not (-webkit-backdrop-filter: blur(1px))) and (not (-moz-appearance: none)) {
+  /* Italic correction on accents */
+  .chr-sml {
+    transform: translate(0.07em, 0)
+  }
+  .chr-sml-vec {
+    transform: scale(0.75) translate(0.07em, 0)
+  }
+  .chr-med {
+    transform: translate(0.14em, 0)
+  }
+  .chr-med-vec {
+    transform: scale(0.75) translate(0.14em, 0)
+  }
+  .chr-lrg {
+    transform: translate(0.21em, 0)
+  }
+  .chr-lrg-vec {
+    transform: scale(0.75) translate(0.21em, 0)
+  }
+
+  /* For CD labels that grow to the left */
+  .tml-shift-left { margin-left:-100% }
+
+  /* MathML Core & Chromium do not support the MathML 3.0 element <menclose> attributes. */
+  /* So use styles. */
+  menclose {
+    position: relative;
+    padding: 0.5ex 0ex;
+  }
+  
+    .tml-overline {
+    padding: 0.1em 0 0 0;
+    border-top: 0.065em solid;
+  }
+
+  .tml-underline {
+    padding: 0 0 0.1em 0;
+    border-bottom: 0.065em solid;
+  }
+
+  .tml-cancel {
+    display: inline-block;
+    position: absolute;
+    left: 0.5px;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-color: currentColor;
+  }
+  .upstrike {
+    clip-path: polygon(0.05em 100%, 0em calc(100% - 0.05em), calc(100% - 0.05em) 0em, 100% 0.05em);
+  }
+  .downstrike {
+    clip-path: polygon(0em 0.05em, 0.05em 0em, 100% calc(100% - 0.05em), calc(100% - 0.05em) 100%);
+  }
+  .sout {
+    clip-path: polygon(0em calc(55% + 0.0333em), 0em calc(55% - 0.0333em), 100% calc(55% - 0.0333em), 100% calc(55% + 0.0333em));
+  }
+  .tml-xcancel {
+    clip-path: polygon(0.05em 0em, 0em 0.05em, calc(50% - 0.05em) 50%, 0em calc(100% - 0.05em), 0.05em 100%, 50% calc(50% + 0.05em), calc(100% - 0.05em) 100%, 100% calc(100% - 0.05em), calc(50% + 0.05em) 50%, 100% 0.05em, calc(100% - 0.05em) 0%, 50% calc(50% - 0.05em));
+  }
+
+  .longdiv-top {
+    border-top: 0.067em solid;
+    padding: 0.1em 0.2em 0.2em 0.433em;
+  }
+  .longdiv-arc {
+    position: absolute;
+    top: 0;
+    bottom: 0.1em;
+    left: -0.4em;
+    width: 0.7em;
+    border: 0.067em solid;
+    transform: translateY(-0.067em);
+    border-radius: 70%;
+    clip-path: inset(0 0 0 0.4em);
+    box-sizing: border-box;}
+    .menclose {display: inline-block;
+    text-align: left;
+    position: relative;
+  }
+  
+  .phasor-bottom {
+    border-bottom: 0.067em solid;
+    padding: 0.2em 0.2em 0.1em 0.6em;
+  }
+  .phasor-angle {
+    display: inline-block;
+    position: absolute;
+    left: 0.5px;
+    bottom: -0.04em;
+    height: 100%;
+    aspect-ratio: 0.5;
+    background-color: currentColor;
+    clip-path: polygon(0.05em 100%, 0em calc(100% - 0.05em), calc(100% - 0.05em) 0em, 100% 0.05em);
+  }
+
+  .tml-fbox {
+    padding: 3pt;
+    border: 1px solid;
+  }
+
+  .circle-pad {
+    padding: 0.267em;
+  }
+  .textcircle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    border: 0.067em solid;
+    border-radius: 50%;
+   }
+
+   .actuarial {
+    padding: 0.03889em 0.03889em 0 0.03889em;
+    border-width: 0.08em 0.08em 0em 0em;
+    border-style: solid;
+    margin-right: 0.03889em;
+   }
+
+   /* Stretch widetilde */
+  .tml-crooked-2 {
+    transform: scale(2.0, 1.1)
+  }
+  .tml-crooked-3 {
+    transform: scale(3.0, 1.3)
+  }
+  .tml-crooked-4 {
+    transform: scale(4.0, 1.4)
+  }
+  /* set array cell justification */
+  .tml-right {
+    text-align: -webkit-right;
+  }
+  .tml-left {
+    text-align: -webkit-left;
+  }
+}
+
+.special-fraction {
+  font-family: 'STIX TWO', 'Times New Roman', Times, Tinos, serif;
+}
+
+/* flex-wrap for line-breaking in Chromium */
+math {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+math > mrow {
+  padding: 0.5ex 0ex;
+}
+
+/* Default mtd top padding is 0.5ex per MathML-Core and user-agent CSS */
+/* We adjust for jot and small */
+mtable.tml-jot mtd {
+  padding-top: 0.7ex;
+  padding-bottom: 0.7ex;
+}
+mtable.tml-small mtd {
+  padding-top: 0.35ex;
+  padding-bottom: 0.35ex;
+}
+
+/* Firefox */
+@-moz-document url-prefix() {
+  /* Avoid flex-wrap */
+  math { display: inline; }
+  math > mrow { padding: 0 }
+  /* Adjust Firefox spacing between array rows */
+  mtd, mtable.tml-small mtd { padding-top: 0; padding-bottom: 0; }
+  mtable.tml-jot mtd { padding-top: 0.2ex; padding-bottom: 0.ex; }
+}
+
+/* AMS environment auto-numbering via CSS counter. */
 .tml-eqn:empty::before {
   counter-increment: tmlEqnNo;
   content: "(" counter(tmlEqnNo) ")";
 }
+
 body {
   counter-reset: tmlEqnNo;
+}`, TI = `@supports (not (-moz-appearance: none)) {
+  math mtd { padding-top: 0.5ex; padding-bottom: 0.5ex; }
 }
-/* Display math needs CSS block layout, not MathML layout, for an equation TAG
-   to reach the right margin: the tag rides in an mtable whose width:100%
-   Chromium ignores under display: block math, collapsing the spacer cells so
-   "(1)" sits glued to the equation instead of at the margin.
-
-   !important is not decoration. Temml emits style=display:block math on
-   every display formula unconditionally — no option turns it off — so an inline
-   style beats any rule we write, including Temml's own math.tml-display { display: block }, which is exactly what this restores. Fixing it here
-   rather than in the generator also repairs math that was already built.
-
-   Scoped with :has() to formulas that actually carry a tag. Switching every
-   display formula to CSS block layout would left-align the lot -- MathML layout
-   is what centres them -- so an unnumbered derivation or matrix keeps
-   display: block math and stays centred. Where :has() is unsupported the tag
-   simply does not reach the margin; nothing else changes. */
 math.tml-display:has(.tml-eqn) {
   display: block !important;
   width: 100%;
-}`;
+}`, U2 = `${SI}
+${TI}`;
 function z2(e, n = 1) {
   let t = n;
   return { html: String(e ?? "").replace(
@@ -74024,7 +74322,7 @@ function z2(e, n = 1) {
     () => `<span class="tml-eqn">(${t++})</span>`
   ), next: t };
 }
-async function SI(e, n = {}) {
+async function AI(e, n = {}) {
   const { mode: t = "html", meta: r = {}, stylesheet: a, polyfillUrl: i, ...s } = n, u = (e && e.sections || []).join(`
 `), l = { ...e?.metadata || {}, ...r }, c = H2({
     body: u,
@@ -74035,12 +74333,12 @@ async function SI(e, n = {}) {
   if (t === "html")
     return new Blob([c], { type: "text/html; charset=utf-8" });
   if (t === "server")
-    return TI(c, s);
+    return kI(c, s);
   throw new Error(
     `pagedjs adapter: unknown mode "${t}". Valid modes: 'html' (returns paged-ready HTML), 'server' (POSTs HTML to endpoint, receives PDF).`
   );
 }
-async function TI(e, n = {}) {
+async function kI(e, n = {}) {
   const t = n.endpoint || "/__press/pagedjs/compile", r = new FormData();
   r.append(
     "document.html",
@@ -74074,15 +74372,15 @@ ${t || q2}`, o = r || W2;
   <head>
     <meta charset="utf-8" />
     <title>${$2(i)}</title>
-${AI(n)}    <style>${s}</style>
+${CI(n)}    <style>${s}</style>
     <script src="${ji(o)}" defer><\/script>
   </head>
   <body>
-${kI(n)}${e}
+${NI(n)}${e}
   </body>
 </html>`;
 }
-function AI(e) {
+function CI(e) {
   const n = [];
   return e?.author && n.push(`    <meta name="author" content="${ji(e.author)}" />`), e?.description && n.push(
     `    <meta name="description" content="${ji(e.description)}" />`
@@ -74092,7 +74390,7 @@ function AI(e) {
 `) + `
 ` : "";
 }
-function kI(e) {
+function NI(e) {
   if (!e || typeof e != "object") return "";
   const n = Object.entries(e).filter(
     ([, r]) => r != null && typeof r != "object"
@@ -74172,21 +74470,21 @@ blockquote {
 }
 ul, ol { margin: 0.5em 0 0.75em 1.5em; }
 figure { break-inside: avoid; }
-`, CI = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+`, II = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   DEFAULT_POLYFILL_URL: W2,
   DEFAULT_STYLESHEET: q2,
-  compilePagedjs: SI,
+  compilePagedjs: AI,
   emitDocument: H2
 }, Symbol.toStringTag, { value: "Module" }));
-async function NI(e, n = {}) {
+async function OI(e, n = {}) {
   const { sections: t = [], metadata: r = null } = e || {}, { meta: a = {}, stylesheet: i, identifier: s, cover: o, loadAsset: u } = n, l = { ...r || {}, ...a }, c = `${U2}
-${i || ty}`, d = s || l.identifier || PI(), h = o || l.cover || l.coverImage;
+${i || ty}`, d = s || l.identifier || BI(), h = o || l.cover || l.coverImage;
   let f = 1;
   const g = t.map((N) => {
     const x = z2(N, f);
     return f = x.next, x.html;
-  }).map((N, x) => II(N, x)), p = /* @__PURE__ */ new Set();
+  }).map((N, x) => RI(N, x)), p = /* @__PURE__ */ new Set();
   for (const N of g)
     for (const x of N.images) p.add(x);
   h && p.add(h);
@@ -74234,7 +74532,7 @@ ${i || ty}`, d = s || l.identifier || PI(), h = o || l.cover || l.coverImage;
     }),
     isCover: !0
   } : null, O = R ? [R, ...C] : C, H = new jh();
-  H.file("mimetype", "application/epub+zip", { compression: "STORE" }), H.file("META-INF/container.xml", MI());
+  H.file("mimetype", "application/epub+zip", { compression: "STORE" }), H.file("META-INF/container.xml", DI());
   const Y = H.folder("OEBPS");
   Y.file("content.opf", X2({
     id: d,
@@ -74264,7 +74562,7 @@ ${i || ty}`, d = s || l.identifier || PI(), h = o || l.cover || l.coverImage;
     compressionOptions: { level: 6 }
   });
 }
-function II(e, n) {
+function RI(e, n) {
   const t = dm(e || ""), r = { title: "", images: /* @__PURE__ */ new Set() };
   return V2(t, r), {
     tree: t,
@@ -74291,7 +74589,7 @@ function K2(e, n, t) {
     if (a.nodeName === "#text") continue;
     if ((a.tagName || "").toLowerCase() === "img") {
       const s = Y2(a, "src"), o = s && n.get(s);
-      o && OI(a, "src", t + o);
+      o && LI(a, "src", t + o);
     }
     a.childNodes && K2(a, n, t);
   }
@@ -74307,7 +74605,7 @@ function Y2(e, n) {
     if (t.name === n) return t.value;
   return null;
 }
-function OI(e, n, t) {
+function LI(e, n, t) {
   e.attrs || (e.attrs = []);
   for (const r of e.attrs)
     if (r.name === n) {
@@ -74316,7 +74614,7 @@ function OI(e, n, t) {
     }
   e.attrs.push({ name: n, value: t });
 }
-const RI = /* @__PURE__ */ new Set([
+const MI = /* @__PURE__ */ new Set([
   "area",
   "base",
   "br",
@@ -74339,13 +74637,13 @@ function sa(e) {
   const n = (e.tagName || "").toLowerCase();
   if (!n)
     return (e.childNodes || []).map(sa).join("");
-  const t = LI(e.attrs || []);
-  if (RI.has(n))
+  const t = PI(e.attrs || []);
+  if (MI.has(n))
     return `<${n}${t}/>`;
   const r = (e.childNodes || []).map(sa).join("");
   return `<${n}${t}>${r}</${n}>`;
 }
-function LI(e) {
+function PI(e) {
   if (!e.length) return "";
   let n = "";
   for (const t of e) {
@@ -74360,7 +74658,7 @@ function mr(e) {
 function tr(e) {
   return String(e).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
-function MI() {
+function DI() {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
   <rootfiles>
@@ -74505,7 +74803,7 @@ ${t}
 function yg(e) {
   return String(e).padStart(2, "0");
 }
-function PI() {
+function BI() {
   if (globalThis.crypto?.randomUUID)
     return "urn:uuid:" + globalThis.crypto.randomUUID();
   const e = () => Math.floor(Math.random() * 65536).toString(16).padStart(4, "0");
@@ -74545,36 +74843,36 @@ pre {
   overflow: auto;
   white-space: pre-wrap;
 }
-`, DI = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+`, jI = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   DEFAULT_STYLESHEET: ty,
   buildCoverXhtml: Q2,
   buildNav: J2,
   buildNcx: Z2,
   buildOpf: X2,
-  compileEpub: NI,
+  compileEpub: OI,
   serializeXhtml: sa,
   wrapChapterXhtml: ey
 }, Symbol.toStringTag, { value: "Module" }));
 export {
-  HI as Abstract,
-  $I as Appendix,
-  WI as BackCover,
-  qI as BackMatter,
-  VI as Bibliography,
-  KI as BookCover,
-  GI as Chapter,
-  YI as Cite,
-  XI as Contents,
-  JI as Cover,
-  QI as Definition,
-  eO as Lemma,
-  tO as ListOfFigures,
-  rO as ListOfTables,
-  nO as Proof,
-  ZI as Theorem,
-  sO as TitlePage,
+  WI as Abstract,
+  qI as Appendix,
+  VI as BackCover,
+  KI as BackMatter,
+  GI as Bibliography,
+  YI as BookCover,
+  XI as Chapter,
+  JI as Cite,
+  ZI as Contents,
+  QI as Cover,
+  tO as Definition,
+  rO as Lemma,
+  nO as ListOfFigures,
+  sO as ListOfTables,
+  iO as Proof,
+  eO as Theorem,
+  oO as TitlePage,
   y3 as compileDocument,
   yd as compileSubtree,
-  iO as default
+  aO as default
 };
