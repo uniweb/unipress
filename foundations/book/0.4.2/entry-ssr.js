@@ -11744,10 +11744,10 @@ function Yf(e) {
   const n = e.toLowerCase();
   return xE.some((t) => n.includes(t));
 }
-const SE = /(<a\b[^>]*?\shref=)(["'])([^"']*)\2/gi, TE = /^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i;
 function hl(e, n) {
   return !e || typeof e != "string" || !n || !e.startsWith("/") || e.startsWith("//") || e === n || e.startsWith(n + "/") ? e : n + e;
 }
+const SE = /(<a\b[^>]*?\shref=)(["'])([^"']*)\2/gi, TE = /^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i;
 function AE(e, n) {
   if (!n.hasMultipleLocales?.()) return e;
   const t = n.getActiveLocale?.(), r = n.getDefaultLocale?.();

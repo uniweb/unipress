@@ -9599,10 +9599,10 @@ function fL(e) {
   const r = e.toLowerCase();
   return cL.some((t) => r.includes(t));
 }
-const hL = /(<a\b[^>]*?\shref=)(["'])([^"']*)\2/gi, dL = /^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i;
-function pL(e, r) {
+function hL(e, r) {
   return !e || typeof e != "string" || !r || !e.startsWith("/") || e.startsWith("//") || e === r || e.startsWith(r + "/") ? e : r + e;
 }
+const dL = /(<a\b[^>]*?\shref=)(["'])([^"']*)\2/gi, pL = /^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i;
 function gL(e, r) {
   if (!r.hasMultipleLocales?.()) return e;
   const t = r.getActiveLocale?.(), n = r.getDefaultLocale?.();
@@ -9613,15 +9613,15 @@ function gL(e, r) {
 function mL(e, r, { locale: t = !0 } = {}) {
   if (!e || typeof e != "string" || !r) return e;
   let n = e;
-  return (e.startsWith("page:") || e.startsWith("topic:")) && (n = r.makeHref ? r.makeHref(e) : e), dL.test(n) || t && n.startsWith("/") && !fL(n) && (n = gL(n, r)), n;
+  return (e.startsWith("page:") || e.startsWith("topic:")) && (n = r.makeHref ? r.makeHref(e) : e), pL.test(n) || t && n.startsWith("/") && !fL(n) && (n = gL(n, r)), n;
 }
 function bL(e, r) {
-  return !e || typeof e != "string" || !r ? e : pL(mL(e, r), r.basePath || "");
+  return !e || typeof e != "string" || !r ? e : hL(mL(e, r), r.basePath || "");
 }
 function vL(e, r) {
   if (!e || typeof e != "string" || !r || !e.includes("<a")) return e;
   const t = e.includes("page:") || e.includes("topic:"), n = !!r.hasMultipleLocales?.() && r.getActiveLocale?.() !== r.getDefaultLocale?.();
-  return !t && !r.basePath && !n ? e : e.replace(hL, (a, i, s, o) => {
+  return !t && !r.basePath && !n ? e : e.replace(dL, (a, i, s, o) => {
     const u = bL(o, r);
     return u === o ? a : `${i}${s}${u}${s}`;
   });
