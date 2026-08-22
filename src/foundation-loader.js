@@ -33,6 +33,7 @@ import { resolve, isAbsolute, join, dirname } from 'node:path'
 import { FoundationResolutionError } from './errors.js'
 import { findCatalogEntry } from './catalog.js'
 import { fetchFoundationToCache } from './foundation-fetch.js'
+import { foundationUrl } from './registry-base.js'
 
 const URL_PATTERN = /^https?:\/\//
 const PATH_PATTERN = /^(\.\.?[\/\\]|[\/\\]|[A-Za-z]:[\/\\])/
@@ -42,32 +43,15 @@ const PATH_PATTERN = /^(\.\.?[\/\\]|[\/\\]|[A-Za-z]:[\/\\])/
 // registry decides what's valid.
 const REGISTRY_REF_PATTERN = /^@([a-z0-9][a-z0-9._-]*)\/([a-z0-9][a-z0-9._-]*)@([0-9a-z][0-9a-z.\-+]*)$/i
 
-// unipress's bundled foundations are distributed as static artifacts on
-// the unipress repo's GitHub Pages site. URL pattern:
-//
-//   https://uniweb.github.io/unipress/foundations/<name>/<version>/entry.js
-//
-// The namespace portion of a registry ref is implicit — every foundation
-// served from this base is under @uniweb/. Set UNIWEB_REGISTRY_URL to
-// override (e.g., for testing against a local http.server during foundation
-// development, or for users with a private alternative).
-const DEFAULT_REGISTRY_BASE = 'https://uniweb.github.io/unipress'
 const DEFAULT_BUILT_ENTRY = 'dist/entry.js'
 
-function getRegistryBase() {
-  const raw = process.env.UNIWEB_REGISTRY_URL || DEFAULT_REGISTRY_BASE
-  return raw.replace(/\/$/, '')
-}
-
-// Build the URL for a registry ref. The namespace is preserved in the
-// returned URL only when the base wants it; for the GH Pages distribution
-// the namespace is implicit and the path is <base>/foundations/<name>/<ver>/.
-// If a custom UNIWEB_REGISTRY_URL needs the namespace in the path, it can
-// hold a path prefix that resolves accordingly (e.g., set
-// `UNIWEB_REGISTRY_URL=https://my.host/by-ns/uniweb` and live without the
-// per-namespace split, or maintain a redirect rule on that host).
+// Build the URL for a registry ref. The base + layout live in registry-base.js,
+// shared with the catalog so the URL we FETCH and the URL we SHOW cannot drift
+// (and so both honour UNIWEB_REGISTRY_URL). The `namespace` is accepted and
+// unused: every foundation under this layout is @uniweb/, so a ref's scope does
+// not appear in the path — see foundationPath's note on per-namespace bases.
 function buildRegistryUrl(namespace, name, version) {
-  return `${getRegistryBase()}/foundations/${name}/${version}/entry.js`
+  return foundationUrl(name, version)
 }
 
 export async function resolveFoundationRef(ref, { anchorDir, onProgress = () => {} } = {}) {

@@ -14,9 +14,9 @@
  * ─────────────────────────────────────────────────────────────────────────
  *
  * Foundations are deployed as static artifacts to the unipress repo's
- * GitHub Pages site. URL pattern:
- *
- *   https://uniweb.github.io/unipress/foundations/<name>/<version>/entry.js
+ * GitHub Pages site. **The base and the URL rule live in `registry-base.js`** —
+ * one definition, shared with `foundation-loader.js`, so what this catalog shows
+ * and what `compile` fetches cannot disagree.
  *
  * On every push to main, `.github/workflows/deploy-foundations.yml`
  * builds each `foundations/<name>/` and layers the resulting `dist/` into
@@ -52,9 +52,23 @@
  *
  * Each entry's `foundation.source.url` is the human-meaningful "where this
  * foundation lives" pointer shown in `list-templates` output and post-create
- * messages. It mirrors the URL the loader builds at compile time, but does
- * not itself drive resolution — the loader builds its own URL from
- * `foundation.ref` + the configured base.
+ * messages. It does not itself drive resolution — the loader builds its own URL
+ * from `foundation.ref` + the configured base.
+ *
+ * ⚠️ **It is built from the same helper the loader resolves through**
+ * (`registry-base.js::foundationUrl`), and that is load-bearing rather than tidy.
+ * Until 2026-08-22 this file held its own hardcoded base, so it ignored
+ * `UNIWEB_REGISTRY_URL`: pointing unipress at a local registry left
+ * `list-templates` printing the GitHub Pages URL — an address the tool was not
+ * using, reported at exactly the moment someone was debugging which address it
+ * used. "Display only" is not "free to be wrong."
+ *
+ * ⛔ There is also a live fallback that DOES resolve from this field:
+ * `foundation-loader.js::resolveCatalogRef` fetches `source.url` directly when an
+ * entry carries no registry-shaped `foundation.ref` (the v0.1 legacy shape). No
+ * current entry hits it — all 8 carry a ref — but an entry added without one
+ * would resolve through this URL. Sharing the helper means that path honours the
+ * override too, instead of silently pinning to our origin.
  *
  * ─────────────────────────────────────────────────────────────────────────
  * Storage format
@@ -62,14 +76,17 @@
  *
  * Stored as a plain JS module (not YAML) so `bun build --compile` can
  * inline it at bundle time. The compiled binary has no filesystem for
- * runtime reads.
+ * runtime reads. Its one import (`registry-base.js`) is a zero-import leaf, so
+ * the catalog stays inlinable; the base is still read from the environment at
+ * call time rather than frozen into the binary.
  */
 
-const PUBLIC_FOUNDATIONS_BASE = 'https://uniweb.github.io/unipress/foundations'
+import { foundationUrl } from './registry-base.js'
 
-function publicUrl(name, version) {
-  return `${PUBLIC_FOUNDATIONS_BASE}/${name}/${version}/entry.js`
-}
+// `foundationUrl` is the SAME helper foundation-loader.js resolves through, so
+// what we show here is what compile will fetch — including under a
+// UNIWEB_REGISTRY_URL override, which the old local constant ignored.
+const publicUrl = (name, version) => foundationUrl(name, version)
 
 const BOOK_FOUNDATION = {
   ref: '@uniweb/book@0.4.2',
