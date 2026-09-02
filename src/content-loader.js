@@ -35,7 +35,7 @@ function attachData(section, key, data) {
 function findQueryRecords(fetchConfig, resolved) {
   // `as` is the binding key; `schema` is its pre-2026-09-02 name, still on any
   // payload written before then.
-  if (!fetchConfig?.path || !(fetchConfig.as ?? fetchConfig.schema)) return null
+  if (!fetchConfig?.path || !fetchConfig.as) return null
   const m = COLLECTION_PATH_RE.exec(fetchConfig.path)
   if (!m) return null
   const records = resolved[m[1]]
@@ -54,7 +54,7 @@ function attachSectionFetches(sections, resolved, cascade = null) {
   if (!Array.isArray(sections)) return
   for (const section of sections) {
     const records = findQueryRecords(section.fetch, resolved)
-    if (records) attachData(section, section.fetch.as ?? section.fetch.schema, records)
+    if (records) attachData(section, section.fetch.as, records)
     if (cascade) attachData(section, cascade.key, cascade.records)
     if (Array.isArray(section.subsections) && section.subsections.length) {
       attachSectionFetches(section.subsections, resolved, cascade)
@@ -122,7 +122,7 @@ async function resolveLocalQueries(siteContent, sitePath) {
     // section tree; a section's own fetch still takes priority.
     const pageRecords = findQueryRecords(page.fetch, resolved)
     const cascade = pageRecords
-      ? { key: page.fetch.as ?? page.fetch.schema, records: pageRecords }
+      ? { key: page.fetch.as, records: pageRecords }
       : null
     attachSectionFetches(page.sections, resolved, cascade)
   }
