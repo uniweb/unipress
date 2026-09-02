@@ -12,7 +12,7 @@ unipress compile . --format docx --out my-directory.docx
 ```
 directory/
 ├── document.yml          pinned to @uniweb/data; one queryable collection
-├── collections/
+├── entities/
 │   └── members/          three sample records to make the first compile non-empty
 └── content/
     └── directory/        cover (with Loom-rendered count) + listing
@@ -32,10 +32,10 @@ For multi-section aggregate reports (publications-by-year, funding totals, super
 
 ### Add an entry
 
-Drop a YAML file under `collections/members/`. Each file is one record; the filename (stem) becomes its slug.
+Drop a YAML file under `entities/members/`. Each file is one record; the filename (stem) becomes its slug.
 
 ```yaml
-# collections/members/your-name.yml
+# entities/members/your-name.yml
 name: "Your Name"
 role: member          # or lead / advisor
 department: sciences  # or engineering / humanities
@@ -46,7 +46,7 @@ joined_year: 2024
 
 ### Adjust the queryable fields
 
-The fields exposed in the FilterPanel UI come from `document.yml`'s `collections.members.queryable:` block. Each field becomes a control:
+The fields exposed in the FilterPanel UI come from `document.yml`'s `queries.members.queryable:` block. Each field becomes a control:
 
 - `enum` → multi-select dropdown.
 - `boolean` → toggle.

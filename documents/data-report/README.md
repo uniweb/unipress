@@ -13,23 +13,23 @@ unipress compile . --format docx --out my-report.docx
 data-report/
 ├── document.yml          pinned to @uniweb/data
 ├── theme.yml
-├── collections/
+├── entities/
 │   ├── members/          three sample records (19th-century naturalists)
 │   └── queries/          saved query examples
 └── content/
     └── report/           cover, members, publications-by-*, funding, supervisions
 ```
 
-The starter ships three sample members (Darwin, Lyell, Wallace) so the first compile produces a non-empty workbook. Replace the YAML files under `collections/members/` with your own data — the foundation reads any record matching the queryable schema declared in `document.yml`.
+The starter ships three sample members (Darwin, Lyell, Wallace) so the first compile produces a non-empty workbook. Replace the YAML files under `entities/members/` with your own data — the foundation reads any record matching the queryable schema declared in `document.yml`.
 
 ## Customize
 
 ### Add a member
 
-Drop a YAML file under `collections/members/`:
+Drop a YAML file under `entities/members/`:
 
 ```yaml
-# collections/members/your-name.yml
+# entities/members/your-name.yml
 name: "Jane Doe"
 department: biology
 rank: professor
@@ -47,16 +47,16 @@ The Cover section's Loom expressions (`{COUNT OF members}`, `{totalPublications}
 
 ### Filter the active selection
 
-Edit `document.yml`'s `collections.members.queryable:` to declare the filterable fields you want exposed in the FilterPanel UI. Each field becomes a control; `enum` fields render as multi-select, `boolean` as toggles, `range` as numeric range inputs.
+Edit `document.yml`'s `queries.members.queryable:` to declare the filterable fields you want exposed in the FilterPanel UI. Each field becomes a control; `enum` fields render as multi-select, `boolean` as toggles, `range` as numeric range inputs.
 
 ### Switch from static files to a backend
 
-When the data outgrows the YAML files (`/data/members.json`-shaped backed by `collections/members/`), declare a backend fetcher:
+When the data outgrows the YAML files (`/data/members.json`-shaped backed by `entities/members/`), declare a backend fetcher:
 
 ```yaml
-collections:
+queries:
   members:
-    path: collections/members
+    path: entities/members
     fetcher:
       url: https://api.example.com/members
       supports: [where, limit, sort]

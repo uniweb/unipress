@@ -61,8 +61,8 @@ If something looks wrong in the output, run `unipress inspect my-book` to see ho
 
 If your book cites sources — even occasionally — the same `@uniweb/book` foundation supports inline cites and a back-matter bibliography. Trade books rarely use this, so it's commented out in `document.yml`. To opt in:
 
-1. Uncomment the `citationStyle:` block under `book:` and the `collections:` block at the bottom of `document.yml`.
-2. Create `collections/bibliography/` and add one YAML file per source (`darwin1859.yml`, etc.) — the filename stem is the cite key.
+1. Uncomment the `citationStyle:` block under `book:` and the `queries:` block at the bottom of `document.yml`.
+2. Create `entities/bibliography/` and add one YAML file per source (`darwin1859.yml`, etc.) — the filename stem is the cite key.
 3. Cite in prose with `[@key]` (or `[@key]{page=42}`, `[@a; @b]`, `[@key]{suppress-author}`).
 4. Add a back-matter file (e.g. `99-bibliography.md`) with `type: Bibliography` and `data: bibliography` in its frontmatter.
 

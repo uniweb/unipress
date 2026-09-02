@@ -23,11 +23,11 @@ ship a Typst path.)
 ```
 invoice/
 ├── document.yml.hbs       # vendor + defaults + foundation reference
-├── collections/
+├── entities/
 │   ├── sows/sow0001.yml   # signed SOW the invoice bills against
 │   └── invoices/0001.yml  # the multi-line subscription invoice
 └── content/invoice/
-    ├── page.yml           # fetches both collections so cross-record validation runs
+    ├── page.yml           # fetches both queries so cross-record validation runs
     ├── 01-cover.md        # invoice header (vendor, client, dates, period)
     ├── 02-line-items.md   # source: items — divider-split table body
     ├── 03-totals.md       # uses computed {subtotal}, {tax_amount}, {total}
@@ -57,4 +57,4 @@ Swap `business_docs.vendor` in `document.yml.hbs` for your real vendor
 identity, set `defaults.tax_jurisdiction` to a registry key the
 foundation ships with (`HST`, `GST`, `PST`, `QST`, `VAT`) or extend the
 registry via `business_docs.registries.tax:`. Add invoices by dropping
-new files into `collections/invoices/` and re-running compile.
+new files into `entities/invoices/` and re-running compile.

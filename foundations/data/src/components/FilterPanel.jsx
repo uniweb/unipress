@@ -23,13 +23,16 @@
  */
 
 import { useEffect, useState } from 'react'
-import { useCollectionQueryable } from '@uniweb/kit'
+import { useQueryable } from '@uniweb/kit'
 import { ALL_MEMBERS, useSelectedQuery, usePanelFilter } from './query-context.jsx'
 
-const COLLECTION = 'members'
+// The QUERY whose `queryable:` surface drives this panel. `queryable:` is
+// declared on a query, not on a set of files — which is why kit's hook is
+// `useQueryable` and this constant is no longer named for a collection.
+const QUERY = 'members'
 
 export default function FilterPanel() {
-  const queryable = useCollectionQueryable(COLLECTION)
+  const queryable = useQueryable(QUERY)
   const [, setSlug] = useSelectedQuery()
   const [panelWhere, setPanelWhere] = usePanelFilter()
 

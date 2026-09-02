@@ -11,9 +11,8 @@ format: xlsx
 # downloadable workbook (xlsx) or report (docx).
 index: report
 
-collections:
+queries:
   members:
-    path: collections/members
     # Queryable surface — drives the FilterPanel UI. The framework
     # decides whether to ship predicates to a backend or evaluate locally
     # based on `fetcher.supports:`.
@@ -35,4 +34,3 @@ collections:
         min: 1820
         max: 1880
   queries:
-    path: collections/queries

@@ -12,7 +12,7 @@ unipress compile . --format epub --out my-monograph.epub
 ```
 monograph/
 ├── document.yml              pinned to @uniweb/book; royal-octavo, EB Garamond
-├── collections/
+├── entities/
 │   └── bibliography/
 │       └── refs.bib          BibTeX records — one .bib file, every @entry is one record
 ├── content/
@@ -47,10 +47,10 @@ Switching the style re-formats every inline cite and the back-matter bibliograph
 
 ### Author bibliography entries
 
-Drop a `.bib` file into `collections/bibliography/`. Every `@entry{key, ...}` becomes one record; the BibTeX cite key is the entry id you reference from prose with `[@key]`. Standard BibTeX entry types — `@article`, `@book`, `@incollection`, `@inproceedings`, `@phdthesis`, `@techreport`, `@misc`, and the rest — all work; LaTeX accents (`\"u`, `\'e`, `\v{c}`) are converted to Unicode automatically.
+Drop a `.bib` file into `entities/bibliography/`. Every `@entry{key, ...}` becomes one record; the BibTeX cite key is the entry id you reference from prose with `[@key]`. Standard BibTeX entry types — `@article`, `@book`, `@incollection`, `@inproceedings`, `@phdthesis`, `@techreport`, `@misc`, and the rest — all work; LaTeX accents (`\"u`, `\'e`, `\v{c}`) are converted to Unicode automatically.
 
 ```bibtex
-% collections/bibliography/refs.bib
+% entities/bibliography/refs.bib
 
 @book{darwin1859,
   author    = {Darwin, Charles},
