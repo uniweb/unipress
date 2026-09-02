@@ -20,20 +20,22 @@ import { ContentDirectoryError, DocumentYmlError } from './errors.js'
 // the inverse: pull the collection name back out of the resolved path.
 const COLLECTION_PATH_RE = /^\/data\/(.+)\.json$/
 
-function attachData(section, schema, data) {
-  if (!section || !schema) return
+function attachData(section, key, data) {
+  if (!section || !key) return
   if (!section.parsedContent) section.parsedContent = {}
   if (!section.parsedContent.data) section.parsedContent.data = {}
   // Don't clobber a section-level value with a cascaded page-level one.
   // The Block constructor will spread parsedContent.data through, so the
   // first writer wins for a given schema.
-  if (section.parsedContent.data[schema] === undefined) {
-    section.parsedContent.data[schema] = data
+  if (section.parsedContent.data[key] === undefined) {
+    section.parsedContent.data[key] = data
   }
 }
 
 function findQueryRecords(fetchConfig, resolved) {
-  if (!fetchConfig?.path || !fetchConfig?.schema) return null
+  // `as` is the binding key; `schema` is its pre-2026-09-02 name, still on any
+  // payload written before then.
+  if (!fetchConfig?.path || !(fetchConfig.as ?? fetchConfig.schema)) return null
   const m = COLLECTION_PATH_RE.exec(fetchConfig.path)
   if (!m) return null
   const records = resolved[m[1]]
@@ -52,8 +54,8 @@ function attachSectionFetches(sections, resolved, cascade = null) {
   if (!Array.isArray(sections)) return
   for (const section of sections) {
     const records = findQueryRecords(section.fetch, resolved)
-    if (records) attachData(section, section.fetch.schema, records)
-    if (cascade) attachData(section, cascade.schema, cascade.records)
+    if (records) attachData(section, section.fetch.as ?? section.fetch.schema, records)
+    if (cascade) attachData(section, cascade.key, cascade.records)
     if (Array.isArray(section.subsections) && section.subsections.length) {
       attachSectionFetches(section.subsections, resolved, cascade)
     }
@@ -120,7 +122,7 @@ async function resolveLocalQueries(siteContent, sitePath) {
     // section tree; a section's own fetch still takes priority.
     const pageRecords = findQueryRecords(page.fetch, resolved)
     const cascade = pageRecords
-      ? { schema: page.fetch.schema, records: pageRecords }
+      ? { key: page.fetch.as ?? page.fetch.schema, records: pageRecords }
       : null
     attachSectionFetches(page.sections, resolved, cascade)
   }
