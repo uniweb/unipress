@@ -7,7 +7,7 @@
  * Under `unipress compile`, content-loader.js resolves file-based
  * collections in-memory and attaches the array to the section's
  * `parsedContent.data.<schema>` — and also stashes the resolved array
- * on `website.config.collections.<name>.records` so insets that render
+ * on `website.config.recordsByQuery.<name>` so insets that render
  * before this section can bootstrap their own copy.
  *
  * Rendering goes through the same per-website citestyle registry the
@@ -105,7 +105,7 @@ export default function Bibliography({ content, params, block }) {
   const cslItems = useMemo(() => recordsToCsl(sorted), [sorted])
 
   // Seed the per-website registry. Bibliography's setBibliography +
-  // findRecord path ALSO bootstraps from website.config.collections (set
+  // findRecord path ALSO bootstraps from website.config.recordsByQuery (set
   // by content-loader) so insets that render before this section don't
   // see an empty list. This call is the explicit refresh path —
   // re-rendering with new records clears the cached registries so

@@ -94,7 +94,7 @@ export default PREAMBLE
  * Build a preamble that includes biblatex setup when the document has
  * a bibliography. The caller (compile-options.js's `buildLatexOptions`)
  * decides `hasBibliography` by inspecting
- * website.config.collections.bibliography.records.
+ * website.config.recordsByQuery.bibliography.
  *
  * @param {Object} [options]
  * @param {string} [options.language='en'] - Reserved for future

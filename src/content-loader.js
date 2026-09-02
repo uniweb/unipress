@@ -32,7 +32,7 @@ function attachData(section, schema, data) {
   }
 }
 
-function findCollectionRecords(fetchConfig, resolved) {
+function findQueryRecords(fetchConfig, resolved) {
   if (!fetchConfig?.path || !fetchConfig?.schema) return null
   const m = COLLECTION_PATH_RE.exec(fetchConfig.path)
   if (!m) return null
@@ -51,7 +51,7 @@ function findCollectionRecords(fetchConfig, resolved) {
 function attachSectionFetches(sections, resolved, cascade = null) {
   if (!Array.isArray(sections)) return
   for (const section of sections) {
-    const records = findCollectionRecords(section.fetch, resolved)
+    const records = findQueryRecords(section.fetch, resolved)
     if (records) attachData(section, section.fetch.schema, records)
     if (cascade) attachData(section, cascade.schema, cascade.records)
     if (Array.isArray(section.subsections) && section.subsections.length) {
@@ -81,7 +81,7 @@ function attachSectionFetches(sections, resolved, cascade = null) {
  * fetches, refine configs, and array-form `fetch: [...]` declarations
  * are left untouched (those have their own gaps; out of scope here).
  */
-async function resolveLocalCollections(siteContent, sitePath) {
+async function resolveLocalQueries(siteContent, sitePath) {
   // ⛔ **`config.queries`, not `config.collections`.** The build renamed both the
   // payload key and the function on 2026-08-29 (`@uniweb/build` e442738, "no
   // identifier in build says `collection` any more") and this file was not
@@ -118,7 +118,7 @@ async function resolveLocalCollections(siteContent, sitePath) {
     // Page-level fetch cascades to every section on the page — top-level
     // and nested alike. attachSectionFetches threads it through the whole
     // section tree; a section's own fetch still takes priority.
-    const pageRecords = findCollectionRecords(page.fetch, resolved)
+    const pageRecords = findQueryRecords(page.fetch, resolved)
     const cascade = pageRecords
       ? { schema: page.fetch.schema, records: pageRecords }
       : null
@@ -129,24 +129,29 @@ async function resolveLocalCollections(siteContent, sitePath) {
   // (regardless of its own page's fetch declaration) can self-bootstrap
   // — e.g., a Cite inset rendering inside a Chapter on page A needs the
   // bibliography records that the Bibliography section declared on page
-  // B. Foundations read this via `block.website.config.collections.<name>.records`
+  // B. Foundations read this via `block.website.config.recordsByQuery.<name>`
   // as a synchronous fallback.
   //
-  // ⚠️ **This `config.collections` is UNIPRESS'S OWN KEY and stays** — do not
-  // "fix" it to `queries` the way the READ at the top of this file had to be
-  // fixed. The build's payload key was renamed `collections` → `queries`; this
-  // one is written here, consumed only by unipress's own foundations, and the
-  // build never emits or reads it. Two different things wearing one word is
-  // precisely what made the read above stay broken for four days, so the
-  // distinction is worth the four lines.
+  // ⭐ **`recordsByQuery`, because "collections" named nothing.** This key is
+  // unipress's own — written here, read only by unipress foundations, never
+  // emitted or read by `@uniweb/build`. It was called `collections`, which
+  // collided with the build's payload key of the same name and said nothing
+  // about what it held. *[Diego, 2026-09-02]* — "collect" as an act is fine;
+  // as a set of things it is useless, because it gives no sense of what KIND of
+  // things, where `records`, `queries` and `entities` each carry meaning.
+  //
+  // This holds **records, keyed by the query that resolved them**, and the name
+  // now says exactly that. ⚠️ Not `config.records`, which the framework already
+  // uses for live record URL patterns (`core/src/query-address.js`).
+  //
+  // The value is the record ARRAY directly, not `{ records: [...] }`. The
+  // wrapper existed to merge with a pre-existing `config.collections` from the
+  // build — which cannot happen now that the build emits `queries` — and
+  // `recordsByQuery.<name>.records` would have said "records" twice.
   if (!siteContent.config) siteContent.config = {}
-  if (!siteContent.config.collections) siteContent.config.collections = {}
+  if (!siteContent.config.recordsByQuery) siteContent.config.recordsByQuery = {}
   for (const name of Object.keys(resolved)) {
-    const existing = siteContent.config.collections[name]
-    siteContent.config.collections[name] = {
-      ...(existing && typeof existing === 'object' ? existing : {}),
-      records: resolved[name],
-    }
+    siteContent.config.recordsByQuery[name] = resolved[name]
   }
 }
 
@@ -225,7 +230,7 @@ export async function loadContent(dir, options = {}) {
     throw err
   }
 
-  await resolveLocalCollections(content, sitePath)
+  await resolveLocalQueries(content, sitePath)
 
   // Cross-reference registry is built AFTER the foundation loads, in
   // orchestrator.loadAndInit, so foundation-declared `xref.kinds`

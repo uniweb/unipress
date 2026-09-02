@@ -47,7 +47,7 @@ function slot(website) {
 }
 
 /**
- * Bootstrap from website.config.collections.<name>.records — the
+ * Bootstrap from website.config.recordsByQuery.<name> — the
  * unipress content-loader stashes resolved collections there so any
  * section can find them regardless of render order.
  *
@@ -59,7 +59,7 @@ function bootstrap(website) {
   const s = slot(website)
   if (s.bibliography) return
   const name = website?.config?.book?.bibliography?.collection || DEFAULT_COLLECTION
-  const raw = website?.config?.collections?.[name]?.records
+  const raw = website?.config?.recordsByQuery?.[name]
   if (!Array.isArray(raw) || raw.length === 0) return
   s.bibliography = recordsToCsl(raw)
 }

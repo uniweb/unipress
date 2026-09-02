@@ -29,6 +29,5 @@ thesis:
   institution: University of Toronto
   year: 2026
 
-collections:
+queries:
   bibliography:
-    path: collections/bibliography

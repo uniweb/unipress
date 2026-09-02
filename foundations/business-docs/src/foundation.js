@@ -80,7 +80,7 @@ function pickActiveSow(data) {
 /**
  * Pull a collection's records from the foundation's two routes: the
  * page-level fetch graph (`data[name]`) and the unipress / runtime
- * cross-page fallback (`website.config.collections[name].records`).
+ * cross-page fallback (`website.config.recordsByQuery[name]`).
  *
  * The page-level fetch only carries the *active* collection (multi-fetch
  * isn't yet wired in the unipress orchestrator — see content-loader.js).
@@ -89,9 +89,9 @@ function pickActiveSow(data) {
  * lookups (invoice → sow_ref) work on any page that fetched only one of
  * the two.
  */
-function gatherCollection(name, data, block) {
+function gatherRecords(name, data, block) {
   if (Array.isArray(data?.[name])) return data[name]
-  const records = block?.website?.config?.collections?.[name]?.records
+  const records = block?.website?.config?.recordsByQuery?.[name]
   return Array.isArray(records) ? records : []
 }
 
@@ -101,8 +101,8 @@ function buildLoomNamespace(data, block) {
   const defaults = cfg.defaults || {}
   const taxRegistry = cfg.registries?.tax || {}
 
-  const invoices = gatherCollection('invoices', data, block)
-  const sows = gatherCollection('sows', data, block)
+  const invoices = gatherRecords('invoices', data, block)
+  const sows = gatherRecords('sows', data, block)
 
   const base = { vendor, defaults }
 
@@ -195,8 +195,8 @@ function maybeLogValidation(data, block) {
   // document.yml's collections: declaration. One log line per block is
   // enough; using a WeakSet keyed by block survives dev-server hot
   // reloads and is GC'd when the page unmounts.
-  const invoices = gatherCollection('invoices', data, block)
-  const sows = gatherCollection('sows', data, block)
+  const invoices = gatherRecords('invoices', data, block)
+  const sows = gatherRecords('sows', data, block)
   if (invoices.length === 0 || sows.length === 0) return
   if (loggedRunsForBlock.has(block)) return
   loggedRunsForBlock.add(block)
@@ -261,11 +261,11 @@ export default {
 
       const invoice = pickActiveInvoice({
         invoice: data?.invoice,
-        invoices: gatherCollection('invoices', data, block),
+        invoices: gatherRecords('invoices', data, block),
       })
       const sow = pickActiveSow({
         sow: data?.sow,
-        sows: gatherCollection('sows', data, block),
+        sows: gatherRecords('sows', data, block),
       })
 
       const totals = invoice

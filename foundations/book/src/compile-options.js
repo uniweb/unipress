@@ -198,7 +198,7 @@ export async function buildLatexOptions(
     // Bibliography → refs.bib via citestyle's exportBibtex. The same
     // collection the Bibliography section reads from at render time;
     // content-loader stashes the resolved records on
-    // website.config.collections.<name>.records during unipress compile.
+    // website.config.recordsByQuery.<name> during unipress compile.
     //
     // The bibtex file rides in adapterOptions.assets, the same channel
     // gatherCovers uses for image bytes — Press's compileLatex packs
@@ -208,8 +208,8 @@ export async function buildLatexOptions(
     // React render and survives compile flows that don't render
     // Bibliography (e.g. an explicit prefatory \cite without a back-
     // matter page — biblatex still needs the .bib file).
-    const bibCollectionName = bookCfg.bibliography?.collection || 'bibliography'
-    const bibRecords = website?.config?.collections?.[bibCollectionName]?.records
+    const bibQueryName = bookCfg.bibliography?.collection || 'bibliography'
+    const bibRecords = website?.config?.recordsByQuery?.[bibQueryName]
     const hasBibliography = Array.isArray(bibRecords) && bibRecords.length > 0
     if (hasBibliography) {
         try {

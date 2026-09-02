@@ -8,6 +8,5 @@ book:
   author: "Test Harness"
   citationStyle: chicago-author-date
 
-collections:
+queries:
   bibliography:
-    path: collections/bibliography
