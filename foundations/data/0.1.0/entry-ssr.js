@@ -9686,7 +9686,7 @@ function LT(e) {
 function _L(e) {
   const r = Wy()?.activeWebsite;
   if (!r) return null;
-  const t = r.config?.collections?.[e];
+  const t = r.config?.queries?.[e];
   if (!t || typeof t != "object") return null;
   const n = t.queryable;
   return !n || typeof n != "object" ? null : n;

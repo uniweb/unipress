@@ -3076,7 +3076,7 @@ function ol(t) {
 }
 function Zn(t, r, e) {
   if (Array.isArray(r?.[t])) return r[t];
-  const f = e?.website?.config?.collections?.[t]?.records;
+  const f = e?.website?.config?.recordsByQuery?.[t];
   return Array.isArray(f) ? f : [];
 }
 function $o(t, r) {
