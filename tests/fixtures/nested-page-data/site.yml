@@ -1,4 +1,3 @@
 name: nested-page-data
-collections:
-  profile:
-    path: collections/profile
+queries:
+  profile: {}

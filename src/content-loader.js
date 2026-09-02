@@ -10,7 +10,7 @@
 
 import { existsSync, readdirSync } from 'node:fs'
 import { resolve, join, basename } from 'node:path'
-import { collectSiteContent, processCollections } from '@uniweb/build/content'
+import { collectSiteContent, processQueries } from '@uniweb/build/content'
 import { detectConfigFile, CONFIG_FILE_NAMES } from './document-yml.js'
 import { ContentDirectoryError, DocumentYmlError } from './errors.js'
 
@@ -65,7 +65,7 @@ function attachSectionFetches(sections, resolved, cascade = null) {
  * `parsedContent.data` so the SSR render pipeline reads populated data
  * synchronously (no `useFetched` round-trip; no `public/` directory).
  *
- * In a regular Uniweb site build, the Vite plugin runs `processCollections`
+ * In a regular Uniweb site build, the Vite plugin runs `processQueries`
  * + `writeCollectionFiles` and the runtime resolves `fetch:` declarations
  * over HTTP at render time. Under `unipress compile` neither of those
  * happens — there's no public dir, and SSR skips effects. We close the
@@ -82,14 +82,35 @@ function attachSectionFetches(sections, resolved, cascade = null) {
  * are left untouched (those have their own gaps; out of scope here).
  */
 async function resolveLocalCollections(siteContent, sitePath) {
-  const collectionsConfig = siteContent?.config?.collections
-  if (!collectionsConfig || typeof collectionsConfig !== 'object') return
-  if (Object.keys(collectionsConfig).length === 0) return
+  // ⛔ **`config.queries`, not `config.collections`.** The build renamed both the
+  // payload key and the function on 2026-08-29 (`@uniweb/build` e442738, "no
+  // identifier in build says `collection` any more") and this file was not
+  // carried across — the same shape that left `hosting` reading a key nothing
+  // emits, noted in `framework/CLAUDE.md` § *Decoupling is the architecture*.
+  //
+  // ⚠️ **The crash was the lucky half.** `processCollections` being undefined
+  // only threw because our own fixture still declared the retired
+  // `site.yml::collections`, which is passed through verbatim as an unrecognised
+  // key. A CURRENT site declares `queries:`, so this read returned undefined,
+  // the guard below returned early, and unipress compiled documents with **no
+  // query data and no error** — silent, which is why four days passed.
+  //
+  // Local identifiers keep the older word deliberately: `framework/CLAUDE.md`
+  // says renaming those is churn. Only the two names that cross a package
+  // boundary had to move.
+  const queriesConfig = siteContent?.config?.queries
+  if (!queriesConfig || typeof queriesConfig !== 'object') return
+  if (Object.keys(queriesConfig).length === 0) return
 
-  const resolved = await processCollections(
+  // ⛔ Third arg is the ENTITIES POOL override, not the site root. Passing
+  // `sitePath` made the pool resolve to `<site>/{schema}/` instead of
+  // `<site>/entities/{schema}/`, so every query matched nothing. `null` takes
+  // the default, which is what a site without `paths.entities` wants — the
+  // same value `@uniweb/build`'s own plugin computes (`paths.entities || null`).
+  const resolved = await processQueries(
     sitePath,
-    collectionsConfig,
-    sitePath,
+    queriesConfig,
+    siteContent?.config?.paths?.entities || null,
     '/',
   )
 
@@ -110,6 +131,14 @@ async function resolveLocalCollections(siteContent, sitePath) {
   // bibliography records that the Bibliography section declared on page
   // B. Foundations read this via `block.website.config.collections.<name>.records`
   // as a synchronous fallback.
+  //
+  // ⚠️ **This `config.collections` is UNIPRESS'S OWN KEY and stays** — do not
+  // "fix" it to `queries` the way the READ at the top of this file had to be
+  // fixed. The build's payload key was renamed `collections` → `queries`; this
+  // one is written here, consumed only by unipress's own foundations, and the
+  // build never emits or reads it. Two different things wearing one word is
+  // precisely what made the read above stay broken for four days, so the
+  // distinction is worth the four lines.
   if (!siteContent.config) siteContent.config = {}
   if (!siteContent.config.collections) siteContent.config.collections = {}
   for (const name of Object.keys(resolved)) {
