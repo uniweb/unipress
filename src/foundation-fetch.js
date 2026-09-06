@@ -203,7 +203,7 @@ async function fetchOne(url) {
     throw new FoundationFetchError(
       `could not fetch ${url}\n` +
       `cause: ${err.message}\n` +
-      `hint: is the registry reachable? (for localhost URLs, is unicloud running?)`
+      `hint: is the registry reachable? (for a localhost URL, is the backend running?)`
     )
   }
   if (!res.ok) {
