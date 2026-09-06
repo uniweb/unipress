@@ -1,33 +1,5 @@
 {
   "_self": {
-    "defaultLayout": "BusinessDocLayout",
-    "props": {},
-    "handlers": {},
-    "outputs": {
-      "pagedjs": {
-        "extension": "html"
-      },
-      "docx": {
-        "extension": "docx"
-      },
-      "xlsx": {
-        "extension": "xlsx"
-      }
-    },
-    "vars": {
-      "max-content-width": {
-        "default": "52rem",
-        "description": "Maximum width for body content (matches a printed letter page reading column)"
-      },
-      "section-padding-y": {
-        "default": "clamp(1.5rem, 3vw, 3rem)",
-        "description": "Vertical padding around each section"
-      },
-      "header-height": {
-        "default": "3.5rem",
-        "description": "Height of the sticky download bar in the web preview"
-      }
-    },
     "name": "@uniweb/business-docs",
     "version": "0.1.0",
     "description": "Business documents foundation for Uniweb. Renders statements of work, invoices, and engagement reports from YAML collections, with PDF/DOCX output via Press and XLSX export for filtered reports."
