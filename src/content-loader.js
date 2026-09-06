@@ -143,8 +143,8 @@ async function resolveLocalQueries(siteContent, sitePath) {
   // things, where `records`, `queries` and `entities` each carry meaning.
   //
   // This holds **records, keyed by the query that resolved them**, and the name
-  // now says exactly that. ⚠️ Not `config.records`, which the framework already
-  // uses for live record URL patterns (`core/src/query-address.js`).
+  // now says exactly that. ⚠️ Not `config.services.records`, which the framework
+  // already uses for the live records lane (`core/src/records-service.js`).
   //
   // The value is the record ARRAY directly, not `{ records: [...] }`. The
   // wrapper existed to merge with a pre-existing `config.collections` from the
