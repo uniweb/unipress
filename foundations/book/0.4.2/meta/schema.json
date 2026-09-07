@@ -2,7 +2,8 @@
   "_self": {
     "name": "@uniweb/book",
     "version": "0.4.2",
-    "description": "Book foundation for Uniweb. Long-form prose with chapters; outputs Typst/PDF, Paged.js HTML, EPUB, and LaTeX. Drives @uniweb/unipress's book/monograph/report/thesis/article templates."
+    "description": "Book foundation for Uniweb. Long-form prose with chapters; outputs Typst/PDF, Paged.js HTML, EPUB, and LaTeX. Drives @uniweb/unipress's book/monograph/report/thesis/article templates.",
+    "supports": []
   },
   "_layouts": {
     "BookLayout": {

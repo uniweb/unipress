@@ -2,7 +2,8 @@
   "_self": {
     "name": "@uniweb/data",
     "version": "0.1.0",
-    "description": "Data foundation for Uniweb. Aggregates structured records (members, publications, funding, supervisions) and emits Excel workbooks and Word reports. Drives @uniweb/unipress's data-report and directory templates."
+    "description": "Data foundation for Uniweb. Aggregates structured records (members, publications, funding, supervisions) and emits Excel workbooks and Word reports. Drives @uniweb/unipress's data-report and directory templates.",
+    "supports": []
   },
   "_layouts": {
     "MetricsLayout": {

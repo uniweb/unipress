@@ -2,7 +2,8 @@
   "_self": {
     "name": "@uniweb/business-docs",
     "version": "0.1.0",
-    "description": "Business documents foundation for Uniweb. Renders statements of work, invoices, and engagement reports from YAML collections, with PDF/DOCX output via Press and XLSX export for filtered reports."
+    "description": "Business documents foundation for Uniweb. Renders statements of work, invoices, and engagement reports from YAML collections, with PDF/DOCX output via Press and XLSX export for filtered reports.",
+    "supports": []
   },
   "_layouts": {
     "BusinessDocLayout": {
