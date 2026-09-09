@@ -48238,7 +48238,7 @@ function z_() {
             return s;
           };
         }
-        (u.prototype = e("./object")).loadAsync = e("./load"), u.support = e("./support"), u.defaults = e("./defaults"), u.version = "3.10.1", u.loadAsync = function(s, i) {
+        (u.prototype = e("./object")).loadAsync = e("./load"), u.support = e("./support"), u.defaults = e("./defaults"), u.version = "3.10.2", u.loadAsync = function(s, i) {
           return new u().loadAsync(s, i);
         }, u.external = e("./external"), f.exports = u;
       }, { "./defaults": 5, "./external": 6, "./load": 11, "./object": 15, "./support": 30 }], 11: [function(e, f, p) {
@@ -48859,7 +48859,9 @@ function z_() {
           }
           return y.join("/");
         }, p.getTypeOf = function(m) {
-          return typeof m == "string" ? "string" : Object.prototype.toString.call(m) === "[object Array]" ? "array" : u.nodebuffer && i.isBuffer(m) ? "nodebuffer" : u.uint8array && m instanceof Uint8Array ? "uint8array" : u.arraybuffer && m instanceof ArrayBuffer ? "arraybuffer" : void 0;
+          if (typeof m == "string") return "string";
+          var d = Object.prototype.toString.call(m);
+          return d === "[object Array]" ? "array" : u.nodebuffer && i.isBuffer(m) ? "nodebuffer" : u.uint8array && d === "[object Uint8Array]" ? "uint8array" : u.arraybuffer && d === "[object ArrayBuffer]" ? "arraybuffer" : void 0;
         }, p.checkSupport = function(m) {
           if (!u[m.toLowerCase()]) throw new Error(m + " is not supported by this platform");
         }, p.MAX_VALUE_16BITS = 65535, p.MAX_VALUE_32BITS = -1, p.pretty = function(m) {
@@ -48880,14 +48882,14 @@ function z_() {
           return y;
         }, p.prepareContent = function(m, d, y, g, v) {
           return a.Promise.resolve(d).then(function(E) {
-            return u.blob && (E instanceof Blob || ["[object File]", "[object Blob]"].indexOf(Object.prototype.toString.call(E)) !== -1) && typeof FileReader < "u" ? new a.Promise(function(k, N) {
+            return u.blob && (E instanceof Blob || ["[object File]", "[object Blob]"].indexOf(Object.prototype.toString.call(E)) !== -1) ? Blob.prototype.arrayBuffer !== void 0 ? E.arrayBuffer() : typeof FileReader < "u" ? new a.Promise(function(k, N) {
               var H = new FileReader();
               H.onload = function(U) {
                 k(U.target.result);
               }, H.onerror = function(U) {
                 N(U.target.error);
               }, H.readAsArrayBuffer(E);
-            }) : E;
+            }) : a.Promise.reject(new Error(m + " is a Blob, but we have no way of reading it.")) : E;
           }).then(function(E) {
             var k = p.getTypeOf(E);
             return k ? (k === "arraybuffer" ? E = p.transformTo("uint8array", E) : k === "string" && (v ? E = s.decode(E) : y && g !== !0 && (E = (function(N) {
