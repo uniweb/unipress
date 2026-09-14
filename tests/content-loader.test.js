@@ -15,12 +15,12 @@ function pageWithSection(content, stableId) {
 
 describe('content-loader — local collection resolution', () => {
   // Regression guard for the unipress-compile nested-data bug: a page-level
-  // `data:` declaration must reach sections nested via page.yml `nest:`, not
+  // `query:` declaration must reach sections nested via page.yml `nest:`, not
   // just top-level sections. Before the fix the cascade stopped at the top
   // level, so a nested child's content handler (e.g. Loom `source:`) ran with
   // an empty `parsedContent.data` and produced no rows while its heading still
   // rendered. See fixtures/nested-page-data.
-  it('cascades a page-level `data:` declaration into nested child sections', async () => {
+  it('cascades a page-level `query:` declaration into nested child sections', async () => {
     const { content } = await loadContent(fixture('nested-page-data'))
 
     const page = pageWithSection(content, 'parent')
@@ -42,6 +42,27 @@ describe('content-loader — local collection resolution', () => {
     // recursive section walk.
     expect(Array.isArray(childData)).toBe(true)
     expect(childData.length).toBe(parentData.length)
+  })
+})
+
+describe('content-loader — a page or section that declares several queries', () => {
+  // `query: [members, views]` is a LIST of fetches. Until 2026-09-14 only a single
+  // fetch was attached, so a page declaring two queries — the data-report document's
+  // `query: [members, queries]` — compiled with neither, and its report sections
+  // rendered their headings over no rows.
+  it('attaches every query of a page-level list to each section, under its own key', async () => {
+    const { content } = await loadContent(fixture('multi-query-page'))
+    const page = pageWithSection(content, 'summary')
+    const summary = page.sections.find((s) => s.stableId === 'summary')
+    expect(summary.parsedContent?.data?.members?.map((m) => m.name).sort()).toEqual(['Ada', 'Grace'])
+    expect(summary.parsedContent?.data?.views?.map((v) => v.title)).toEqual(['All members'])
+  })
+
+  it('a section\'s own list is attached too, and the page\'s fills the keys it does not name', async () => {
+    const { content } = await loadContent(fixture('multi-query-page'))
+    const own = pageWithSection(content, 'own').sections.find((s) => s.stableId === 'own')
+    expect(own.parsedContent?.data?.views?.map((v) => v.title)).toEqual(['All members'])
+    expect(own.parsedContent?.data?.members?.length).toBe(2)
   })
 })
 

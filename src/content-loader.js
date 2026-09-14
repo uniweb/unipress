@@ -14,10 +14,10 @@ import { collectSiteContent, processQueries } from '@uniweb/build/content'
 import { detectConfigFile, CONFIG_FILE_NAMES } from './document-yml.js'
 import { ContentDirectoryError, DocumentYmlError } from './errors.js'
 
-// Match a parsed collection-backed fetch path. parseFetchConfig (in
-// @uniweb/build) normalises `{ collection: <name> }` into
-// `{ path: '/data/<name>.json', schema: <name>, ... }` — so this regex is
-// the inverse: pull the collection name back out of the resolved path.
+// Match a parsed query-backed fetch path. parseFetchConfig (in @uniweb/build)
+// normalises `{ query: <name> }` into `{ query, path: '/data/<name>.json',
+// as: <name>, ... }` — so this regex is the inverse: pull the query name back
+// out of the resolved path.
 const COLLECTION_PATH_RE = /^\/data\/(.+)\.json$/
 
 function attachData(section, key, data) {
@@ -43,19 +43,32 @@ function findQueryRecords(fetchConfig, resolved) {
   return records
 }
 
-// Walk a section tree attaching collection records to each section's
-// parsedContent.data.<schema>. A section's OWN fetch is attached first
-// (so it wins under attachData's first-writer-wins guard); the page-level
-// `cascade` ({ schema, records }) then fills any remaining gap — for this
+// The records of every query a level declares — one fetch, or a list of them
+// (`query: [members, queries]`), each under its own binding key. ⛔ Until
+// 2026-09-14 a list was left untouched, so a page declaring two queries compiled
+// with neither.
+function queryBindings(fetch, resolved) {
+  const list = Array.isArray(fetch) ? fetch : fetch ? [fetch] : []
+  const out = []
+  for (const one of list) {
+    const records = findQueryRecords(one, resolved)
+    if (records) out.push({ key: one.as, records })
+  }
+  return out
+}
+
+// Walk a section tree attaching query records to each section's
+// parsedContent.data.<key>. A section's OWN queries are attached first
+// (so they win under attachData's first-writer-wins guard); the page-level
+// `cascade` ([{ key, records }]) then fills any remaining gap — for this
 // section AND every nested subsection. Threading the cascade through the
-// recursion is what lets a page-level `data:` declaration reach nested
+// recursion is what lets a page-level `query:` declaration reach nested
 // children (declared via page.yml `nest:`), not just top-level sections.
-function attachSectionFetches(sections, resolved, cascade = null) {
+function attachSectionFetches(sections, resolved, cascade = []) {
   if (!Array.isArray(sections)) return
   for (const section of sections) {
-    const records = findQueryRecords(section.fetch, resolved)
-    if (records) attachData(section, section.fetch.as, records)
-    if (cascade) attachData(section, cascade.key, cascade.records)
+    for (const { key, records } of queryBindings(section.fetch, resolved)) attachData(section, key, records)
+    for (const { key, records } of cascade) attachData(section, key, records)
     if (Array.isArray(section.subsections) && section.subsections.length) {
       attachSectionFetches(section.subsections, resolved, cascade)
     }
@@ -73,15 +86,14 @@ function attachSectionFetches(sections, resolved, cascade = null) {
  * happens — there's no public dir, and SSR skips effects. We close the
  * gap by resolving collections in-memory and attaching the records
  * directly to each block's `parsedContent.data.<schema>`. The Block
- * constructor (framework/core/src/block.js) preserves that field, and
- * `prepareProps` then surfaces it as `content.data.<schema>` to the
- * component — same shape the runtime would produce.
+ * constructor (framework/core/src/block.js) keeps that field as what the
+ * section holds, and `prepareProps` surfaces it under each key the section's
+ * component declares — the same shape the runtime would produce.
  *
- * Page-level fetch cascades to every section on the page; section-level
- * fetch overrides on a per-section basis. Only collection-backed fetches
- * (parsed `path: '/data/<name>.json'`) are resolved here — remote URL
- * fetches, refine configs, and array-form `fetch: [...]` declarations
- * are left untouched (those have their own gaps; out of scope here).
+ * Page-level queries cascade to every section on the page; a section's own
+ * override them per key. A level may declare one query or a list of them. Only
+ * query-backed fetches (parsed `path: '/data/<name>.json'`) are resolved here —
+ * an external query's `url:` is left to the browser.
  */
 async function resolveLocalQueries(siteContent, sitePath) {
   // ⛔ **`config.queries`, not `config.collections`.** The build renamed both the
@@ -120,11 +132,7 @@ async function resolveLocalQueries(siteContent, sitePath) {
     // Page-level fetch cascades to every section on the page — top-level
     // and nested alike. attachSectionFetches threads it through the whole
     // section tree; a section's own fetch still takes priority.
-    const pageRecords = findQueryRecords(page.fetch, resolved)
-    const cascade = pageRecords
-      ? { key: page.fetch.as, records: pageRecords }
-      : null
-    attachSectionFetches(page.sections, resolved, cascade)
+    attachSectionFetches(page.sections, resolved, queryBindings(page.fetch, resolved))
   }
 
   // Stash the resolved arrays on the website config too, so any section
