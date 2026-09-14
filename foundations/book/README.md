@@ -27,7 +27,7 @@ Both genres share the same section types, typography knobs, and code/math render
 
 ## Outputs
 
-Declared in `src/foundation.js` under `outputs:`:
+Declared in `src/main.js` under `outputs:`:
 
 | Format    | Adapter            | Notes |
 |-----------|--------------------|-------|
@@ -107,7 +107,7 @@ vars:
   header-height: 3.5rem           # web preview top bar
 ```
 
-Defaults live in `src/foundation.js`'s `vars:` block.
+Defaults live in `src/main.js`'s `vars:` block.
 
 ## See also
 

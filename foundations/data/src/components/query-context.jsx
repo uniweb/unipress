@@ -270,12 +270,12 @@ export function useFilteredMembers(content) {
   // With supports:[where], the where: splits the key and triggers a
   // separate fetch with the predicate.
   //
-  // NOTE: kit hooks take an explicit path:/url:; the `collection:`
+  // NOTE: kit hooks take an explicit path:/url:; the `query:`
   // shorthand is build-time only. To swap to a backend, change BOTH
   // the page-level fetch (in page.yml) AND the path here.
   const { data: fetched, loading } = useFetched(
     active.where
-      ? { path: '/data/members.json', schema: 'members', where: active.where }
+      ? { path: '/data/members.json', as: 'members', where: active.where }
       : null,
   )
 

@@ -8,8 +8,8 @@
  *      dedicated `thesis.yml` at the site root. Recommended for a
  *      thesis where the structured data is reused across multiple
  *      front-matter sections.
- *   3. Content collections — when params.data names a collection,
- *      reads `content.data[<name>]` (one record).
+ *   3. A query — `content.data.thesis` (one record), filled by a
+ *      `query: thesis` on the section or its page.
  *
  * For LaTeX, emits the canonical UofT-style title page laid out
  * manually with \\begin{titlepage} ... \\end{titlepage}. ut-thesis.cls
@@ -22,9 +22,8 @@ import { useDocumentOutput } from '@uniweb/press'
 import { Raw } from '@uniweb/press/typst'
 
 function resolveData({ content, params, block }) {
-    const dataName = params?.data || 'thesis'
-    const fromCollection = content?.data?.[dataName]
-    const fromConfig = block?.website?.config?.[dataName]
+    const fromCollection = Array.isArray(content?.data?.thesis) ? content.data.thesis[0] : content?.data?.thesis
+    const fromConfig = block?.website?.config?.thesis
     const fromFrontmatter = {
         title: content?.title,
         subtitle: content?.subtitle,

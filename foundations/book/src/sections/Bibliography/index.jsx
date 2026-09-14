@@ -2,8 +2,10 @@
  * Bibliography — back-matter section that formats a list of CSL-shaped
  * records through citestyle.
  *
- * Reads its records from `content.data[<dataName>]` (a `data: <name>` /
- * `fetch: { collection: <name> }` declaration on the section or page).
+ * Reads its records from `content.data.bibliography` — the key its meta.js
+ * declares, filled by a `query: bibliography` on the section or its page, or by
+ * any query of another name bound to it (`fetch: { query: further-reading,
+ * as: bibliography }`).
  * Under `unipress compile`, content-loader.js resolves file-based
  * collections in-memory and attaches the array to the section's
  * `parsedContent.data.<schema>` — and also stashes the resolved array
@@ -81,17 +83,16 @@ export default function Bibliography({ content, params, block }) {
   const website = block?.website
   const bookCfg = website?.config?.book || {}
 
-  const dataName = params?.data || 'bibliography'
   const styleName = params?.style || bookCfg.citationStyle || DEFAULT_STYLE
   const style = pickStyle(styleName)
   const sortBy = params?.sortBy || bookCfg.bibliography?.sortBy || 'author'
   const heading = params?.title || content?.title || 'Bibliography'
 
-  // Resolved by content-loader from `data: <name>` on the section.
+  // Resolved by content-loader from the section's (or its page's) query.
   const records = useMemo(() => {
-    const v = content?.data?.[dataName]
+    const v = content?.data?.bibliography
     return Array.isArray(v) ? v : []
-  }, [content?.data, dataName])
+  }, [content?.data])
 
   // Pre-sort the records (author / year / collection-order). For numbered
   // styles, the registry assigns citation numbers in addItems insertion

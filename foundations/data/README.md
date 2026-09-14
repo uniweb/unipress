@@ -50,9 +50,8 @@ Same author code, same foundation code, same components. Switching modes is one 
 foundation: '@uniweb/data@0.1.0'
 format: xlsx
 
-collections:
-  members:
-    path: collections/members
+queries:
+  members:          # its records live in entities/members/
     queryable:
       department:
         type: enum

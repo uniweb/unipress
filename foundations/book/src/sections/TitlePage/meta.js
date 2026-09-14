@@ -6,9 +6,9 @@
  * shape supports a UofT-style thesis, but any institution that
  * provides equivalent fields can use this section.
  *
- * Authors set the data via frontmatter or `data: thesis` to read from
- * a `thesis.yml` collection-style document at the site root. The
- * monograph template uses frontmatter directly; the thesis template
+ * Authors set the data via frontmatter, a `thesis:` block in the
+ * document's config (`thesis.yml` at the site root), or a `query: thesis`.
+ * The monograph template uses frontmatter directly; the thesis template
  * uses thesis.yml for cleaner separation.
  *
  * Compile-side: emits a UofT-shaped title page in LaTeX (no \maketitle
@@ -17,11 +17,11 @@
  * a centered prose layout.
  */
 export default {
+    // The `content.data` key this section reads — one thesis record, when a
+    // query fills it. `{}`: no schema.
+    data: { thesis: {} },
+
     defaults: {
-        // When set, read structured data from website.config.thesis
-        // or content.data[<dataName>]. Otherwise use the section's
-        // own frontmatter (title, subtitle, author, etc.).
-        data: 'thesis',
         // Override the institutional template hint. 'uoft' is the
         // shipped default; foundations / sites can supply their own
         // string and route on it via params.template.

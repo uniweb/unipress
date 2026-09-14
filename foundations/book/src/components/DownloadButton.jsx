@@ -12,14 +12,14 @@
  *      Paged.js on Press's side.
  *
  * Per-format details (meta assembly, preamble, template, cover fetch)
- * live on the foundation's outputs declaration (src/foundation.js +
+ * live on the foundation's outputs declaration (src/main.js +
  * src/compile-options.js). This component just maps UI intent to format
  * + mode + delivery.
  */
 import React, { useState } from 'react'
 import { compileDocument, triggerDownload } from '@uniweb/press'
 import { useWebsite } from '@uniweb/kit'
-import foundation from '../foundation.js'
+import foundation from '../main.js'
 
 /**
  * In split-mode sites, some pages defer loading their markdown until

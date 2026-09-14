@@ -2,7 +2,7 @@
  * Per-format adapter-options builders for the book's declared outputs.
  *
  * These are the functions referenced by `outputs[format].getOptions` in
- * foundation.js. They assemble what Press's format adapters need — meta,
+ * main.js. They assemble what Press's format adapters need — meta,
  * preamble, template, cover assets, stylesheet — from the site's config,
  * and return `{ adapterOptions }` for compileDocument to pass through.
  *

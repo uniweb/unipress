@@ -2,7 +2,7 @@
  * Members — roster of the currently-filtered member set.
  *
  * Reads the already-filtered list from `content.data.members` (see
- * foundation.js for the simulated-backend explanation). Renders a web
+ * main.js for the simulated-backend explanation). Renders a web
  * preview as a styled HTML table and registers an xlsx sheet with the
  * same rows.
  *

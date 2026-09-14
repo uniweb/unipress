@@ -10,7 +10,7 @@
  *
  * Loom namespace shape exposed to {placeholders} in markdown:
  *
- *   - For single-record pages (data: invoice OR data: sow), the record's
+ *   - For single-record pages (query: invoice OR query: sow), the record's
  *     fields are flattened in (`{number}`, `{title}`, `{client.organization}`,
  *     `{items}`, `{deliverables}`, …).
  *   - For invoices, the namespace also carries computed totals
@@ -18,7 +18,7 @@
  *     `{total}`) so 03-totals.md can render with plain placeholders.
  *   - `{vendor.*}` and `{defaults.*}` always resolve from
  *     website.config.business_docs.
- *   - For aggregate pages (data: invoices, sows), `invoices` and `sows`
+ *   - For aggregate pages (query: [invoices, sows]), `invoices` and `sows`
  *     are exposed as arrays for `{COUNT OF invoices}`-style aggregation.
  */
 
@@ -57,8 +57,8 @@ function pickRecord(data, key) {
 /**
  * Single-record documents (the unipress invoice template, an SOW page in
  * a uniweb site) point Loom at one record. The page can either declare
- * the singular form (`data: invoice`) — which the handler picks via
- * data.invoice — or rely on a single-item collection (`data: invoices`),
+ * the singular form (`query: invoice`) — which the handler picks via
+ * data.invoice — or rely on a single-record query (`query: invoices`),
  * in which case the first item stands in. Authors don't need to know
  * the difference; only one invoice in scope means the page is
  * unambiguously about it.
@@ -84,8 +84,8 @@ function pickActiveSow(data) {
  *
  * The page-level fetch only carries the *active* collection (multi-fetch
  * isn't yet wired in the unipress orchestrator — see content-loader.js).
- * The fallback covers everything declared in document.yml's
- * `collections:` config so cross-record validation and cross-collection
+ * The fallback covers every query declared in document.yml's
+ * `queries:` so cross-record validation and cross-query
  * lookups (invoice → sow_ref) work on any page that fetched only one of
  * the two.
  */
@@ -192,7 +192,7 @@ function maybeLogValidation(data, block) {
   // Run cross-record validation whenever both collections are reachable
   // — either via the page's own fetch (data.invoices / data.sows) or via
   // the website-config fallback that unipress populates from
-  // document.yml's collections: declaration. One log line per block is
+  // document.yml's `queries:`. One log line per block is
   // enough; using a WeakSet keyed by block survives dev-server hot
   // reloads and is GC'd when the page unmounts.
   const invoices = gatherRecords('invoices', data, block)
@@ -207,6 +207,11 @@ function maybeLogValidation(data, block) {
 export default {
   defaultLayout: 'BusinessDocLayout',
   props: {},
+
+  // ⭐ The `content.data` keys every section receives — what the handlers below read
+  // (a single record, or both lists) and what useFilteredEngagement reads in
+  // EngagementReport. A section receives only the keys declared for it.
+  data: { invoices: {}, sows: {}, invoice: {}, sow: {} },
 
   handlers: {
     content: (data, block) => {

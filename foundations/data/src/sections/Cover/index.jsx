@@ -23,7 +23,7 @@ export default function Cover({ content, block }) {
   const { members, activeView, activeLabel, totalCount } = useFilteredMembers(content)
 
   // Loom-resolved narrative paragraphs — the content handler in
-  // foundation.js has already instantiated {COUNT OF members}, etc.,
+  // main.js has already instantiated {COUNT OF members}, etc.,
   // so content.paragraphs arrives as plain strings at this point.
   // These reflect the UNIT as a whole, not the current query filter.
   const narrative = Array.isArray(content?.paragraphs)
