@@ -1,5 +1,34 @@
 {
   "_self": {
+    "defaultLayout": "MetricsLayout",
+    "props": {},
+    "data": {
+      "members": {},
+      "queries": {}
+    },
+    "handlers": {},
+    "outputs": {
+      "xlsx": {
+        "extension": "xlsx"
+      },
+      "docx": {
+        "extension": "docx"
+      }
+    },
+    "vars": {
+      "max-content-width": {
+        "default": "72rem",
+        "description": "Maximum width for body content (wider than a book; tables need room)"
+      },
+      "section-padding-y": {
+        "default": "clamp(2rem, 4vw, 4rem)",
+        "description": "Vertical padding around each section"
+      },
+      "report-gap": {
+        "default": "clamp(2rem, 4vw, 4rem)",
+        "description": "Gap between report sections"
+      }
+    },
     "name": "@uniweb/data",
     "version": "0.1.0",
     "description": "Data foundation for Uniweb. Aggregates structured records (members, publications, funding, supervisions) and emits Excel workbooks and Word reports. Drives @uniweb/unipress's data-report and directory templates.",
@@ -45,6 +74,10 @@
     "content": {
       "title": "Section heading (defaults to \"Members\")"
     },
+    "data": {
+      "members": {},
+      "queries": {}
+    },
     "params": {}
   },
   "PublicationsByJournal": {
@@ -87,10 +120,8 @@
     "description": "Formatted bibliography across the filtered member set. Applies the date-range and refereed-only filters and formats each entry through citestyle using the active citation style. Preview uses the per-field HTML citestyle emits; xlsx records citation text + year + author; docx uses a hanging-indent paragraph per entry.",
     "category": "academic-metrics",
     "data": {
-      "inherit": [
-        "members",
-        "queries"
-      ]
+      "members": {},
+      "queries": {}
     },
     "content": {
       "title": "Section heading (defaults to \"Publications\")"
