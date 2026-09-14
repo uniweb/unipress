@@ -1,10 +1,8 @@
 title: Invoice INV-0001
 description: Demo subscription invoice billing against the platform-redesign SOW.
 
-# Page-level fetch surfaces the active collection on every section as
-# data.invoices. SOWs are reachable via block.website.config.recordsByQuery.sows
-# (unipress's synchronous cross-page fallback), which the foundation
-# handler uses for cross-record validation without a second fetch
-# declaration. Multi-fetch (`fetch: [a, b]`) isn't yet supported by
-# the unipress orchestrator (see content-loader.js).
-data: invoices
+# Page-level query surfaces the invoices on every section as data.invoices.
+# SOWs are reachable via block.website.config.recordsByQuery.sows (unipress's
+# synchronous cross-page fallback), which the foundation handler uses for
+# cross-record validation without a second query.
+query: invoices

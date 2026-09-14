@@ -35,7 +35,7 @@ Reports often cite — primary sources backing findings, prior work in methodolo
 1. Uncomment the `citationStyle:` block under `book:` and the `queries:` block at the bottom of `document.yml`.
 2. Create `entities/bibliography/` and drop a `.bib` file in (each `@entry{key, ...}` becomes one record; the cite key is what you reference with `[@key]`). Hand-written YAML in CSL-JSON shape works alongside it if you'd rather edit entries directly.
 3. Cite in prose: `[@smith2024]`, `[@smith2024]{page=12}` for a locator, `[@a; @b]` for a multi-cite cluster, `[@key]{suppress-author}` when the author is named in the running prose.
-4. Add a back-matter content file (e.g. `99-bibliography.md`) with `type: Bibliography` and `data: bibliography` in frontmatter.
+4. Add a back-matter content file (e.g. `99-bibliography.md`) with `type: Bibliography` and `query: bibliography` in frontmatter.
 
 Pick a citation style by setting `book.citationStyle:` to one of `chicago-author-date`, `apa`, `mla`, `harvard`, `ieee`, `vancouver`, `ama`, `nature`, `science`. For numbered styles (IEEE, Vancouver, Nature, etc.), the back-matter list reuses the same numbering as the inline cites — `[1]` inline matches `[1]` in the back-matter.
 

@@ -1,4 +1,4 @@
 title: Doc
-data: profile
+query: profile
 nest:
   parent: [child]

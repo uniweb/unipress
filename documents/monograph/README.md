@@ -100,7 +100,7 @@ A missing key never breaks the compile — the `[?]` mark is a visible reminder 
 ---
 type: Bibliography
 title: References
-data: bibliography
+query: bibliography
 ---
 ```
 

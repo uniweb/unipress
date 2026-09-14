@@ -1,5 +1,5 @@
 ---
 type: Bibliography
 title: References
-data: bibliography
+query: bibliography
 ---

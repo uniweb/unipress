@@ -8,6 +8,4 @@ description: An aggregate report across the selected set of members. Same data f
 # (a foundation-provided hook backed by useFetched), which composes
 # the active predicate from page.state and lets the framework decide
 # whether to ship it to the source or evaluate it locally.
-fetch:
-  - { collection: members }
-  - { collection: queries }
+query: [members, queries]
