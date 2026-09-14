@@ -14,8 +14,8 @@ unipress compile . --format xlsx --out faculty.xlsx
 
 ```
 faculty/
-├── document.yml          pinned to @uniweb/data@<version>; one queryable collection
-├── collections/
+├── document.yml          pinned to @uniweb/data@<version>; one queryable query
+├── entities/
 │   └── members/          three sample records
 └── content/
     └── directory/        cover (Loom-rendered count) + listing
@@ -28,15 +28,15 @@ faculty/
 | `name`                      | Workbook title.                                        |
 | `format`                    | `xlsx` (default) or `docx`.                            |
 | `index`                     | Routes `/` → `content/directory`.                        |
-| `collections.members.path`  | Where the records live (`collections/members`).        |
-| `collections.members.queryable` | Filterable fields — drives the FilterPanel UI.    |
+| `queries.members`           | The query over the records in `entities/members/`.     |
+| `queries.members.queryable` | Filterable fields — drives the FilterPanel UI.         |
 
 ## Add an entry
 
-Drop a YAML file under `collections/members/`. Filename (stem) becomes the slug:
+Drop a YAML file under `entities/members/`. Filename (stem) becomes the slug:
 
 ```yaml
-# collections/members/your-name.yml
+# entities/members/your-name.yml
 name: "Your Name"
 role: member          # or lead / advisor
 department: sciences  # or engineering / humanities

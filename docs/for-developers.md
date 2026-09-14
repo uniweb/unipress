@@ -29,8 +29,10 @@ A document is rarely just prose. Foundations declare data inputs; authors fill t
 
 - **Markdown content** — the prose body of each `.md` file, parsed into a structured tree (title, paragraphs, items, links, images, code blocks).
 - **Frontmatter params** — declared in each section's YAML frontmatter, typed by the foundation's `meta.js`.
-- **File-based collections** — `collections/publications.json`, `collections/team.yml`, or markdown frontmatter swept into a list at build time. Compile to one `/data/<name>.json` per collection.
-- **API-backed collections** — declare a fetcher in `document.yml`; the build pipeline resolves it at compile time. The foundation reads `content.data` and renders.
+- **File-based queries** — records under `entities/<name>/` (JSON, YAML, BibTeX, or markdown frontmatter), named by a query under `queries:` in `document.yml`. Compile to one `/data/<name>.json` per query.
+- **External queries** — a query with `url:` names a public API. A website's visitors' browsers fetch it; `unipress compile` reads file-based queries only.
+
+A section type declares the `content.data` keys it reads in its `meta.js` `data:` — `data: { publications: {} }` — and a section receives those keys and nothing else. Keys a foundation's content handlers read go in its `main.js` `data:`, and every section receives them.
 - **Computed values via [Loom](https://github.com/uniweb/loom)** — Loom is an expression language for instantiating templates against hierarchical data. Pull a publications list from a collection, format each entry with a Loom expression, and the result lands typeset in your output.
 
 All of these flow through the same foundation pipeline — same primitives whether the data came from a YAML file, a JSON dump, or an API endpoint.
@@ -41,12 +43,12 @@ For scholarly work specifically, [`citestyle`](https://github.com/uniweb/csl) ha
 
 The combination is the powerful part. Loom interpolates ("In {section.title}, we describe…"); citestyle formats bibliographic entries (a complete back-matter `Bibliography`, or inline `[Author Year]` citation marks). A thesis, monograph, or annual research report uses both: Loom for dynamic prose and per-section metadata, citestyle for every bibliographic touch in the document.
 
-Working example: the `data-report` template ships a `PublicationsList` section backed by YAML bib data in `collections/members/*.yml`, with per-section style selection. Run `unipress create my-report --template data-report` to see it. Bibliography support in long-form prose templates (`book`, `monograph`, future `thesis`/`paper`) lands across upcoming releases.
+Working example: the `data-report` template ships a `PublicationsList` section backed by YAML bib data in `entities/members/*.yml`, with per-section style selection. Run `unipress create my-report --template data-report` to see it. Bibliography support in long-form prose templates (`book`, `monograph`, future `thesis`/`paper`) lands across upcoming releases.
 
 ## Outputs are foundation-declared
 
 ```js
-// foundation/src/foundation.js
+// foundation/src/main.js
 export default {
   outputs: {
     pdf:    { extension: 'pdf', via: 'typst', getOptions: buildTypstOptions },
@@ -83,9 +85,9 @@ A content author writes:
 ---
 type: PublicationsList
 title: "Publications"
-data: publications
-filter:
-  year: 2024
+fetch:
+  query: publications
+  where: { year: 2024 }
 ---
 
 The group published 47 papers in 2024, a 30% increase over 2023.
@@ -96,7 +98,7 @@ The group published 47 papers in 2024, a 30% increase over 2023.
 ## Where to go from here
 
 - **Foundation contract** — the `outputs:` map, `meta.js` section-type discovery, the `getOptions(website, hostHints)` signature: see [foundation configuration](https://github.com/uniweb/docs/blob/main/reference/foundation-config.md).
-- **Data fetching** — collections, fetchers, predicates, where-objects, deferred fields: see the [data fetching reference](https://github.com/uniweb/docs/blob/main/reference/data-fetching.md).
+- **Data fetching** — queries, the keys a section receives, predicates, where-objects, deferred fields: see the [data fetching reference](https://github.com/uniweb/docs/blob/main/reference/data-fetching.md).
 - **Loom** — expression language for instantiating templates against hierarchical data: [`@uniweb/loom`](https://github.com/uniweb/loom).
 - **citestyle** — CSL-based citation and bibliography formatter. Domain-specific complement to Loom: Loom interpolates, citestyle formats academic-style references: [`citestyle`](https://github.com/uniweb/csl).
 - **Press (the output layer)** — [`@uniweb/press`](https://github.com/uniweb/press) docs cover the registration pattern foundations consume, the IR layer for custom adapters, and per-adapter notes (docx invariants, typst conventions, the EPUB pipeline).

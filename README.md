@@ -199,7 +199,8 @@ The content-directory-level config. Fields unipress reads:
 | `format` | Default output format. Overridable by CLI `--format` or `unipress.config.js`. |
 | `content:` | Reading order — chapter names with any numeric prefix stripped (`00-intro.md` → `intro`). `pages:` is accepted as an alias. |
 | `paths:` | Content-directory overrides. `paths: { pages: . }` reads markdown loose at the project root instead of a `content/` subfolder. |
-| `book:`, `report:`, `collections:` … | Foundation-specific config blocks. The foundation's `getOptions` reads these. |
+| `queries:` | The queries a document's sections fetch by name (`query: bibliography`); a query's records live under `entities/<name>/`. |
+| `book:`, `report:`, `thesis:` … | Foundation-specific config blocks. The foundation's `getOptions` reads these. |
 
 `site.yml` is also accepted as a fallback for compatibility with existing Uniweb site directories.
 
