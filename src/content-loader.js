@@ -33,8 +33,8 @@ function attachData(section, key, data) {
 }
 
 function findQueryRecords(fetchConfig, resolved) {
-  // `as` is the binding key; `schema` is its pre-2026-09-02 name, still on any
-  // payload written before then.
+  // `as` is the binding key, as the build writes it — it wrote `schema` until
+  // 2026-09-02, and no alias is read.
   if (!fetchConfig?.path || !fetchConfig.as) return null
   const m = COLLECTION_PATH_RE.exec(fetchConfig.path)
   if (!m) return null
@@ -84,16 +84,21 @@ function attachSectionFetches(sections, resolved, cascade = []) {
  * + `writeCollectionFiles` and the runtime resolves `fetch:` declarations
  * over HTTP at render time. Under `unipress compile` neither of those
  * happens — there's no public dir, and SSR skips effects. We close the
- * gap by resolving collections in-memory and attaching the records
- * directly to each block's `parsedContent.data.<schema>`. The Block
- * constructor (framework/core/src/block.js) keeps that field as what the
- * section holds, and `prepareProps` surfaces it under each key the section's
- * component declares — the same shape the runtime would produce.
+ * gap by resolving queries in-memory and attaching the records directly to
+ * each block's `parsedContent.data.<as>`. The Block constructor
+ * (framework/core/src/block.js) keeps that field as what the section holds,
+ * and `prepareProps` gives the component each key it declares from it.
+ *
+ * ⚠️ BY NAME ONLY. The web runtime also fills a declared key from a query of
+ * another name when their schemas match (`fillDeclaredKeys`, automatic `as`);
+ * nothing here does, so a document binds such a query with `as:`. The
+ * foundations in this repo declare `{}` keys, which pair by name on both.
  *
  * Page-level queries cascade to every section on the page; a section's own
  * override them per key. A level may declare one query or a list of them. Only
  * query-backed fetches (parsed `path: '/data/<name>.json'`) are resolved here —
- * an external query's `url:` is left to the browser.
+ * an external query's `url:` is not fetched: a document compiles from the
+ * site's own records.
  */
 async function resolveLocalQueries(siteContent, sitePath) {
   // ⛔ **`config.queries`, not `config.collections`.** The build renamed both the
