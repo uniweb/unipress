@@ -1,0 +1,7 @@
+name: narrowed-fetch
+queries:
+  members: {}
+  newest:
+    schema: '@/members'
+    sort: joined desc
+    limit: 1

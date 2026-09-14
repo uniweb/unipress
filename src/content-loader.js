@@ -11,6 +11,7 @@
 import { existsSync, readdirSync } from 'node:fs'
 import { resolve, join, basename } from 'node:path'
 import { collectSiteContent, processQueries } from '@uniweb/build/content'
+import { resolveFetchConfigs, evaluateQuery, parentRouteOf, siteReaches } from '@uniweb/core'
 import { detectConfigFile, CONFIG_FILE_NAMES } from './document-yml.js'
 import { ContentDirectoryError, DocumentYmlError } from './errors.js'
 
@@ -44,15 +45,23 @@ function findQueryRecords(fetchConfig, resolved) {
 }
 
 // The records of every query a level declares — one fetch, or a list of them
-// (`query: [members, queries]`), each under its own binding key. ⛔ Until
-// 2026-09-14 a list was left untouched, so a page declaring two queries compiled
-// with neither.
-function queryBindings(fetch, resolved) {
+// (`query: [members, queries]`), each under its own binding key, as that fetch
+// selects them. ⛔ Until 2026-09-14 a list was left untouched, so a page declaring
+// two queries compiled with neither.
+//
+// ⭐ SELECTED AS THE RUNTIME SELECTS FROM A COMPILED FILE — the query as saved (its
+// `scope`, `sort` and `limit`, which a build leaves to the runtime), then the fetch's
+// own `where`, `sort` and `limit`, by the one evaluator (`evaluateQuery`). ⛔ Until
+// 2026-09-14 every fetch received its query's whole compiled file, so
+// `fetch: { query: publications, where: { year: 2024 } }` compiled every year.
+function queryBindings(fetch, resolved, { queries = null, locale = null } = {}) {
   const list = Array.isArray(fetch) ? fetch : fetch ? [fetch] : []
   const out = []
   for (const one of list) {
     const records = findQueryRecords(one, resolved)
-    if (records) out.push({ key: one.as, records })
+    if (!records) continue
+    const cfg = resolveFetchConfigs([one], { queries, locale, defaultLocale: locale }).get(one.as)
+    out.push({ key: one.as, records: cfg ? evaluateQuery(records, cfg, { locale }) : records })
   }
   return out
 }
@@ -64,13 +73,13 @@ function queryBindings(fetch, resolved) {
 // section AND every nested subsection. Threading the cascade through the
 // recursion is what lets a page-level `query:` declaration reach nested
 // children (declared via page.yml `nest:`), not just top-level sections.
-function attachSectionFetches(sections, resolved, cascade = []) {
+function attachSectionFetches(sections, resolved, cascade = [], options = {}) {
   if (!Array.isArray(sections)) return
   for (const section of sections) {
-    for (const { key, records } of queryBindings(section.fetch, resolved)) attachData(section, key, records)
+    for (const { key, records } of queryBindings(section.fetch, resolved, options)) attachData(section, key, records)
     for (const { key, records } of cascade) attachData(section, key, records)
     if (Array.isArray(section.subsections) && section.subsections.length) {
-      attachSectionFetches(section.subsections, resolved, cascade)
+      attachSectionFetches(section.subsections, resolved, cascade, options)
     }
   }
 }
@@ -84,18 +93,22 @@ function attachSectionFetches(sections, resolved, cascade = []) {
  * + `writeCollectionFiles` and the runtime resolves `fetch:` declarations
  * over HTTP at render time. Under `unipress compile` neither of those
  * happens — there's no public dir, and SSR skips effects. We close the
- * gap by resolving queries in-memory and attaching the records directly to
- * each block's `parsedContent.data.<as>`. The Block constructor
- * (framework/core/src/block.js) keeps that field as what the section holds,
- * and `prepareProps` gives the component each key it declares from it.
+ * gap by resolving queries in-memory and attaching each fetch's records
+ * directly to the block's `parsedContent.data.<as>`. The Block constructor
+ * (framework/core/src/block.js) keeps that field as what the section holds.
  *
- * ⚠️ BY NAME ONLY. The web runtime also fills a declared key from a query of
- * another name when their schemas match (`fillDeclaredKeys`, automatic `as`);
- * nothing here does, so a document binds such a query with `as:`. The
- * foundations in this repo declare `{}` keys, which pair by name on both.
+ * ⭐ THE RUNTIME PAIRS THEM WITH THE COMPONENT'S KEYS, NOT THIS FILE. At render
+ * the entity store fills each key the component declares from the fetches that
+ * reach the section — by name, then by the query's schema (`fillDeclaredKeys`,
+ * automatic `as`) — and delivers a fetch's answer the section already holds
+ * under the fetch's own key without asking. So a key declared as `people:
+ * '@/member'` receives a `query: members` attached here as `members`, exactly as
+ * on a website. For that, every level the store reads is attached, in its order:
+ * the section's own queries, its page's, its parent page's, and the document's
+ * for a page with no parent.
  *
- * Page-level queries cascade to every section on the page; a section's own
- * override them per key. A level may declare one query or a list of them. Only
+ * A level's queries cascade to every section below it; a more specific one
+ * overrides them per key. A level may declare one query or a list of them. Only
  * query-backed fetches (parsed `path: '/data/<name>.json'`) are resolved here —
  * an external query's `url:` is not fetched: a document compiles from the
  * site's own records.
@@ -133,11 +146,29 @@ async function resolveLocalQueries(siteContent, sitePath) {
     '/',
   )
 
-  for (const page of siteContent.pages || []) {
-    // Page-level fetch cascades to every section on the page — top-level
-    // and nested alike. attachSectionFetches threads it through the whole
-    // section tree; a section's own fetch still takes priority.
-    attachSectionFetches(page.sections, resolved, queryBindings(page.fetch, resolved))
+  // What each fetch selects is evaluated in the document's language, as a text
+  // `sort` collates in the page's locale on a website.
+  const options = { queries: queriesConfig, locale: siteContent?.config?.defaultLanguage ?? null }
+  const pages = siteContent.pages || []
+  const byRoute = new Map(pages.map((page) => [page.route, page]))
+  const documentBindings = queryBindings(siteContent?.config?.fetch, resolved, options)
+  for (const page of pages) {
+    // ⭐ The levels a section's queries come from, most specific first — the entity
+    // store's (`EntityStore._levels`), so an answer is held for the fetch the store
+    // pairs a key with: the page's, its parent page's (`parentRouteOf`, the Website's
+    // one parent rule), and the document's own `query:` on a page with no parent
+    // (`siteReaches`). A section's own go first, in `attachSectionFetches`. The page's
+    // cascade reaches every section on it, top-level and nested alike. ⛔ Until
+    // 2026-09-14 only the page's was attached, so a parent page's or the document's
+    // `query:` reached no section — not even a key of the same name.
+    const parentRoute = parentRouteOf(page.route, { declared: page.parent, has: (route) => byRoute.has(route) })
+    const parent = parentRoute ? byRoute.get(parentRoute) : null
+    const cascade = [
+      ...queryBindings(page.fetch, resolved, options),
+      ...(parent && parent !== page ? queryBindings(parent.fetch, resolved, options) : []),
+      ...(siteReaches(parent) ? documentBindings : []),
+    ]
+    attachSectionFetches(page.sections, resolved, cascade, options)
   }
 
   // Stash the resolved arrays on the website config too, so any section

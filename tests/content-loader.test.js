@@ -64,6 +64,23 @@ describe('content-loader — a page or section that declares several queries', (
     expect(own.parsedContent?.data?.views?.map((v) => v.title)).toEqual(['All members'])
     expect(own.parsedContent?.data?.members?.length).toBe(2)
   })
+
+  // A fetch receives what it selects, as on a website: the query as saved (its `sort` and
+  // `limit`, which the build leaves to the runtime), then the fetch's own `where`, `sort`
+  // and `limit`. Until 2026-09-14 every fetch received the query's whole compiled file.
+  it('a fetch receives what it selects — its query\'s sort and limit, then its own narrowing', async () => {
+    const { content } = await loadContent(fixture('narrowed-fetch'))
+    const sections = pageWithSection(content, 'one').sections
+    const names = (id, key) => sections.find((s) => s.stableId === id).parsedContent?.data?.[key]?.map((m) => m.name)
+    expect(names('one', 'members')).toEqual(['Grace'])
+    expect(names('newest', 'newest')).toEqual(['Grace'])
+    expect(names('two', 'members')).toEqual(['Linus', 'Grace'])
+  })
+
+  it('CONTROL — the records by query stay whole', async () => {
+    const { content } = await loadContent(fixture('narrowed-fetch'))
+    expect(content.config.recordsByQuery.members.map((m) => m.name).sort()).toEqual(['Ada', 'Grace', 'Linus'])
+  })
 })
 
 describe('content-loader — alternate document config (--document)', () => {
