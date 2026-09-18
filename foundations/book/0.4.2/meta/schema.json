@@ -70,14 +70,17 @@
     "name": "@uniweb/book",
     "version": "0.4.2",
     "description": "Book foundation for Uniweb. Long-form prose with chapters; outputs Typst/PDF, Paged.js HTML, EPUB, and LaTeX. Drives @uniweb/unipress's book/monograph/report/thesis/article templates.",
-    "supports": []
+    "supports": [
+      "records"
+    ]
   },
   "_layouts": {
     "BookLayout": {
       "name": "BookLayout",
       "path": "layouts/BookLayout",
       "defaults": {},
-      "title": "Book Layout"
+      "title": "Book Layout",
+      "titleInferred": true
     }
   },
   "Abstract": {
@@ -86,7 +89,8 @@
     "defaults": {
       "title": "Abstract"
     },
-    "title": "Abstract"
+    "title": "Abstract",
+    "titleInferred": true
   },
   "Appendix": {
     "name": "Appendix",
@@ -94,19 +98,22 @@
     "defaults": {
       "auto": true
     },
-    "title": "Appendix"
+    "title": "Appendix",
+    "titleInferred": true
   },
   "BackCover": {
     "name": "BackCover",
     "path": "sections/BackCover",
     "defaults": {},
-    "title": "Back Cover"
+    "title": "Back Cover",
+    "titleInferred": true
   },
   "BackMatter": {
     "name": "BackMatter",
     "path": "sections/BackMatter",
     "defaults": {},
-    "title": "Back Matter"
+    "title": "Back Matter",
+    "titleInferred": true
   },
   "Bibliography": {
     "name": "Bibliography",
@@ -119,13 +126,15 @@
       "sortBy": null,
       "style": null
     },
-    "title": "Bibliography"
+    "title": "Bibliography",
+    "titleInferred": true
   },
   "BookCover": {
     "name": "BookCover",
     "path": "sections/BookCover",
     "defaults": {},
-    "title": "Book Cover"
+    "title": "Book Cover",
+    "titleInferred": true
   },
   "Chapter": {
     "name": "Chapter",
@@ -133,7 +142,8 @@
     "defaults": {
       "chapterNumber": null
     },
-    "title": "Chapter"
+    "title": "Chapter",
+    "titleInferred": true
   },
   "Cite": {
     "name": "Cite",
@@ -142,19 +152,22 @@
     "defaults": {
       "label": "page"
     },
-    "title": "Cite"
+    "title": "Cite",
+    "titleInferred": true
   },
   "Contents": {
     "name": "Contents",
     "path": "sections/Contents",
     "defaults": {},
-    "title": "Contents"
+    "title": "Contents",
+    "titleInferred": true
   },
   "Cover": {
     "name": "Cover",
     "path": "sections/Cover",
     "defaults": {},
-    "title": "Cover"
+    "title": "Cover",
+    "titleInferred": true
   },
   "Definition": {
     "name": "Definition",
@@ -162,7 +175,8 @@
     "defaults": {
       "name": null
     },
-    "title": "Definition"
+    "title": "Definition",
+    "titleInferred": true
   },
   "Lemma": {
     "name": "Lemma",
@@ -170,7 +184,8 @@
     "defaults": {
       "name": null
     },
-    "title": "Lemma"
+    "title": "Lemma",
+    "titleInferred": true
   },
   "ListOfFigures": {
     "name": "ListOfFigures",
@@ -178,7 +193,8 @@
     "defaults": {
       "title": "List of Figures"
     },
-    "title": "List Of Figures"
+    "title": "List Of Figures",
+    "titleInferred": true
   },
   "ListOfTables": {
     "name": "ListOfTables",
@@ -186,13 +202,15 @@
     "defaults": {
       "title": "List of Tables"
     },
-    "title": "List Of Tables"
+    "title": "List Of Tables",
+    "titleInferred": true
   },
   "Proof": {
     "name": "Proof",
     "path": "sections/Proof",
     "defaults": {},
-    "title": "Proof"
+    "title": "Proof",
+    "titleInferred": true
   },
   "Theorem": {
     "name": "Theorem",
@@ -201,7 +219,8 @@
       "name": null,
       "idPrefix": null
     },
-    "title": "Theorem"
+    "title": "Theorem",
+    "titleInferred": true
   },
   "TitlePage": {
     "name": "TitlePage",
@@ -212,6 +231,7 @@
     "defaults": {
       "template": "uoft"
     },
-    "title": "Title Page"
+    "title": "Title Page",
+    "titleInferred": true
   }
 }
