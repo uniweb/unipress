@@ -11,7 +11,7 @@
 import { existsSync, readdirSync } from 'node:fs'
 import { resolve, join, basename } from 'node:path'
 import { collectSiteContent, processQueries } from '@uniweb/build/content'
-import { resolveFetchConfigs, evaluateQuery, parentRouteOf, siteReaches } from '@uniweb/core'
+import { resolveFetchConfigs, evaluateQuery, parentRouteOf, fetchLevels } from '@uniweb/core'
 import { detectConfigFile, CONFIG_FILE_NAMES } from './document-yml.js'
 import { ContentDirectoryError, DocumentYmlError } from './errors.js'
 
@@ -151,23 +151,24 @@ async function resolveLocalQueries(siteContent, sitePath) {
   const options = { queries: queriesConfig, locale: siteContent?.config?.defaultLanguage ?? null }
   const pages = siteContent.pages || []
   const byRoute = new Map(pages.map((page) => [page.route, page]))
-  const documentBindings = queryBindings(siteContent?.config?.fetch, resolved, options)
   for (const page of pages) {
-    // ⭐ The levels a section's queries come from, most specific first — the entity
-    // store's (`EntityStore._levels`), so an answer is held for the fetch the store
-    // pairs a key with: the page's, its parent page's (`parentRouteOf`, the Website's
-    // one parent rule), and the document's own `query:` on a page with no parent
-    // (`siteReaches`). A section's own go first, in `attachSectionFetches`. The page's
-    // cascade reaches every section on it, top-level and nested alike. ⛔ Until
+    // ⭐ The levels a section's queries come from, most specific first — the rule's, so an
+    // answer is held for the fetch a renderer pairs a key with: the page's, its parent page's
+    // (`parentRouteOf`, the one parent rule), and the document's own `query:` on a page with
+    // no parent (`siteReaches`, inside `fetchLevels`). A section's own go first, in
+    // `attachSectionFetches`. The page's cascade reaches every section on it, top-level and
+    // nested alike. ⛔ Until
     // 2026-09-14 only the page's was attached, so a parent page's or the document's
     // `query:` reached no section — not even a key of the same name.
     const parentRoute = parentRouteOf(page.route, { declared: page.parent, has: (route) => byRoute.has(route) })
-    const parent = parentRoute ? byRoute.get(parentRoute) : null
-    const cascade = [
-      ...queryBindings(page.fetch, resolved, options),
-      ...(parent && parent !== page ? queryBindings(parent.fetch, resolved, options) : []),
-      ...(siteReaches(parent) ? documentBindings : []),
-    ]
+    const parentPage = parentRoute ? byRoute.get(parentRoute) : null
+    const parent = parentPage && parentPage !== page ? parentPage : null
+    // ⭐ The levels, by the rule (`fetchLevels`, `@uniweb/core`) — the one answer to which fetches
+    // reach a section, so a document is fed what a page would be. ⛔ This spelled the list out
+    // itself until 2026-09-19; there is no route binding here because a document has no parametric
+    // pages, and that is the only level the rule adds.
+    const cascade = fetchLevels({ page: page.fetch, parent, site: siteContent?.config?.fetch })
+      .flatMap((level) => (level ? queryBindings(level, resolved, options) : []))
     attachSectionFetches(page.sections, resolved, cascade, options)
   }
 
