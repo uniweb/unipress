@@ -21053,6 +21053,8 @@ function $G({ areArrayBuffersEqual: e, areArraysEqual: r, areDataViewsEqual: t, 
       return s(p, b, v);
     if (_ === Set)
       return f(p, b, v);
+    if (_ == null)
+      return u(p, b, v);
     const w = zG.call(p);
     if (w === PG)
       return n(p, b, v);
