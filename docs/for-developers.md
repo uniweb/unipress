@@ -29,7 +29,7 @@ A document is rarely just prose. Foundations declare data inputs; authors fill t
 
 - **Markdown content** — the prose body of each `.md` file, parsed into a structured tree (title, paragraphs, items, links, images, code blocks).
 - **Frontmatter params** — declared in each section's YAML frontmatter, typed by the foundation's `meta.js`.
-- **File-based queries** — records under `entities/<name>/` (JSON, YAML, BibTeX, or markdown frontmatter), named by a query under `queries:` in `document.yml`. Compile to one `/data/<name>.json` per query.
+- **File-based queries** — records under `records/<name>/` (JSON, YAML, BibTeX, or markdown frontmatter), named by a query under `queries:` in `document.yml`. Compile to one `/data/<name>.json` per query.
 - **External queries** — a query with `url:` names a public API. A website's visitors' browsers fetch it; `unipress compile` reads file-based queries only.
 
 A section type declares the `content.data` keys it reads in its `meta.js` `data:` — `data: { publications: {} }` — and a section receives those keys and nothing else. Keys a foundation's content handlers read go in its `main.js` `data:`, and every section receives them.
@@ -43,7 +43,7 @@ For scholarly work specifically, [`citestyle`](https://github.com/uniweb/csl) ha
 
 The combination is the powerful part. Loom interpolates ("In {section.title}, we describe…"); citestyle formats bibliographic entries (a complete back-matter `Bibliography`, or inline `[Author Year]` citation marks). A thesis, monograph, or annual research report uses both: Loom for dynamic prose and per-section metadata, citestyle for every bibliographic touch in the document.
 
-Working example: the `data-report` template ships a `PublicationsList` section backed by YAML bib data in `entities/members/*.yml`, with per-section style selection. Run `unipress create my-report --template data-report` to see it. Bibliography support in long-form prose templates (`book`, `monograph`, future `thesis`/`paper`) lands across upcoming releases.
+Working example: the `data-report` template ships a `PublicationsList` section backed by YAML bib data in `records/members/*.yml`, with per-section style selection. Run `unipress create my-report --template data-report` to see it. Bibliography support in long-form prose templates (`book`, `monograph`, future `thesis`/`paper`) lands across upcoming releases.
 
 ## Outputs are foundation-declared
 

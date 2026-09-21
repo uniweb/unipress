@@ -10,7 +10,7 @@
 
 import { existsSync, readdirSync } from 'node:fs'
 import { resolve, join, basename } from 'node:path'
-import { collectSiteContent, processQueries } from '@uniweb/build/content'
+import { collectSiteContent, processQueries, resolveRecordsDir } from '@uniweb/build/content'
 import { resolveFetchConfigs, evaluateQuery, parentRouteOf, fetchLevels } from '@uniweb/core'
 import { detectConfigFile, CONFIG_FILE_NAMES } from './document-yml.js'
 import { ContentDirectoryError, DocumentYmlError } from './errors.js'
@@ -134,15 +134,16 @@ async function resolveLocalQueries(siteContent, sitePath) {
   if (!queriesConfig || typeof queriesConfig !== 'object') return
   if (Object.keys(queriesConfig).length === 0) return
 
-  // ⛔ Third arg is the ENTITIES POOL override, not the site root. Passing
-  // `sitePath` made the pool resolve to `<site>/{schema}/` instead of
-  // `<site>/entities/{schema}/`, so every query matched nothing. `null` takes
-  // the default, which is what a site without `paths.entities` wants — the
-  // same value `@uniweb/build`'s own plugin computes (`paths.entities || null`).
+  // ⛔ Third arg is the RECORDS DIRECTORY, not the site root. Passing `sitePath`
+  // made it resolve to `<site>/{schema}/` instead of `<site>/records/{schema}/`,
+  // so every query matched nothing. It comes from the one resolver, handed this
+  // document's own `paths:` — a document has no `site.yml` for the resolver to read
+  // — so `paths.records` moves it, and the retired `paths.entities` and a leftover
+  // `entities/` are refused by name rather than silently read as nothing.
   const resolved = await processQueries(
     sitePath,
     queriesConfig,
-    siteContent?.config?.paths?.entities || null,
+    resolveRecordsDir(sitePath, siteContent?.config?.paths).rel,
     '/',
   )
 

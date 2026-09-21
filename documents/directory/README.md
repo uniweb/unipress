@@ -12,7 +12,7 @@ unipress compile . --format docx --out my-directory.docx
 ```
 directory/
 ├── document.yml          pinned to @uniweb/data; one queryable collection
-├── entities/
+├── records/
 │   └── members/          three sample records to make the first compile non-empty
 └── content/
     └── directory/        cover (with Loom-rendered count) + listing
@@ -32,10 +32,10 @@ For multi-section aggregate reports (publications-by-year, funding totals, super
 
 ### Add an entry
 
-Drop a YAML file under `entities/members/`. Each file is one record; the filename (stem) becomes its slug.
+Drop a YAML file under `records/members/`. Each file is one record; the filename (stem) becomes its slug.
 
 ```yaml
-# entities/members/your-name.yml
+# records/members/your-name.yml
 name: "Your Name"
 role: member          # or lead / advisor
 department: sciences  # or engineering / humanities

@@ -17,7 +17,7 @@ The starter ships a small Victorian-naturalist bibliography (nine entries — Da
 ```
 my-monograph/
 ├── document.yml              pinned to @uniweb/book@<version>; royal-octavo, EB Garamond
-├── entities/
+├── records/
 │   └── bibliography/
 │       └── refs.bib          BibTeX file — every @entry is one record
 ├── content/
@@ -63,10 +63,10 @@ Optional sort: `book.bibliography.sortBy:` — `author` (default), `year`, or `c
 
 ### Author bibliography entries
 
-Drop a `.bib` file into `entities/bibliography/`. Every `@entry{key, ...}` becomes one record; the BibTeX cite key is the entry id you reference from prose with `[@key]`. Standard BibTeX entry types work (`@article`, `@book`, `@incollection`, `@inproceedings`, `@phdthesis`, `@techreport`, `@misc`, etc.); LaTeX accents (`\"u`, `\'e`, `\v{c}`) are converted to Unicode automatically.
+Drop a `.bib` file into `records/bibliography/`. Every `@entry{key, ...}` becomes one record; the BibTeX cite key is the entry id you reference from prose with `[@key]`. Standard BibTeX entry types work (`@article`, `@book`, `@incollection`, `@inproceedings`, `@phdthesis`, `@techreport`, `@misc`, etc.); LaTeX accents (`\"u`, `\'e`, `\v{c}`) are converted to Unicode automatically.
 
 ```bibtex
-% entities/bibliography/refs.bib
+% records/bibliography/refs.bib
 
 @book{darwin1859,
   author    = {Darwin, Charles},
@@ -90,7 +90,7 @@ Drop a `.bib` file into `entities/bibliography/`. Every `@entry{key, ...}` becom
 If a record needs a CSL field BibTeX can't carry — multi-script titles, fine-grained date parts, fielded notes — drop a hand-written YAML file (CSL-JSON shape) into the same folder. The loader merges every `.bib`, `.yml`, and `.json` it finds, so authors can mix the format their reference manager exports with one-off hand-edited entries.
 
 ```yaml
-# entities/bibliography/wallace1858.yml — full CSL-JSON, overrides if a duplicate
+# records/bibliography/wallace1858.yml — full CSL-JSON, overrides if a duplicate
 # cite key exists in any .bib file in the same folder.
 id: wallace1858
 type: article-journal
@@ -188,13 +188,13 @@ Same shape as `book` (see [book.md](./book.md)). The defaults differ:
 | `book.structure.frontMatterNumbering`| `roman`                                              |
 | `book.citationStyle`                 | `chicago-author-date`                                |
 | `book.bibliography.sortBy`           | `author`                                             |
-| `queries.bibliography`               | records in `entities/bibliography/`                  |
+| `queries.bibliography`               | records in `records/bibliography/`                  |
 
 ## Common customizations
 
 - **Switch citation style** by changing one line: `book.citationStyle: ieee` (or any of the nine styles above). Re-compile; every cite and the back-matter list re-formats to match.
-- **Add a "further reading" section** by declaring a second query in `document.yml` (`further-reading:` under `queries:`, its records in `entities/further-reading/`) and a second `Bibliography` content file with `fetch: { query: further-reading, as: bibliography }`.
-- **Drop the citations entirely** by deleting `99-bibliography.md`, the `entities/bibliography/` directory, the `queries:` block, and the `book.citationStyle:` block. The remaining template behaves like a citation-free `book` with monograph typography.
+- **Add a "further reading" section** by declaring a second query in `document.yml` (`further-reading:` under `queries:`, its records in `records/further-reading/`) and a second `Bibliography` content file with `fetch: { query: further-reading, as: bibliography }`.
+- **Drop the citations entirely** by deleting `99-bibliography.md`, the `records/bibliography/` directory, the `queries:` block, and the `book.citationStyle:` block. The remaining template behaves like a citation-free `book` with monograph typography.
 
 ## Foundation reference
 

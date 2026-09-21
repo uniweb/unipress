@@ -51,7 +51,7 @@ foundation: '@uniweb/data@0.1.0'
 format: xlsx
 
 queries:
-  members:          # its records live in entities/members/
+  members:          # its records live in records/members/
     queryable:
       department:
         type: enum

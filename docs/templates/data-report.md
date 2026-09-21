@@ -17,7 +17,7 @@ unipress compile . --format docx --out q3-metrics.docx
 q3-metrics/
 ├── document.yml          pinned to @uniweb/data@<version>
 ├── theme.yml             colors + typography for the web preview
-├── entities/
+├── records/
 │   ├── members/          three sample records (19th-century naturalists)
 │   └── queries/          saved query examples for the Population dropdown
 └── content/
@@ -25,7 +25,7 @@ q3-metrics/
                           publications-list, funding, supervisions
 ```
 
-The starter ships three sample members so the first compile produces a non-empty workbook. Replace the YAML files under `entities/members/` with your own data.
+The starter ships three sample members so the first compile produces a non-empty workbook. Replace the YAML files under `records/members/` with your own data.
 
 ## `document.yml` fields
 
@@ -34,14 +34,14 @@ The starter ships three sample members so the first compile produces a non-empty
 | `name`, `author`, `year`   | Workbook metadata (shown in the file's properties).    |
 | `format`                   | `xlsx` (default) or `docx`. Override on the CLI.       |
 | `index`                    | Routes `/` → `content/<index>` (here: `report`).         |
-| `queries.members`          | The query over the records in `entities/members/`.     |
+| `queries.members`          | The query over the records in `records/members/`.     |
 | `queries.members.queryable` | Filterable surface — drives the FilterPanel UI.       |
-| `queries.queries`          | Saved views for the Population dropdown, in `entities/queries/`. |
+| `queries.queries`          | Saved views for the Population dropdown, in `records/queries/`. |
 
 ## Add a member
 
 ```yaml
-# entities/members/your-name.yml
+# records/members/your-name.yml
 name: "Jane Doe"
 department: biology
 rank: professor
