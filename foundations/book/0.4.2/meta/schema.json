@@ -76,48 +76,36 @@
   },
   "_layouts": {
     "BookLayout": {
-      "name": "BookLayout",
-      "path": "layouts/BookLayout",
       "defaults": {},
-      "title": "Book Layout",
-      "titleInferred": true
+      "name": "BookLayout",
+      "path": "layouts/BookLayout"
     }
   },
   "Abstract": {
-    "name": "Abstract",
-    "path": "sections/Abstract",
     "defaults": {
       "title": "Abstract"
     },
-    "title": "Abstract",
-    "titleInferred": true
+    "name": "Abstract",
+    "path": "sections/Abstract"
   },
   "Appendix": {
-    "name": "Appendix",
-    "path": "sections/Appendix",
     "defaults": {
       "auto": true
     },
-    "title": "Appendix",
-    "titleInferred": true
+    "name": "Appendix",
+    "path": "sections/Appendix"
   },
   "BackCover": {
-    "name": "BackCover",
-    "path": "sections/BackCover",
     "defaults": {},
-    "title": "Back Cover",
-    "titleInferred": true
+    "name": "BackCover",
+    "path": "sections/BackCover"
   },
   "BackMatter": {
-    "name": "BackMatter",
-    "path": "sections/BackMatter",
     "defaults": {},
-    "title": "Back Matter",
-    "titleInferred": true
+    "name": "BackMatter",
+    "path": "sections/BackMatter"
   },
   "Bibliography": {
-    "name": "Bibliography",
-    "path": "sections/Bibliography",
     "data": {
       "bibliography": {}
     },
@@ -126,112 +114,88 @@
       "sortBy": null,
       "style": null
     },
-    "title": "Bibliography",
-    "titleInferred": true
+    "name": "Bibliography",
+    "path": "sections/Bibliography"
   },
   "BookCover": {
-    "name": "BookCover",
-    "path": "sections/BookCover",
     "defaults": {},
-    "title": "Book Cover",
-    "titleInferred": true
+    "name": "BookCover",
+    "path": "sections/BookCover"
   },
   "Chapter": {
-    "name": "Chapter",
-    "path": "sections/Chapter",
     "defaults": {
       "chapterNumber": null
     },
-    "title": "Chapter",
-    "titleInferred": true
+    "name": "Chapter",
+    "path": "sections/Chapter"
   },
   "Cite": {
-    "name": "Cite",
-    "path": "sections/Cite",
     "inset": true,
     "defaults": {
       "label": "page"
     },
-    "title": "Cite",
-    "titleInferred": true
+    "name": "Cite",
+    "path": "sections/Cite"
   },
   "Contents": {
-    "name": "Contents",
-    "path": "sections/Contents",
     "defaults": {},
-    "title": "Contents",
-    "titleInferred": true
+    "name": "Contents",
+    "path": "sections/Contents"
   },
   "Cover": {
-    "name": "Cover",
-    "path": "sections/Cover",
     "defaults": {},
-    "title": "Cover",
-    "titleInferred": true
+    "name": "Cover",
+    "path": "sections/Cover"
   },
   "Definition": {
-    "name": "Definition",
-    "path": "sections/Definition",
     "defaults": {
       "name": null
     },
-    "title": "Definition",
-    "titleInferred": true
+    "name": "Definition",
+    "path": "sections/Definition"
   },
   "Lemma": {
-    "name": "Lemma",
-    "path": "sections/Lemma",
     "defaults": {
       "name": null
     },
-    "title": "Lemma",
-    "titleInferred": true
+    "name": "Lemma",
+    "path": "sections/Lemma"
   },
   "ListOfFigures": {
-    "name": "ListOfFigures",
-    "path": "sections/ListOfFigures",
     "defaults": {
       "title": "List of Figures"
     },
-    "title": "List Of Figures",
-    "titleInferred": true
+    "name": "ListOfFigures",
+    "path": "sections/ListOfFigures"
   },
   "ListOfTables": {
-    "name": "ListOfTables",
-    "path": "sections/ListOfTables",
     "defaults": {
       "title": "List of Tables"
     },
-    "title": "List Of Tables",
-    "titleInferred": true
+    "name": "ListOfTables",
+    "path": "sections/ListOfTables"
   },
   "Proof": {
-    "name": "Proof",
-    "path": "sections/Proof",
     "defaults": {},
-    "title": "Proof",
-    "titleInferred": true
+    "name": "Proof",
+    "path": "sections/Proof"
   },
   "Theorem": {
-    "name": "Theorem",
-    "path": "sections/Theorem",
     "defaults": {
       "name": null,
       "idPrefix": null
     },
-    "title": "Theorem",
-    "titleInferred": true
+    "name": "Theorem",
+    "path": "sections/Theorem"
   },
   "TitlePage": {
-    "name": "TitlePage",
-    "path": "sections/TitlePage",
     "data": {
       "thesis": {}
     },
     "defaults": {
       "template": "uoft"
     },
-    "title": "Title Page",
-    "titleInferred": true
+    "name": "TitlePage",
+    "path": "sections/TitlePage"
   }
 }

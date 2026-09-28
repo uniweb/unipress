@@ -44,14 +44,10 @@
   "_layouts": {
     "BusinessDocLayout": {
       "name": "BusinessDocLayout",
-      "path": "layouts/BusinessDocLayout",
-      "title": "Business Doc Layout",
-      "titleInferred": true
+      "path": "layouts/BusinessDocLayout"
     }
   },
   "EngagementReport": {
-    "name": "EngagementReport",
-    "path": "sections/EngagementReport",
     "title": "Engagement report",
     "description": "Aggregate view across a collection of invoices or SOWs. Reads filter state (date range, client, status, source collection) from page state via useFilteredEngagement; renders an on-screen table plus aggregate cards (count, sum subtotals, sum totals, sum outstanding); registers an XLSX export with two sheets (Records, Summary).",
     "category": "business-docs",
@@ -59,11 +55,11 @@
       "title": "Report title",
       "subtitle": "Optional subtitle (overridden by active filter description when one is set)"
     },
-    "params": {}
+    "params": {},
+    "name": "EngagementReport",
+    "path": "sections/EngagementReport"
   },
   "Invoice": {
-    "name": "Invoice",
-    "path": "sections/Invoice",
     "title": "Invoice slice",
     "description": "A section in an invoice document. Renders title, paragraphs, items, and insets from semantic content; Loom expressions in the markdown are resolved before this component sees the content. Multi-line subscription invoices use source: items with a divider-split table body; totals sections rely on the computed {subtotal} / {tax_amount} / {total} placeholders.",
     "category": "business-docs",
@@ -81,11 +77,11 @@
         "type": "string",
         "description": "Loom filter expression applied to the source array. Example: \"qty > 0\"."
       }
-    }
+    },
+    "name": "Invoice",
+    "path": "sections/Invoice"
   },
   "SOW": {
-    "name": "SOW",
-    "path": "sections/SOW",
     "title": "SOW slice",
     "description": "A section in a statement-of-work document. Renders title, paragraphs, items, and insets from semantic content; Loom expressions in the markdown are resolved before this component sees the content. Pair multiple SOW sections in one folder (cover, scope, deliverables, fees, terms, signatures) to compose a full SOW.",
     "category": "business-docs",
@@ -103,6 +99,8 @@
         "type": "string",
         "description": "Loom filter expression applied to the source array. Examples: \"fee > 0\", \"party = 'client'\"."
       }
-    }
+    },
+    "name": "SOW",
+    "path": "sections/SOW"
   }
 }
