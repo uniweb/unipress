@@ -72,7 +72,8 @@
     "description": "Book foundation for Uniweb. Long-form prose with chapters; outputs Typst/PDF, Paged.js HTML, EPUB, and LaTeX. Drives @uniweb/unipress's book/monograph/report/thesis/article templates.",
     "supports": [
       "records"
-    ]
+    ],
+    "schemaFormat": 2
   },
   "_layouts": {
     "BookLayout": {

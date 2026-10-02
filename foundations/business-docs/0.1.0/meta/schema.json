@@ -39,7 +39,8 @@
     "description": "Business documents foundation for Uniweb. Renders statements of work, invoices, and engagement reports from YAML collections, with PDF/DOCX output via Press and XLSX export for filtered reports.",
     "supports": [
       "records"
-    ]
+    ],
+    "schemaFormat": 2
   },
   "_layouts": {
     "BusinessDocLayout": {
@@ -51,10 +52,18 @@
     "title": "Engagement report",
     "description": "Aggregate view across a collection of invoices or SOWs. Reads filter state (date range, client, status, source collection) from page state via useFilteredEngagement; renders an on-screen table plus aggregate cards (count, sum subtotals, sum totals, sum outstanding); registers an XLSX export with two sheets (Records, Summary).",
     "category": "business-docs",
-    "content": {
-      "title": "Report title",
-      "subtitle": "Optional subtitle (overridden by active filter description when one is set)"
-    },
+    "content": [
+      {
+        "element": "title",
+        "kind": "heading",
+        "label": "Report title"
+      },
+      {
+        "element": "subtitle",
+        "kind": "heading",
+        "label": "Optional subtitle (overridden by active filter description when one is set)"
+      }
+    ],
     "params": {},
     "name": "EngagementReport",
     "path": "sections/EngagementReport"
@@ -63,11 +72,23 @@
     "title": "Invoice slice",
     "description": "A section in an invoice document. Renders title, paragraphs, items, and insets from semantic content; Loom expressions in the markdown are resolved before this component sees the content. Multi-line subscription invoices use source: items with a divider-split table body; totals sections rely on the computed {subtotal} / {tax_amount} / {total} placeholders.",
     "category": "business-docs",
-    "content": {
-      "title": "Section heading",
-      "paragraphs": "Body paragraphs (Loom expressions allowed)",
-      "items": "Repeated entries when the section uses source: items"
-    },
+    "content": [
+      {
+        "element": "title",
+        "kind": "heading",
+        "label": "Section heading"
+      },
+      {
+        "element": "paragraphs",
+        "kind": "prose",
+        "label": "Body paragraphs (Loom expressions allowed)"
+      },
+      {
+        "element": "items",
+        "kind": "entries",
+        "label": "Repeated entries when the section uses source: items"
+      }
+    ],
     "params": {
       "source": {
         "type": "string",
@@ -85,11 +106,23 @@
     "title": "SOW slice",
     "description": "A section in a statement-of-work document. Renders title, paragraphs, items, and insets from semantic content; Loom expressions in the markdown are resolved before this component sees the content. Pair multiple SOW sections in one folder (cover, scope, deliverables, fees, terms, signatures) to compose a full SOW.",
     "category": "business-docs",
-    "content": {
-      "title": "Section heading",
-      "paragraphs": "Body paragraphs (Loom expressions allowed)",
-      "items": "Repeated entries when the section uses source: <field>"
-    },
+    "content": [
+      {
+        "element": "title",
+        "kind": "heading",
+        "label": "Section heading"
+      },
+      {
+        "element": "paragraphs",
+        "kind": "prose",
+        "label": "Body paragraphs (Loom expressions allowed)"
+      },
+      {
+        "element": "items",
+        "kind": "entries",
+        "label": "Repeated entries when the section uses source: <field>"
+      }
+    ],
     "params": {
       "source": {
         "type": "string",

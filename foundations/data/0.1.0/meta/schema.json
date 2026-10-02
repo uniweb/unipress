@@ -34,7 +34,8 @@
     "description": "Data foundation for Uniweb. Aggregates structured records (members, publications, funding, supervisions) and emits Excel workbooks and Word reports. Drives @uniweb/unipress's data-report and directory templates.",
     "supports": [
       "records"
-    ]
+    ],
+    "schemaFormat": 2
   },
   "_layouts": {
     "MetricsLayout": {
@@ -46,11 +47,23 @@
     "title": "Cover",
     "description": "Report summary: title, a narrative paragraph rendered via Loom (unit-wide counts), a Population selector, and a live stats strip over the filtered member set. Registers a Summary sheet in the downloaded workbook.",
     "category": "academic-metrics",
-    "content": {
-      "title": "Report title (e.g., \"Academic Metrics — 2025\")",
-      "subtitle": "Optional subtitle (overridden by active query name when one is selected)",
-      "paragraphs": "Narrative body — write prose with Loom expressions like {COUNT OF members}, {SHOW members.name JOINED BY \", \"}, {totalPublications}, {totalFunding}, {totalGrants}, {totalSupervisions}."
-    },
+    "content": [
+      {
+        "element": "title",
+        "kind": "heading",
+        "label": "Report title (e.g., \"Academic Metrics — 2025\")"
+      },
+      {
+        "element": "subtitle",
+        "kind": "heading",
+        "label": "Optional subtitle (overridden by active query name when one is selected)"
+      },
+      {
+        "element": "paragraphs",
+        "kind": "prose",
+        "label": "Narrative body — write prose with Loom expressions like {COUNT OF members}, {SHOW members.name JOINED BY \", \"}, {totalPublications}, {totalFunding}, {totalGrants}, {totalSupervisions}."
+      }
+    ],
     "params": {},
     "name": "Cover",
     "path": "sections/Cover"
@@ -59,9 +72,13 @@
     "title": "Funding",
     "description": "Research funding received across the filtered member set, grouped by source. Preview is a horizontal bar chart of total amount per source; xlsx is one row per source with Count / Total + a totals row in currency format.",
     "category": "academic-metrics",
-    "content": {
-      "title": "Section heading (defaults to \"Funding received\")"
-    },
+    "content": [
+      {
+        "element": "title",
+        "kind": "heading",
+        "label": "Section heading (defaults to \"Funding received\")"
+      }
+    ],
     "params": {},
     "name": "Funding",
     "path": "sections/Funding"
@@ -70,9 +87,13 @@
     "title": "Members",
     "description": "Roster of the filtered member set (name, rank, department, tenured, start year). Registers a Members sheet in the downloaded workbook.",
     "category": "academic-metrics",
-    "content": {
-      "title": "Section heading (defaults to \"Members\")"
-    },
+    "content": [
+      {
+        "element": "title",
+        "kind": "heading",
+        "label": "Section heading (defaults to \"Members\")"
+      }
+    ],
     "data": {
       "members": {},
       "queries": {}
@@ -85,9 +106,13 @@
     "title": "Publications by Journal",
     "description": "Top journals by publication count across the filtered member set. Publisher (for books) and journal (for articles) are both treated as \"venue\". Preview is a horizontal bar chart; xlsx is one row per venue plus a totals row.",
     "category": "academic-metrics",
-    "content": {
-      "title": "Section heading (defaults to \"Publications by journal\")"
-    },
+    "content": [
+      {
+        "element": "title",
+        "kind": "heading",
+        "label": "Section heading (defaults to \"Publications by journal\")"
+      }
+    ],
     "params": {},
     "name": "PublicationsByJournal",
     "path": "sections/PublicationsByJournal"
@@ -96,9 +121,13 @@
     "title": "Publications by Type",
     "description": "Aggregates the publications of the filtered member set by type (book, article, chapter, ...). Preview is a pie chart; xlsx is a flat table with one row per type plus a totals row.",
     "category": "academic-metrics",
-    "content": {
-      "title": "Section heading (defaults to \"Publications by type\")"
-    },
+    "content": [
+      {
+        "element": "title",
+        "kind": "heading",
+        "label": "Section heading (defaults to \"Publications by type\")"
+      }
+    ],
     "params": {},
     "name": "PublicationsByType",
     "path": "sections/PublicationsByType"
@@ -107,9 +136,13 @@
     "title": "Publications by Year",
     "description": "Timeline of publication counts per year across the filtered member set. Preview is a vertical bar chart chronologically sorted; xlsx is Year / Count / Cumulative rows with a totals row.",
     "category": "academic-metrics",
-    "content": {
-      "title": "Section heading (defaults to \"Publications by year\")"
-    },
+    "content": [
+      {
+        "element": "title",
+        "kind": "heading",
+        "label": "Section heading (defaults to \"Publications by year\")"
+      }
+    ],
     "params": {},
     "name": "PublicationsByYear",
     "path": "sections/PublicationsByYear"
@@ -122,9 +155,13 @@
       "members": {},
       "queries": {}
     },
-    "content": {
-      "title": "Section heading (defaults to \"Publications\")"
-    },
+    "content": [
+      {
+        "element": "title",
+        "kind": "heading",
+        "label": "Section heading (defaults to \"Publications\")"
+      }
+    ],
     "params": {},
     "name": "PublicationsList",
     "path": "sections/PublicationsList"
@@ -133,9 +170,13 @@
     "title": "Supervisions",
     "description": "Student supervisions grouped by level (doctoral, masters, undergraduate, apprentice) across the filtered member set. Preview is a stacked bar chart with one bar per member; xlsx is a cross-tab with member rows × level columns plus a totals row.",
     "category": "academic-metrics",
-    "content": {
-      "title": "Section heading (defaults to \"Supervisions\")"
-    },
+    "content": [
+      {
+        "element": "title",
+        "kind": "heading",
+        "label": "Section heading (defaults to \"Supervisions\")"
+      }
+    ],
     "params": {},
     "name": "Supervisions",
     "path": "sections/Supervisions"

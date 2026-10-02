@@ -11877,29 +11877,15 @@ function n3(e, n) {
       es: `Llamar a ${r}`
     });
   }
-  if (Hc(e))
-    return n({
-      en: "Download file",
-      fr: "Télécharger le fichier",
-      es: "Descargar archivo"
-    });
-  if (wg(e))
-    return n({
-      en: "Open external link",
-      fr: "Ouvrir le lien externe",
-      es: "Abrir enlace externo"
-    });
-  try {
-    const r = new URL(e, window.location.origin), l = decodeURIComponent(r.pathname).replace(/^\/+/, "").replace(/[-_]/g, " ").replace(/\.\w+$/, "").trim();
-    if (l)
-      return n({
-        en: `Go to ${l}`,
-        fr: `Aller à ${l}`,
-        es: `Ir a ${l}`
-      });
-  } catch {
-  }
-  return "";
+  return Hc(e) ? n({
+    en: "Download file",
+    fr: "Télécharger le fichier",
+    es: "Descargar archivo"
+  }) : wg(e) ? n({
+    en: "Open external link",
+    fr: "Ouvrir le lien externe",
+    es: "Abrir enlace externo"
+  }) : "";
 }
 function Zr({
   to: e,
@@ -11912,7 +11898,7 @@ function Zr({
   reload: s,
   ...u
 }) {
-  const { website: o, localize: c, getRoutingComponents: d } = ei(), h = d()?.Link, g = Eg(n || e || "", o, { locale: !s }), m = l || Hc(g), p = wg(g), b = t || n3(g, c);
+  const { website: o, localize: c, getRoutingComponents: d } = ei(), h = d()?.Link, g = Eg(n || e || "", o, { locale: !s }), m = l || Hc(g), p = wg(g), b = t || n3(g, c) || void 0;
   if (s && !m) {
     const y = p ? "" : o?.basePath || "";
     return /* @__PURE__ */ pe(
@@ -13931,11 +13917,11 @@ function sE({ element: e, block: n, components: t }) {
     // 2026-09-29 the parser delivered a document as an image, and this drew
     // `<img src="report.pdf">`.
     case "document": {
-      const { url: l, alt: a, caption: i, preview: s, author: u, description: o } = e.attrs || {}, c = i || a || rE(l);
+      const { url: l, alt: a, caption: i, preview: s, author: u, description: o, name: c } = e.attrs || {}, d = i || a || c || rE(l);
       return /* @__PURE__ */ Xe("figure", { id: Ls(e), "data-kind": "document", children: [
         /* @__PURE__ */ Xe(Zr, { to: l, children: [
-          s ? /* @__PURE__ */ pe(mh, { src: s, alt: "" }) : /* @__PURE__ */ pe(m3, { filename: l }),
-          /* @__PURE__ */ pe("span", { children: c })
+          s ? /* @__PURE__ */ pe(mh, { src: s, alt: "" }) : /* @__PURE__ */ pe(m3, { filename: c || l }),
+          /* @__PURE__ */ pe("span", { children: d })
         ] }),
         (u || o) && /* @__PURE__ */ Xe("figcaption", { children: [
           u && /* @__PURE__ */ pe("span", { children: u }),
