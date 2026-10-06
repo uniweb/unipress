@@ -29310,9 +29310,6 @@ const s8 = { defaultInsets: ha?.defaultInsets, xref: ha?.xref, outputs: ha?.outp
       bibliography: null
     }
   },
-  Cite: {
-    inset: !0
-  },
   TitlePage: {
     data: {
       thesis: null
