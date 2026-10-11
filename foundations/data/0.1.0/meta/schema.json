@@ -1,6 +1,5 @@
 {
   "_self": {
-    "defaultLayout": "MetricsLayout",
     "props": {},
     "data": {
       "members": {},
@@ -35,6 +34,7 @@
     "supports": [
       "records"
     ],
+    "defaultLayout": "MetricsLayout",
     "schemaFormat": 2
   },
   "_layouts": {

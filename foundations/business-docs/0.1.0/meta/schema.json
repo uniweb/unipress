@@ -1,6 +1,5 @@
 {
   "_self": {
-    "defaultLayout": "BusinessDocLayout",
     "props": {},
     "data": {
       "invoices": {},
@@ -40,6 +39,7 @@
     "supports": [
       "records"
     ],
+    "defaultLayout": "BusinessDocLayout",
     "schemaFormat": 2
   },
   "_layouts": {

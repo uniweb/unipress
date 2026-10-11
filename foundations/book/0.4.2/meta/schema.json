@@ -1,7 +1,6 @@
 {
   "_self": {
     "defaultSection": "Chapter",
-    "defaultLayout": "BookLayout",
     "props": {},
     "defaultInsets": {},
     "xref": {
@@ -73,6 +72,7 @@
     "supports": [
       "records"
     ],
+    "defaultLayout": "BookLayout",
     "schemaFormat": 2
   },
   "_layouts": {
