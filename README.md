@@ -90,7 +90,7 @@ Updates land via `brew upgrade unipress`. On recent Homebrew (6.x), the first `i
 
 **Manual download (Windows, or any platform without Homebrew).** Grab the asset for your platform from [the releases page](https://github.com/uniweb/unipress/releases), make it executable (Unix), and put it somewhere on your `PATH`. On macOS and Linux, `/usr/local/bin/unipress` is a common location.
 
-**npm.** If you already have Node ≥ 20.19:
+**npm.** If you already have Node ≥ 22.12:
 
 ```bash
 npm i -g @uniweb/unipress
