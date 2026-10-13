@@ -267,7 +267,7 @@ Applied per-field.
 
 ## Where things stand
 
-unipress is **pre-1.0**. The CLI is stable enough to write real documents with — the `book` template, in particular, is well-tested. Future versions may change small things, but `document.yml` files and project folders from today should keep working: scaffolded projects pin a specific foundation version, and registry artifacts are immutable.
+unipress is on **1.x**, like every Uniweb package since 1.0.1. The CLI is stable enough to write real documents with — the `book` template, in particular, is well-tested. Future versions may change small things, and a change you may need to act on arrives as a minor version, but `document.yml` files and project folders from today should keep working: scaffolded projects pin a specific foundation version, and registry artifacts are immutable.
 
 **Foundations are fetched on first use.** The bundled templates pin foundations served from `https://uniweb.github.io/unipress/foundations/…`; the first compile downloads and caches the one your `document.yml` names (alongside the Typst binary). To iterate on a foundation locally, pass `--foundation <path>` pointing at a built foundation directory; to point at a different registry, set `UNIWEB_REGISTRY_URL`.
 
