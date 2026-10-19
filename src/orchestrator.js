@@ -19,7 +19,7 @@
 // dispatches. unipress hands it the Website + format + host hints;
 // compileDocument does the rest.
 //
-// React-instance note (gotcha #2): @uniweb/runtime/ssr (built bundle) imports
+// React-instance note: @uniweb/runtime/ssr (built bundle) imports
 // React as an external; the foundation does the same. Both must resolve to the
 // SAME React instance, otherwise hooks in foundation components throw "Invalid
 // hook call" — and the foundation must see the SAME @uniweb/core unipress built

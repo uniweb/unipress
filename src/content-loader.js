@@ -117,8 +117,7 @@ async function resolveLocalQueries(siteContent, sitePath) {
   // ⛔ **`config.queries`, not `config.collections`.** The build renamed both the
   // payload key and the function on 2026-08-29 (`@uniweb/build` e442738, "no
   // identifier in build says `collection` any more") and this file was not
-  // carried across — the same shape that left `hosting` reading a key nothing
-  // emits, noted in `framework/CLAUDE.md` § *Decoupling is the architecture*.
+  // carried across: a renamed key reads as absent, never as an error.
   //
   // ⚠️ **The crash was the lucky half.** `processCollections` being undefined
   // only threw because our own fixture still declared the retired
@@ -127,9 +126,8 @@ async function resolveLocalQueries(siteContent, sitePath) {
   // the guard below returned early, and unipress compiled documents with **no
   // query data and no error** — silent, which is why four days passed.
   //
-  // Local identifiers keep the older word deliberately: `framework/CLAUDE.md`
-  // says renaming those is churn. Only the two names that cross a package
-  // boundary had to move.
+  // Local identifiers keep the older word deliberately: renaming those is
+  // churn. Only the two names that cross a package boundary had to move.
   const queriesConfig = siteContent?.config?.queries
   if (!queriesConfig || typeof queriesConfig !== 'object') return
   if (Object.keys(queriesConfig).length === 0) return

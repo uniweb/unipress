@@ -118,8 +118,8 @@ separates create-time templates from runtime foundations.
   links to the foundation README.
 - **Registry-ref resolver** in `foundation-loader.js`. The fifth ref
   form `@<namespace>/<name>@<version>` constructs a URL from
-  `UNIWEB_REGISTRY_URL` (or the production default at
-  `site-router.uniweb-edge.workers.dev`) and fetches via the existing
+  `UNIWEB_REGISTRY_URL` (or the default registry of the time) and
+  fetches via the existing
   cache. Catalog entries pin registry refs; scaffolded `document.yml`
   files inherit them.
 

@@ -100,7 +100,7 @@ Set `foundation:` in `document.yml`, or pass `--foundation <ref>`. Four ref form
 
 ```yaml
 # Registry ref (recommended) — resolved against UNIWEB_REGISTRY_URL
-# or the production default at site-router.uniweb-edge.workers.dev.
+# or the default registry, https://uniweb.github.io/unipress.
 foundation: "@uniweb/book@0.1.0"
 
 # Or a full URL.

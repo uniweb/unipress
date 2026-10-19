@@ -14,8 +14,8 @@
  *
  * Sites using this layout can choose between:
  *   - Per-page downloads: one chapter's Typst source at a time (current default).
- *   - Whole-book downloads: the user builds via `pnpm book:compile` script
- *     (scripts/framework/compile-book.js) while in-browser support is Phase 2.
+ *   - Whole-book downloads: built outside the browser for now; in-browser
+ *     support is Phase 2.
  */
 import React from 'react'
 import { useWebsite } from '@uniweb/kit'

@@ -21,7 +21,7 @@
  * expect.
  *
  * Synchronous on purpose. The SSR pipeline used by `unipress compile`
- * skips `useEffect` (gotcha #2 in framework CLAUDE.md), so an
+ * skips `useEffect` (server rendering runs no effects), so an
  * async-load + useEffect + setState pattern (the way `@uniweb/data`'s
  * PublicationsList does it for the dev/preview case) leaves the
  * captured `useDocumentOutput` registrations holding an empty entries
