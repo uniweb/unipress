@@ -9534,7 +9534,7 @@ function Bo() {
      */
     localize: (t, l = "") => r.localize(t, l),
     /**
-     * Transform a href (handles topic: protocol, etc.)
+     * Resolve a page: reference to its route; any other href comes back as written
      * @param {string} href
      * @returns {string}
      */

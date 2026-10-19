@@ -9522,7 +9522,7 @@ function Jd() {
      */
     localize: (t, n = "") => r.localize(t, n),
     /**
-     * Transform a href (handles topic: protocol, etc.)
+     * Resolve a page: reference to its route; any other href comes back as written
      * @param {string} href
      * @returns {string}
      */
@@ -9606,14 +9606,14 @@ function jj(e, r) {
 function Bj(e, r, { locale: t = !0 } = {}) {
   if (!e || typeof e != "string" || !r) return e;
   let n = e;
-  return (e.startsWith("page:") || e.startsWith("topic:")) && (n = r.makeHref ? r.makeHref(e) : e), Lj.test(n) || t && n.startsWith("/") && !Mj(n) && (n = jj(n, r)), n;
+  return e.startsWith("page:") && (n = r.makeHref ? r.makeHref(e) : e), Lj.test(n) || t && n.startsWith("/") && !Mj(n) && (n = jj(n, r)), n;
 }
 function Fj(e, r) {
   return !e || typeof e != "string" || !r ? e : tN(Bj(e, r), r.basePath || "");
 }
 function Uj(e, r) {
   if (!e || typeof e != "string" || !r || !e.includes("<a")) return e;
-  const t = e.includes("page:") || e.includes("topic:"), n = !!r.hasMultipleLocales?.() && r.getActiveLocale?.() !== r.getDefaultLocale?.();
+  const t = e.includes("page:"), n = !!r.hasMultipleLocales?.() && r.getActiveLocale?.() !== r.getDefaultLocale?.();
   return !t && !r.basePath && !n ? e : e.replace(Dj, (i, a, s, o) => {
     const u = Fj(o, r);
     return u === o ? i : `${a}${s}${u}${s}`;
