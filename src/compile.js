@@ -128,7 +128,7 @@ export async function compile({
     throw new CompileError(
       `foundation declares no outputs — cannot compile.\n` +
       `hint: foundation's default export must include an outputs: { … } map. ` +
-      `See framework/docs/reference/foundation-config.md#document-outputs.`
+      `See https://github.com/uniweb/docs/blob/main/reference/foundation-config.md#document-outputs`
     )
   }
   const outputSpec = outputs[format]

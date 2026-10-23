@@ -31,11 +31,11 @@ A document is rarely just prose. Foundations declare data inputs; authors fill t
 - **Frontmatter params** — declared in each section's YAML frontmatter, typed by the foundation's `meta.js`.
 - **File-based queries** — records under `records/<name>/` (JSON, YAML, BibTeX, or markdown frontmatter), named by a query under `queries:` in `document.yml`. Compile to one `/data/<name>.json` per query.
 - **External queries** — a query with `url:` names a public API. A website's visitors' browsers fetch it; `unipress compile` reads file-based queries only.
+- **Computed values via [Loom](https://github.com/uniweb/loom)** — Loom is an expression language for instantiating templates against hierarchical data. Pull a publications list from a query's records, format each entry with a Loom expression, and the result lands typeset in your output.
 
 A section type declares the `content.data` keys it reads in its `meta.js` `data:` — `data: { publications: {} }` — and a section receives those keys and nothing else. Keys a foundation's content handlers read go in its `main.js` `data:`, and every section receives them.
-- **Computed values via [Loom](https://github.com/uniweb/loom)** — Loom is an expression language for instantiating templates against hierarchical data. Pull a publications list from a collection, format each entry with a Loom expression, and the result lands typeset in your output.
 
-All of these flow through the same foundation pipeline — same primitives whether the data came from a YAML file, a JSON dump, or an API endpoint.
+All of these flow through the same foundation pipeline — same primitives whether the data came from a YAML file, a JSON dump, or (on a website) an API endpoint.
 
 ### Academic writing: bibliographies and citations
 
@@ -74,7 +74,7 @@ That's the structural payoff: the work of defining section types, theming, and r
 A research-group annual-report foundation (`@yourorg/annual-report`) might ship:
 
 - **Section types**: `Cover`, `ExecutiveSummary`, `Members`, `PublicationsList`, `FundingTable`, `Charts`, `Appendix`, `Bibliography`.
-- **Data**: a `publications.yml` collection (file-based) with full bibliographic fields per paper; a `funding.json` collection with grant data; an API-backed `metrics:` collection pulling live citation counts.
+- **Data**: a `publications` query over records with full bibliographic fields per paper; a `funding` query over grant records; and, for the website, an external `metrics` query pulling live citation counts — which the site's visitors fetch and a compiled document does not.
 - **citestyle for bibliographic precision**: pick a style at the section level (`style: chicago-author-date`) and citestyle formats every entry to spec — author ordering, journal abbreviations, the punctuation that marks the difference between a draft and a polished publication.
 - **Loom templates**: dynamic prose elsewhere — running headers (`{book.title} — Chapter {n}`), section subtitles, the table-of-contents introductions. Loom and citestyle cooperate: citestyle owns bibliographic formatting; Loom owns everything else.
 - **Outputs**: `pdf` (typeset for the dean's office), `xlsx` (one sheet per data block, for finance), `docx` (for collaborators who don't open PDFs), `pagedjs` (HTML for the public site).
@@ -93,12 +93,12 @@ fetch:
 The group published 47 papers in 2024, a 30% increase over 2023.
 ```
 
-`unipress compile annual-2024 --format pdf` walks the content through the foundation, resolves Loom expressions over the filtered collection, runs the typst adapter, ships a typeset PDF. `unipress compile annual-2024 --format xlsx` produces a workbook with one sheet per data section. The same source directory; two file types, both honest.
+`unipress compile annual-2024 --format pdf` walks the content through the foundation, resolves Loom expressions over the filtered records, runs the typst adapter, ships a typeset PDF. `unipress compile annual-2024 --format xlsx` produces a workbook with one sheet per data section. The same source directory; two file types, both honest.
 
 ## Where to go from here
 
 - **Foundation contract** — the `outputs:` map, `meta.js` section-type discovery, the `getOptions(website, hostHints)` signature: see [foundation configuration](https://github.com/uniweb/docs/blob/main/reference/foundation-config.md).
-- **Data fetching** — queries, the keys a section receives, predicates, where-objects, deferred fields: see the [data fetching reference](https://github.com/uniweb/docs/blob/main/reference/data-fetching.md).
+- **Data fetching** — queries, the keys a section receives, predicates, where-objects: see the [data fetching reference](https://github.com/uniweb/docs/blob/main/reference/data-fetching.md).
 - **Loom** — expression language for instantiating templates against hierarchical data: [`@uniweb/loom`](https://github.com/uniweb/loom).
 - **citestyle** — CSL-based citation and bibliography formatter. Domain-specific complement to Loom: Loom interpolates, citestyle formats academic-style references: [`citestyle`](https://github.com/uniweb/csl).
 - **Press (the output layer)** — [`@uniweb/press`](https://github.com/uniweb/press) docs cover the registration pattern foundations consume, the IR layer for custom adapters, and per-adapter notes (docx invariants, typst conventions, the EPUB pipeline).
@@ -106,10 +106,10 @@ The group published 47 papers in 2024, a 30% increase over 2023.
 
 ## A few things worth knowing upfront
 
-**Documents are static at compile time.** unipress produces bytes; once the file is on disk, it doesn't change. "Dynamic data" in a document means *the data backing the document can vary between compiles* (re-run `unipress compile` after the API has new data; get a new PDF). It does not mean the PDF live-updates while someone reads it. That's website territory.
+**Documents are static at compile time.** unipress produces bytes; once the file is on disk, it doesn't change. "Dynamic data" in a document means *the data backing the document can vary between compiles* (re-run `unipress compile` after its records change; get a new PDF). It does not mean the PDF live-updates while someone reads it. That's website territory.
 
 **Foundations stay environment-agnostic.** unipress runs in Node; the Uniweb editor runs in the browser. Foundations should not branch on `typeof window` or do their own asset I/O. The compile pipeline supplies a `loadAsset(src)` helper that hosts implement appropriately for their runtime; foundations just call it. The book foundation in this repo is the reference example.
 
 **Compile failures are debuggable.** `unipress compile <dir> --verbose` streams every step; `unipress inspect <dir>` dumps the parsed content tree as JSON before the foundation runs (useful when output looks wrong and you want to know whether the input was right). Press emits structured warnings when an adapter receives unexpected shapes.
 
-**Pre-1.0.** The contract is settling but not frozen. The foundation `outputs:` map, the `meta.js` discovery model, the `compileDocument` API, the section-type vocabulary — all stable enough to build against, with breaking changes possible (and documented in the CHANGELOG) before 1.0.
+**On 1.x.** The foundation `outputs:` map, the `meta.js` discovery model, the `compileDocument` API, the section-type vocabulary — all stable enough to build against. A change you may need to act on arrives as a minor version, documented in the CHANGELOG.

@@ -72,9 +72,9 @@ Making the files is half the job; getting your book onto Amazon, Apple Books, an
 
 **For authors.** unipress is a tool. Pick a template, write markdown, compile. The template knows the conventions for its kind of document — typography, structure, the bits that make a book look like a book and a directory look like a directory. You handle the content; the template handles everything else.
 
-**For developers.** unipress is an engine. A *foundation* you write declares what section types exist (`type: Chapter`, `type: Bibliography`), where their data comes from (markdown content, file-based or API-backed collections, [Loom](https://github.com/uniweb/loom) expressions templating against hierarchical data), and what output formats it can emit (`outputs: { docx, xlsx, pdf, custom-format }`). Authors mix prose with structured records and computed values in the same document; unipress runs your foundation against their content and produces whatever your foundation declares — typeset book, accessible EPUB, regulatory report, structured data feed. The same foundation can also drive a [Uniweb](https://uniweb.io) website, so the work is never single-purpose.
+**For developers.** unipress is an engine. A *foundation* you write declares what section types exist (`type: Chapter`, `type: Bibliography`), where their data comes from (markdown content, the records of file-based or API-backed queries, [Loom](https://github.com/uniweb/loom) expressions templating against hierarchical data), and what output formats it can emit (`outputs: { docx, xlsx, pdf, custom-format }`). Authors mix prose with structured records and computed values in the same document; unipress runs your foundation against their content and produces whatever your foundation declares — typeset book, accessible EPUB, regulatory report, structured data feed. The same foundation can also drive a [Uniweb](https://uniweb.io) website, so the work is never single-purpose.
 
-Foundations consume [@uniweb/press](https://github.com/uniweb/press) for the bytes-emitting work. Press is the output layer (Word, Excel, Typst today; more formats shipping); the foundation is your vocabulary.
+Foundations consume [@uniweb/press](https://github.com/uniweb/press) for the bytes-emitting work. Press is the output layer (Word, Excel, Typst, LaTeX, Paged.js and EPUB); the foundation is your vocabulary.
 
 → For the deeper pitch — mixed prose-and-data, Loom templating, custom output adapters — see [docs/for-developers.md](./docs/for-developers.md).
 
@@ -119,7 +119,7 @@ More templates land as more foundations ship — `cv`, `resume`, `thesis` are on
 
 Any foundation that declares an `outputs: { … }` map on its default export can drive unipress. Point `document.yml`'s `foundation:` at:
 
-- a registry ref: `@<namespace>/<name>@<version>` — fetched from the Uniweb registry, cached locally,
+- a registry ref: `@<namespace>/<name>@<version>` — fetched from unipress's foundation registry (`https://uniweb.github.io/unipress`, or the base `UNIWEB_REGISTRY_URL` names), cached locally,
 - a URL: `https://…/entry.js`,
 - a local filesystem path: `./foundation`, `/abs/path`, etc.
 
@@ -129,7 +129,7 @@ The local-path form is the everyday dev loop — point unipress at a foundation 
 unipress compile my-doc --foundation ../my-foundation
 ```
 
-For the foundation contract — the `outputs:` map, the `getOptions(website, hostHints)` function, what bytes a foundation can emit — see the [foundation authors' guide](https://github.com/uniweb/docs/blob/main/reference/foundation-config.md#document-outputs). Foundations are distributed via the [Uniweb registry](https://uniweb.io), not npm.
+For the foundation contract — the `outputs:` map, the `getOptions(website, hostHints)` function, what bytes a foundation can emit — see the [foundation authors' guide](https://github.com/uniweb/docs/blob/main/reference/foundation-config.md#document-outputs). A foundation is not an npm package: unipress loads its built `entry.js` by URL — a registry ref is turned into one — or from a local path.
 
 ---
 
