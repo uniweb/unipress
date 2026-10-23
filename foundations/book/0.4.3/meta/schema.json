@@ -1,0 +1,202 @@
+{
+  "_self": {
+    "defaultSection": "Chapter",
+    "props": {},
+    "defaultInsets": {},
+    "xref": {
+      "kinds": {
+        "theorem": {
+          "prefix": "thm",
+          "label": "Theorem",
+          "labelPlural": "Theorems",
+          "counter": "arabic",
+          "resetOn": "chapter",
+          "sep": " "
+        },
+        "lemma": {
+          "prefix": "lem",
+          "label": "Lemma",
+          "labelPlural": "Lemmas",
+          "counter": "arabic",
+          "resetOn": "chapter",
+          "sep": " "
+        },
+        "definition": {
+          "prefix": "def",
+          "label": "Definition",
+          "labelPlural": "Definitions",
+          "counter": "arabic",
+          "resetOn": "chapter",
+          "sep": " "
+        },
+        "proof": {
+          "prefix": "proof",
+          "label": "Proof",
+          "labelPlural": "Proofs",
+          "counter": null,
+          "sep": " "
+        }
+      }
+    },
+    "outputs": {
+      "typst": {
+        "extension": "zip"
+      },
+      "pdf": {
+        "extension": "pdf",
+        "via": "typst"
+      },
+      "latex": {
+        "extension": "zip"
+      },
+      "pagedjs": {
+        "extension": "html"
+      },
+      "epub": {
+        "extension": "epub"
+      }
+    },
+    "vars": {
+      "max-content-width": {
+        "default": "48rem",
+        "description": "Maximum width of a book page on screen (reading column)."
+      },
+      "header-height": {
+        "default": "3.5rem",
+        "description": "Height of the top bar in the web preview."
+      }
+    },
+    "name": "@unipress/book",
+    "version": "0.4.3",
+    "description": "Book foundation for Uniweb. Long-form prose with chapters; outputs Typst/PDF, Paged.js HTML, EPUB, and LaTeX. Drives @uniweb/unipress's book/monograph/report/thesis/article templates.",
+    "supports": [
+      "records"
+    ],
+    "defaultLayout": "BookLayout",
+    "schemaFormat": 2
+  },
+  "_layouts": {
+    "BookLayout": {
+      "defaults": {},
+      "name": "BookLayout",
+      "path": "layouts/BookLayout"
+    }
+  },
+  "Abstract": {
+    "defaults": {
+      "title": "Abstract"
+    },
+    "name": "Abstract",
+    "path": "sections/Abstract"
+  },
+  "Appendix": {
+    "defaults": {
+      "auto": true
+    },
+    "name": "Appendix",
+    "path": "sections/Appendix"
+  },
+  "BackCover": {
+    "defaults": {},
+    "name": "BackCover",
+    "path": "sections/BackCover"
+  },
+  "BackMatter": {
+    "defaults": {},
+    "name": "BackMatter",
+    "path": "sections/BackMatter"
+  },
+  "Bibliography": {
+    "data": {
+      "bibliography": {}
+    },
+    "defaults": {
+      "title": "Bibliography",
+      "sortBy": null,
+      "style": null
+    },
+    "name": "Bibliography",
+    "path": "sections/Bibliography"
+  },
+  "BookCover": {
+    "defaults": {},
+    "name": "BookCover",
+    "path": "sections/BookCover"
+  },
+  "Chapter": {
+    "defaults": {
+      "chapterNumber": null
+    },
+    "name": "Chapter",
+    "path": "sections/Chapter"
+  },
+  "Cite": {
+    "inset": true,
+    "defaults": {
+      "label": "page"
+    },
+    "name": "Cite",
+    "path": "sections/Cite"
+  },
+  "Contents": {
+    "defaults": {},
+    "name": "Contents",
+    "path": "sections/Contents"
+  },
+  "Cover": {
+    "defaults": {},
+    "name": "Cover",
+    "path": "sections/Cover"
+  },
+  "Definition": {
+    "defaults": {
+      "name": null
+    },
+    "name": "Definition",
+    "path": "sections/Definition"
+  },
+  "Lemma": {
+    "defaults": {
+      "name": null
+    },
+    "name": "Lemma",
+    "path": "sections/Lemma"
+  },
+  "ListOfFigures": {
+    "defaults": {
+      "title": "List of Figures"
+    },
+    "name": "ListOfFigures",
+    "path": "sections/ListOfFigures"
+  },
+  "ListOfTables": {
+    "defaults": {
+      "title": "List of Tables"
+    },
+    "name": "ListOfTables",
+    "path": "sections/ListOfTables"
+  },
+  "Proof": {
+    "defaults": {},
+    "name": "Proof",
+    "path": "sections/Proof"
+  },
+  "Theorem": {
+    "defaults": {
+      "name": null,
+      "idPrefix": null
+    },
+    "name": "Theorem",
+    "path": "sections/Theorem"
+  },
+  "TitlePage": {
+    "data": {
+      "thesis": {}
+    },
+    "defaults": {
+      "template": "uoft"
+    },
+    "name": "TitlePage",
+    "path": "sections/TitlePage"
+  }
+}
