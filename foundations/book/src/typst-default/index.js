@@ -1,5 +1,5 @@
 /**
- * Typst defaults for @uniweb/book — shared Typst preamble + template
+ * Typst defaults for @unipress/book — shared Typst preamble + template
  * passed to @uniweb/press's typst adapter.
  *
  * Exports:

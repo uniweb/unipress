@@ -1,4 +1,4 @@
-# @uniweb/data
+# @unipress/data
 
 A Uniweb foundation for structured-data documents. Aggregates collections of records (members, publications, funding, supervisions, …) and emits Excel workbooks and Word reports alongside a web preview. Pairs with `@uniweb/press` for the document outputs and `@uniweb/loom` for inline content expressions. Drives the `data-report` and `directory` templates in `@uniweb/unipress`.
 
@@ -47,7 +47,7 @@ Same author code, same foundation code, same components. Switching modes is one 
 
 ```yaml
 # document.yml
-foundation: '@uniweb/data@0.1.0'
+foundation: '@unipress/data@0.1.0'
 format: xlsx
 
 queries:

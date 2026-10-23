@@ -1,6 +1,6 @@
 # `invoice` document template
 
-A self-contained worked invoice for the [`@uniweb/business-docs`](../../foundations/business-docs/)
+A self-contained worked invoice for the [`@unipress/business-docs`](../../foundations/business-docs/)
 foundation. Demonstrates a multi-line subscription bill referencing a
 signed statement of work in the same project.
 
@@ -15,7 +15,7 @@ unipress compile . --format pagedjs --out invoice-0001.html
 produces a Paged.js-wired HTML — open it in a browser and use the
 browser's Print → Save as PDF for the printable artifact. (A native
 PDF output via Paged.js or Typst is on the v2 roadmap; today's
-unipress hardcodes `pdf → typst`, and `@uniweb/business-docs` doesn't
+unipress hardcodes `pdf → typst`, and `@unipress/business-docs` doesn't
 ship a Typst path.)
 
 ## Layout

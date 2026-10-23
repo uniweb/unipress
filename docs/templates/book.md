@@ -14,7 +14,7 @@ unipress compile . --format pdf --out my-book.pdf
 
 ```
 my-book/
-├── document.yml          pinned to @uniweb/book@<version>
+├── document.yml          pinned to @unipress/book@<version>
 ├── content/
 │   ├── 01-preface.md     type: BackMatter — unnumbered front matter
 │   ├── 02-chapter-one.md
@@ -51,4 +51,4 @@ Drop a markdown file under `content/` and add its base name (without `.md`) to `
 
 ## Foundation reference
 
-`@uniweb/book` — see the foundation's README for the full list of section types, layout knobs, and theme variables: `framework/unipress/foundations/book/README.md`.
+`@unipress/book` — see the foundation's README for the full list of section types, layout knobs, and theme variables: `framework/unipress/foundations/book/README.md`.

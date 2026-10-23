@@ -28,7 +28,7 @@ export function variantToConfigFile(variant) {
 // Bare-folder default: the book foundation's `article` genre — a clean
 // single-column A4 paper, the natural shape for a loose folder of markdown.
 const DEFAULT_FOUNDATION =
-  findCatalogEntry('article')?.foundation?.ref ?? '@uniweb/book@0.4.2'
+  findCatalogEntry('article')?.foundation?.ref ?? '@unipress/book@0.4.3'
 
 // "durable-structured-systems" → "Durable Structured Systems"
 function titleize(slug) {

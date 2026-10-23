@@ -21,7 +21,7 @@
  * boundaries readable.
  */
 
-// Map @uniweb/book's `citationStyle` values to biblatex `style=` package
+// Map @unipress/book's `citationStyle` values to biblatex `style=` package
 // options. Verified against TeX Live 2026 — every entry below resolves
 // to either a core biblatex style or a CTAN-shipped community package.
 //
@@ -126,7 +126,7 @@ export function createPreamble({
   const style = STYLE_MAP[citationStyle] || STYLE_MAP['chicago-author-date']
 
   const bibSetup = `% Bibliography (biblatex + biber). The active style maps from
-% @uniweb/book's \`citationStyle\` config; biber is invoked
+% @unipress/book's \`citationStyle\` config; biber is invoked
 % automatically by latexmk so authors don't need to remember the
 % multi-pass dance.
 \\usepackage[style=${style},backend=biber]{biblatex}

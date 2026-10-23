@@ -1,6 +1,6 @@
 # `report` template
 
-A technical report: trade-7x10 trim, block paragraphs (no first-line indent), tables and code listings styled for clarity, code-block margin relief so wide content doesn't wrap awkwardly. Same `@uniweb/book` foundation as the `book` and `monograph` templates — configured for technical writing.
+A technical report: trade-7x10 trim, block paragraphs (no first-line indent), tables and code listings styled for clarity, code-block margin relief so wide content doesn't wrap awkwardly. Same `@unipress/book` foundation as the `book` and `monograph` templates — configured for technical writing.
 
 ```bash
 unipress compile . --format pdf --out my-report.pdf
@@ -11,7 +11,7 @@ unipress compile . --format pagedjs --out my-report.html
 
 ```
 report/
-├── document.yml          pinned to @uniweb/book; trade-7x10, block paragraphs
+├── document.yml          pinned to @unipress/book; trade-7x10, block paragraphs
 ├── content/
 │   ├── 01-summary.md     executive summary + recommendations table
 │   ├── 02-findings.md    body, with code listing and pull-quote
@@ -30,7 +30,7 @@ For prose-driven content, pick `book` (trade-6x9) or `monograph` (royal-octavo, 
 
 ## Adding citations
 
-Reports often cite — primary sources backing findings, prior work in methodology, regulatory references in compliance reports. The same `@uniweb/book` foundation supports inline cites and a back-matter bibliography; this template ships them commented out so a report that doesn't need them isn't carrying empty scaffolding. To opt in:
+Reports often cite — primary sources backing findings, prior work in methodology, regulatory references in compliance reports. The same `@unipress/book` foundation supports inline cites and a back-matter bibliography; this template ships them commented out so a report that doesn't need them isn't carrying empty scaffolding. To opt in:
 
 1. Uncomment the `citationStyle:` block under `book:` and the `queries:` block at the bottom of `document.yml`.
 2. Create `records/bibliography/` and drop a `.bib` file in (each `@entry{key, ...}` becomes one record; the cite key is what you reference with `[@key]`). Hand-written YAML in CSL-JSON shape works alongside it if you'd rather edit entries directly.

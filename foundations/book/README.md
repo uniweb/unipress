@@ -1,4 +1,4 @@
-# @uniweb/book
+# @unipress/book
 
 A Uniweb foundation for books and papers. Pairs with `@uniweb/press` to render long-form prose as a web reader and to compile it to Typst-bundled PDF, Paged.js HTML, or EPUB. Drives the `article`, `book`, `monograph`, and `report` templates in `@uniweb/unipress`.
 
@@ -50,11 +50,11 @@ If multiple foundations end up wanting to share these defaults, they can split b
 ## Wiring into a site
 
 ```yaml
-# site.yml or document.yml
-foundation: '@uniweb/book@0.1.0'
+# document.yml
+foundation: '@unipress/book@0.4.3'
 ```
 
-For a Uniweb-site workspace using this foundation, the site's `vite.config.js` enables Press's typst-server compile plugin:
+A site's `site.yml` cannot name it that way — a site build refuses a versioned ref — so a Uniweb-site workspace uses this foundation from its own folder, and the site's `vite.config.js` enables Press's typst-server compile plugin:
 
 ```js
 import { defineSiteConfig } from '@uniweb/build/site'

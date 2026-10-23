@@ -1,5 +1,5 @@
 /**
- * Paged.js defaults for @uniweb/book — CSS Paged Media stylesheet
+ * Paged.js defaults for @unipress/book — CSS Paged Media stylesheet
  * passed to @uniweb/press's Paged.js adapter.
  *
  * Exports:

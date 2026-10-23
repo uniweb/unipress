@@ -1,6 +1,6 @@
 # `data-report` template
 
-A data-driven report aggregating metrics across a set of records (members, publications, funding, supervisions). Pinned to `@uniweb/data` — outputs both an Excel workbook (one sheet per section) and a Word report.
+A data-driven report aggregating metrics across a set of records (members, publications, funding, supervisions). Pinned to `@unipress/data` — outputs both an Excel workbook (one sheet per section) and a Word report.
 
 ```bash
 unipress compile . --format xlsx --out my-report.xlsx
@@ -11,7 +11,7 @@ unipress compile . --format docx --out my-report.docx
 
 ```
 data-report/
-├── document.yml          pinned to @uniweb/data
+├── document.yml          pinned to @unipress/data
 ├── theme.yml
 ├── records/
 │   ├── members/          three sample records (19th-century naturalists)

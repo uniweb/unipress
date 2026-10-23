@@ -1,6 +1,6 @@
 # `monograph`
 
-A scholarly monograph — sustained, single-author argument on a focused topic with a working citation system. Royal-octavo trim, classical typography (EB Garamond by default with Garamond and Georgia fall-backs), three-deep TOC, roman-numeralled front matter, inline `[@key]` cites, and a back-matter bibliography formatted by [citestyle](https://github.com/uniweb/csl) in any of nine styles. Same `@uniweb/book` foundation as the `book` and `report` templates, configured for academic press conventions.
+A scholarly monograph — sustained, single-author argument on a focused topic with a working citation system. Royal-octavo trim, classical typography (EB Garamond by default with Garamond and Georgia fall-backs), three-deep TOC, roman-numeralled front matter, inline `[@key]` cites, and a back-matter bibliography formatted by [citestyle](https://github.com/uniweb/csl) in any of nine styles. Same `@unipress/book` foundation as the `book` and `report` templates, configured for academic press conventions.
 
 ## Scaffold
 
@@ -16,7 +16,7 @@ The starter ships a small Victorian-naturalist bibliography (nine entries — Da
 
 ```
 my-monograph/
-├── document.yml              pinned to @uniweb/book@<version>; royal-octavo, EB Garamond
+├── document.yml              pinned to @unipress/book@<version>; royal-octavo, EB Garamond
 ├── records/
 │   └── bibliography/
 │       └── refs.bib          BibTeX file — every @entry is one record
@@ -198,4 +198,4 @@ Same shape as `book` (see [book.md](./book.md)). The defaults differ:
 
 ## Foundation reference
 
-`@uniweb/book` — see [foundations/book/README.md](https://github.com/uniweb/unipress/blob/main/foundations/book/README.md) for the full list of foundation knobs and `foundations/book/CHANGELOG.md` for the version history.
+`@unipress/book` — see [foundations/book/README.md](https://github.com/uniweb/unipress/blob/main/foundations/book/README.md) for the full list of foundation knobs and `foundations/book/CHANGELOG.md` for the version history.

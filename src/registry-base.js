@@ -66,9 +66,11 @@ export function getRegistryBase() {
  * The registry path for one foundation, relative to any base serving it.
  *
  * ⚠️ The **namespace is implicit** — every foundation under this layout is
- * `@uniweb/`, so a ref's scope does not appear in the path. A custom
+ * `@unipress/`, so a ref's scope does not appear in the path. That is also why
+ * a document that pinned a version under their earlier `@uniweb/` names still
+ * resolves to the same artifact. A custom
  * `UNIWEB_REGISTRY_URL` that needs a per-namespace split carries it in the base
- * (e.g. `https://my.host/by-ns/uniweb`) or answers it with a redirect.
+ * (e.g. `https://my.host/by-ns/unipress`) or answers it with a redirect.
  *
  * @param {string} name - the foundation name, unscoped (e.g. 'book')
  * @param {string} version

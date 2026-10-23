@@ -1,6 +1,6 @@
 # `directory`
 
-A simple records listing — a faculty directory, an alumni list, an item catalog. Pinned to `@uniweb/data`. Outputs an Excel workbook (one sheet, one row per record) or a Word listing.
+A simple records listing — a faculty directory, an alumni list, an item catalog. Pinned to `@unipress/data`. Outputs an Excel workbook (one sheet, one row per record) or a Word listing.
 
 ## Scaffold
 
@@ -14,7 +14,7 @@ unipress compile . --format xlsx --out faculty.xlsx
 
 ```
 faculty/
-├── document.yml          pinned to @uniweb/data@<version>; one queryable query
+├── document.yml          pinned to @unipress/data@<version>; one queryable query
 ├── records/
 │   └── members/          three sample records
 └── content/
@@ -70,4 +70,4 @@ For multi-section aggregate reports (publications-by-year, funding totals, super
 
 ## Foundation reference
 
-`@uniweb/data` — see the foundation's README: `framework/unipress/foundations/data/README.md`.
+`@unipress/data` — see the foundation's README: `framework/unipress/foundations/data/README.md`.

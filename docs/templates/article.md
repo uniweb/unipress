@@ -2,7 +2,7 @@
 
 A single-column paper — A4 (default) or US Letter, continuous prose, no chapters. Clean typography, symmetric margins tuned for a comfortable ~75-character measure, an inline title block (no separate title page), and unnumbered section headings. It's the natural shape for turning a folder of notes, a report, a proposal, or an essay into one shareable PDF — and the default when you run `unipress compile .` on a loose folder of markdown.
 
-The same `@uniweb/book` foundation drives `article`, `book`, `monograph`, and `report`. The difference is the genre: `article` sets `book.kind: article`, which renders continuous prose instead of chapters.
+The same `@unipress/book` foundation drives `article`, `book`, `monograph`, and `report`. The difference is the genre: `article` sets `book.kind: article`, which renders continuous prose instead of chapters.
 
 ## Scaffold
 
@@ -23,7 +23,7 @@ unipress compile . --yes
 
 ```
 my-paper/
-├── document.yml          pinned to @uniweb/book@<version>; book.kind: article, trim: a4
+├── document.yml          pinned to @unipress/book@<version>; book.kind: article, trim: a4
 ├── content/
 │   ├── 01-introduction.md
 │   └── 02-main.md
@@ -66,4 +66,4 @@ Cover artwork, title pages, copyright pages, and chapter numbering don't apply t
 
 ## Foundation reference
 
-`@uniweb/book` — see the foundation's README: `foundations/book/README.md`.
+`@unipress/book` — see the foundation's README: `foundations/book/README.md`.

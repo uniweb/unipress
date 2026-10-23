@@ -187,7 +187,7 @@ shipped as first-class section types yet:
   is being rolled out.
 
 If you need any of these badly, see the foundation's source under
-`@uniweb/book` and extend; or open an issue.
+`@unipress/book` and extend; or open an issue.
 
 ## Verifying the structure compiles
 

@@ -68,7 +68,7 @@ describe('the catalog shows what the loader fetches', () => {
       const ref = entry.foundation?.ref
       const url = entry.foundation?.source?.url
       if (!ref || !url) continue
-      // '@uniweb/book@0.4.2' -> name 'book', version '0.4.2'
+      // '@unipress/book@0.4.2' -> name 'book', version '0.4.2'
       const m = ref.match(/^@[^/]+\/([^@]+)@(.+)$/)
       expect(m, `unparseable ref: ${ref}`).toBeTruthy()
       expect(url, `catalog url drifted for ${ref}`).toBe(foundationUrl(m[1], m[2]))

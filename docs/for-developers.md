@@ -112,4 +112,4 @@ The group published 47 papers in 2024, a 30% increase over 2023.
 
 **Compile failures are debuggable.** `unipress compile <dir> --verbose` streams every step; `unipress inspect <dir>` dumps the parsed content tree as JSON before the foundation runs (useful when output looks wrong and you want to know whether the input was right). Press emits structured warnings when an adapter receives unexpected shapes.
 
-**On 1.x.** The foundation `outputs:` map, the `meta.js` discovery model, the `compileDocument` API, the section-type vocabulary — all stable enough to build against. A change you may need to act on arrives as a minor version, documented in the CHANGELOG.
+**On 1.x.** The foundation `outputs:` map, the `meta.js` discovery model, the `compileDocument` API, the section-type vocabulary — all stable enough to build against. A change you may need to act on arrives as a minor version.

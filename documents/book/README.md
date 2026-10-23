@@ -59,7 +59,7 @@ If something looks wrong in the output, run `unipress inspect my-book` to see ho
 
 ## Adding citations (optional)
 
-If your book cites sources — even occasionally — the same `@uniweb/book` foundation supports inline cites and a back-matter bibliography. Trade books rarely use this, so it's commented out in `document.yml`. To opt in:
+If your book cites sources — even occasionally — the same `@unipress/book` foundation supports inline cites and a back-matter bibliography. Trade books rarely use this, so it's commented out in `document.yml`. To opt in:
 
 1. Uncomment the `citationStyle:` block under `book:` and the `queries:` block at the bottom of `document.yml`.
 2. Create `records/bibliography/` and add one YAML file per source (`darwin1859.yml`, etc.) — the filename stem is the cite key.

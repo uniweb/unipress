@@ -48,7 +48,7 @@ const DEFAULT_BUILT_ENTRY = 'dist/entry.js'
 // Build the URL for a registry ref. The base + layout live in registry-base.js,
 // shared with the catalog so the URL we FETCH and the URL we SHOW cannot drift
 // (and so both honour UNIWEB_REGISTRY_URL). The `namespace` is accepted and
-// unused: every foundation under this layout is @uniweb/, so a ref's scope does
+// unused: every foundation under this layout is @unipress/, so a ref's scope does
 // not appear in the path — see foundationPath's note on per-namespace bases.
 function buildRegistryUrl(namespace, name, version) {
   return foundationUrl(name, version)

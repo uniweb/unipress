@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.4.3
+
+### Changed
+
+- **Renamed `@unipress/book`** (was `@uniweb/book`), and so are its
+  siblings: `@unipress/data` and `@unipress/business-docs`. Nothing else
+  changed. A document that pins `@uniweb/book@<version>` keeps compiling
+  against that version, since a registry ref's scope is not part of the
+  URL it resolves to; pin `@unipress/book@0.4.3` to move to this one.
+
+## 0.4.2
+
+### Fixed
+
+- Images referenced in markdown embed in Typst/PDF, LaTeX and EPUB output
+  (from `@uniweb/press`'s inline body-image bundling).
+
 ## 0.4.1
 
 ### Added

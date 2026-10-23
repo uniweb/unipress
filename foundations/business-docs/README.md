@@ -1,4 +1,4 @@
-# @uniweb/business-docs
+# @unipress/business-docs
 
 A Uniweb foundation for **statements of work, invoices, and engagement
 reports**.
@@ -7,8 +7,8 @@ The same source ships in three forms:
 
 | Surface | Use it for |
 |---|---|
-| **Foundation** (`@uniweb/business-docs`) | Hosted as a federated module on GitHub Pages; loaded by both unipress documents and uniweb sites. |
-| **Unipress doc template** (`unipress new --template invoice`) | One worked invoice + the SOW it bills against; compiles to PDF and DOCX. |
+| **Foundation** (`@unipress/business-docs`) | Hosted as a federated module on GitHub Pages; loaded by both unipress documents and uniweb sites. |
+| **Unipress doc template** (`unipress create my-invoice --template invoice`) | One worked invoice + the SOW it bills against; compiles to DOCX, and to Paged.js HTML you print to PDF from a browser. |
 | **Uniweb site template** (`uniweb create --template business-docs`) | A complete site: list of invoices, list of SOWs, per-record preview, filtered report page with XLSX export. |
 
 ## What it provides
@@ -88,7 +88,7 @@ not fail on validation alone. See
 ## Versioning and archival
 
 Every record (SOW or invoice) carries
-`foundation_version: '@uniweb/business-docs@<semver>'`. A signed PDF
+`foundation_version: '@unipress/business-docs@<semver>'`. A signed PDF
 committed alongside the YAML is the authoritative legal record; the
 YAML + foundation version + compiler reproduce that artifact
 deterministically. Recompilation against a newer foundation should be

@@ -22,7 +22,7 @@
  *
  * Synchronous on purpose. The SSR pipeline used by `unipress compile`
  * skips `useEffect` (server rendering runs no effects), so an
- * async-load + useEffect + setState pattern (the way `@uniweb/data`'s
+ * async-load + useEffect + setState pattern (the way `@unipress/data`'s
  * PublicationsList does it for the dev/preview case) leaves the
  * captured `useDocumentOutput` registrations holding an empty entries
  * array — the compiled HTML/Typst/EPUB then ship with an empty

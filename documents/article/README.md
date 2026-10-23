@@ -3,7 +3,7 @@
 A single-column paper — A4 or US Letter, continuous prose, no chapters.
 Clean typography, an inline title block, comfortable margins. The natural
 shape for turning a folder of notes or docs into one shareable PDF. Pinned
-to `@uniweb/book` (the `article` genre of the book foundation).
+to `@unipress/book` (the `article` genre of the book foundation).
 
 ```bash
 unipress compile . --format pdf
@@ -14,7 +14,7 @@ unipress compile . --format epub      # or pagedjs, or the typst source bundle
 
 ```
 article/
-├── document.yml          pinned to @uniweb/book; book.kind: article, trim: a4
+├── document.yml          pinned to @unipress/book; book.kind: article, trim: a4
 └── content/
     ├── 01-introduction.md
     └── 02-main.md

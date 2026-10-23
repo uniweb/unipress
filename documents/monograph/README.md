@@ -1,6 +1,6 @@
 # `monograph` template
 
-A scholarly monograph: royal-octavo trim, classical typography (EB Garamond by default), three-deep TOC, roman-numeralled front matter, and a working citation system. Same `@uniweb/book` foundation as the `book` and `report` templates — different defaults to fit academic press conventions.
+A scholarly monograph: royal-octavo trim, classical typography (EB Garamond by default), three-deep TOC, roman-numeralled front matter, and a working citation system. Same `@unipress/book` foundation as the `book` and `report` templates — different defaults to fit academic press conventions.
 
 ```bash
 unipress compile . --format pdf --out my-monograph.pdf
@@ -11,7 +11,7 @@ unipress compile . --format epub --out my-monograph.epub
 
 ```
 monograph/
-├── document.yml              pinned to @uniweb/book; royal-octavo, EB Garamond
+├── document.yml              pinned to @unipress/book; royal-octavo, EB Garamond
 ├── records/
 │   └── bibliography/
 │       └── refs.bib          BibTeX records — one .bib file, every @entry is one record

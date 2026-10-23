@@ -1,6 +1,6 @@
 # `directory` template
 
-A simple records-listing — a faculty directory, an alumni list, an item catalog. Pinned to `@uniweb/data`. Outputs an Excel workbook (one sheet, one row per record) or a Word listing.
+A simple records-listing — a faculty directory, an alumni list, an item catalog. Pinned to `@unipress/data`. Outputs an Excel workbook (one sheet, one row per record) or a Word listing.
 
 ```bash
 unipress compile . --format xlsx --out my-directory.xlsx
@@ -11,7 +11,7 @@ unipress compile . --format docx --out my-directory.docx
 
 ```
 directory/
-├── document.yml          pinned to @uniweb/data; one queryable collection
+├── document.yml          pinned to @unipress/data; one queryable collection
 ├── records/
 │   └── members/          three sample records to make the first compile non-empty
 └── content/

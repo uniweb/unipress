@@ -1,5 +1,5 @@
 /**
- * LaTeX defaults for @uniweb/book — shared LaTeX preamble + template
+ * LaTeX defaults for @unipress/book — shared LaTeX preamble + template
  * passed to @uniweb/press's latex adapter.
  *
  * Mirrors typst-default/index.js. Exports:

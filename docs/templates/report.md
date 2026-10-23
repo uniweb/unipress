@@ -1,6 +1,6 @@
 # `report`
 
-A technical report — executive summary up top, findings in the body, methodology at the bottom. Trade-7x10 trim (wider than a book — tables and code need room), block paragraphs with no first-line indent, code-block margin relief so wide content extends past the body column. Same `@uniweb/book` foundation as the `book` and `monograph` templates, configured for technical writing.
+A technical report — executive summary up top, findings in the body, methodology at the bottom. Trade-7x10 trim (wider than a book — tables and code need room), block paragraphs with no first-line indent, code-block margin relief so wide content extends past the body column. Same `@unipress/book` foundation as the `book` and `monograph` templates, configured for technical writing.
 
 ## Scaffold
 
@@ -14,7 +14,7 @@ unipress compile . --format pdf --out q3-report.pdf
 
 ```
 q3-report/
-├── document.yml          pinned to @uniweb/book@<version>; trade-7x10, block paragraphs
+├── document.yml          pinned to @unipress/book@<version>; trade-7x10, block paragraphs
 ├── content/
 │   ├── 01-summary.md     executive summary + recommendations table
 │   ├── 02-findings.md    body, with code listing and pull-quote
@@ -51,4 +51,4 @@ Same shape as `book` (see [book.md](./book.md)). The differences are defaults:
 
 ## Foundation reference
 
-`@uniweb/book` — see the foundation's README: `framework/unipress/foundations/book/README.md`.
+`@unipress/book` — see the foundation's README: `framework/unipress/foundations/book/README.md`.

@@ -42,7 +42,7 @@ Pass `--yes` to skip the prompt (handy in scripts or non-interactive shells):
 
 ```bash
 unipress compile . --yes                     # generate + compile → A4 article PDF
-unipress compile . --yes --foundation @uniweb/data@0.1.0 --format docx
+unipress compile . --yes --foundation @unipress/data@0.1.1 --format docx
 ```
 
 The generated `document.yml` pins a foundation, sets the format, lists the
@@ -53,7 +53,7 @@ with `paths: { pages: . }`. It's an ordinary config file; edit it freely.
 To write one by hand instead:
 
 ```yaml
-foundation: "@uniweb/book@0.4.2"
+foundation: "@unipress/book@0.4.3"
 format: pdf
 paths:
   pages: .          # only needed when sections live at the root (no content/ folder)
@@ -101,7 +101,7 @@ Set `foundation:` in `document.yml`, or pass `--foundation <ref>`. Four ref form
 ```yaml
 # Registry ref (recommended) — resolved against UNIWEB_REGISTRY_URL
 # or the default registry, https://uniweb.github.io/unipress.
-foundation: "@uniweb/book@0.1.0"
+foundation: "@unipress/book@0.1.0"
 
 # Or a full URL.
 foundation: "https://example.com/foundations/my-foundation/entry.js"
@@ -110,7 +110,7 @@ foundation: "https://example.com/foundations/my-foundation/entry.js"
 foundation: "./path/to/foundation"
 
 # Or, inside a pnpm workspace, a bare package name (resolves through node_modules).
-foundation: "@uniweb/book"
+foundation: "@unipress/book"
 ```
 
 ## `FoundationResolutionError: cannot find foundation package '<name>' from <dir>`

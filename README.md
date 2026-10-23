@@ -102,12 +102,12 @@ Built-in templates ship with the binary. Run `unipress list-templates` for the p
 
 | Template | Foundation | Outputs | Use case |
 |---|---|---|---|
-| `article` | `@uniweb/book` | pdf, typst, pagedjs, epub | Single-column paper (A4/Letter, no chapters) — the default for a loose folder of markdown |
-| `book` | `@uniweb/book` | pdf, typst, pagedjs, epub | Trade book, long-form prose with chapters |
-| `monograph` | `@uniweb/book` | pdf, typst, pagedjs, epub | Scholarly monograph (royal-octavo, classical typography) |
-| `report` | `@uniweb/book` | pdf, typst, pagedjs, epub | Technical report (trade-7x10, block paragraphs) |
-| `data-report` | `@uniweb/data` | xlsx, docx | Aggregate metrics across structured records |
-| `directory` | `@uniweb/data` | xlsx, docx | Flat records listing with a filterable surface |
+| `article` | `@unipress/book` | pdf, typst, pagedjs, epub | Single-column paper (A4/Letter, no chapters) — the default for a loose folder of markdown |
+| `book` | `@unipress/book` | pdf, typst, pagedjs, epub | Trade book, long-form prose with chapters |
+| `monograph` | `@unipress/book` | pdf, typst, pagedjs, epub | Scholarly monograph (royal-octavo, classical typography) |
+| `report` | `@unipress/book` | pdf, typst, pagedjs, epub | Technical report (trade-7x10, block paragraphs) |
+| `data-report` | `@unipress/data` | xlsx, docx | Aggregate metrics across structured records |
+| `directory` | `@unipress/data` | xlsx, docx | Flat records listing with a filterable surface |
 
 `article` and `book`/`monograph`/`report` are one foundation, two genres: `article` is single-column and chapter-less (LaTeX's `article`), the others are chaptered with a title page and TOC. Switch by setting `book.kind`.
 

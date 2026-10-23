@@ -68,7 +68,7 @@ describe('detectBareContent', () => {
 describe('buildDocumentYml', () => {
   const base = {
     name: 'My Doc',
-    foundationRef: '@uniweb/book@0.3.0',
+    foundationRef: '@unipress/book@0.3.0',
     format: 'pdf',
     chapters: ['intro', 'body']
   }
@@ -99,8 +99,8 @@ describe('buildDocumentYml', () => {
   })
 
   it('omits the book block for a non-book foundation', () => {
-    const yml = buildDocumentYml({ ...base, contentDir: '.', foundationRef: '@uniweb/data@0.1.0' })
+    const yml = buildDocumentYml({ ...base, contentDir: '.', foundationRef: '@unipress/data@0.1.0' })
     expect(yml).not.toContain('book:')
-    expect(yml).toContain('foundation: "@uniweb/data@0.1.0"')
+    expect(yml).toContain('foundation: "@unipress/data@0.1.0"')
   })
 })

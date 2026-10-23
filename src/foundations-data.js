@@ -6,7 +6,7 @@
  * compile) and ships starter content that exercises that foundation.
  *
  * Multiple templates can pin the same foundation — `book`, `monograph`,
- * and `report` all use `@uniweb/book` with different starter content,
+ * and `report` all use `@unipress/book` with different starter content,
  * different `book.structure:` defaults, and different sample chapters.
  *
  * ─────────────────────────────────────────────────────────────────────────
@@ -36,11 +36,11 @@
  *   1. catalog lookup (this file) → entry.foundation.ref + entry.scaffold.
  *   2. scaffold copies templates-data.js[entry.scaffold] into my-doc/. The
  *      bundled document.yml has `foundation: <entry.foundation.ref>` (the
- *      registry-ref form, e.g., '@uniweb/book@0.1.1' — rewritten from the
+ *      registry-ref form, e.g., '@unipress/book@0.1.1' — rewritten from the
  *      committed dev path-ref by scripts/generate-templates-data.js).
  *
  * `unipress compile my-doc`:
- *   1. document.yml `foundation: '@uniweb/book@0.1.1'` is parsed as a
+ *   1. document.yml `foundation: '@unipress/book@0.1.1'` is parsed as a
  *      registry ref by foundation-loader.js.
  *   2. The loader constructs a URL from the registry base
  *      (UNIWEB_REGISTRY_URL env override or the default GH Pages base) →
@@ -89,18 +89,18 @@ import { foundationUrl } from './registry-base.js'
 const publicUrl = (name, version) => foundationUrl(name, version)
 
 const BOOK_FOUNDATION = {
-  ref: '@uniweb/book@0.4.2',
-  source: { url: publicUrl('book', '0.4.2') },
+  ref: '@unipress/book@0.4.3',
+  source: { url: publicUrl('book', '0.4.3') },
 }
 
 const DATA_FOUNDATION = {
-  ref: '@uniweb/data@0.1.0',
-  source: { url: publicUrl('data', '0.1.0') },
+  ref: '@unipress/data@0.1.1',
+  source: { url: publicUrl('data', '0.1.1') },
 }
 
 const BUSINESS_DOCS_FOUNDATION = {
-  ref: '@uniweb/business-docs@0.1.0',
-  source: { url: publicUrl('business-docs', '0.1.0') },
+  ref: '@unipress/business-docs@0.1.1',
+  source: { url: publicUrl('business-docs', '0.1.1') },
 }
 
 export const FOUNDATIONS = [
@@ -186,8 +186,8 @@ export const FOUNDATIONS = [
     name: 'Invoice',
     description:
       'A multi-line subscription invoice referencing a signed statement of ' +
-      'work. Demonstrates the @uniweb/business-docs foundation: SOW + invoice ' +
-      'collections, computed totals, and the SHOW-default Loom shorthand.',
+      'work. Demonstrates the @unipress/business-docs foundation: SOW and ' +
+      'invoice records, computed totals, and the SHOW-default Loom shorthand.',
     outputs: ['docx', 'pagedjs'],
     foundation: BUSINESS_DOCS_FOUNDATION,
     scaffold: 'invoice',

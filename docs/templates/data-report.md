@@ -1,6 +1,6 @@
 # `data-report`
 
-An aggregate metrics report — counts, totals, and breakdowns across a set of records (members, publications, funding, supervisions). Pinned to `@uniweb/data`. Outputs a downloadable Excel workbook (one sheet per section) and a Word report.
+An aggregate metrics report — counts, totals, and breakdowns across a set of records (members, publications, funding, supervisions). Pinned to `@unipress/data`. Outputs a downloadable Excel workbook (one sheet per section) and a Word report.
 
 ## Scaffold
 
@@ -15,7 +15,7 @@ unipress compile . --format docx --out q3-metrics.docx
 
 ```
 q3-metrics/
-├── document.yml          pinned to @uniweb/data@<version>
+├── document.yml          pinned to @unipress/data@<version>
 ├── theme.yml             colors + typography for the web preview
 ├── records/
 │   ├── members/          three sample records (19th-century naturalists)
@@ -82,4 +82,4 @@ For a flat records listing, use `directory` instead.
 
 ## Foundation reference
 
-`@uniweb/data` — see the foundation's README: `framework/unipress/foundations/data/README.md`.
+`@unipress/data` — see the foundation's README: `framework/unipress/foundations/data/README.md`.

@@ -186,7 +186,7 @@ export function resolveTrim(input) {
     const p = TRIM_PRESETS[input]
     if (!p) {
       throw new Error(
-        `[@uniweb/book] unknown trim preset "${input}". ` +
+        `[@unipress/book] unknown trim preset "${input}". ` +
           `Available: ${Object.keys(TRIM_PRESETS).join(', ')}`,
       )
     }
@@ -198,7 +198,7 @@ export function resolveTrim(input) {
     const base = TRIM_PRESETS[baseName]
     if (!base) {
       throw new Error(
-        `[@uniweb/book] unknown trim preset "${baseName}". ` +
+        `[@unipress/book] unknown trim preset "${baseName}". ` +
           `Available: ${Object.keys(TRIM_PRESETS).join(', ')}`,
       )
     }
@@ -210,7 +210,7 @@ export function resolveTrim(input) {
   }
 
   throw new Error(
-    `[@uniweb/book] invalid trim value: ${JSON.stringify(input)}`,
+    `[@unipress/book] invalid trim value: ${JSON.stringify(input)}`,
   )
 }
 
@@ -243,7 +243,7 @@ export function resolveStructure(input) {
   const validModes = ['none', 'roman', 'arabic']
   if (!validModes.includes(merged.frontMatterNumbering)) {
     throw new Error(
-      `[@uniweb/book] invalid structure.frontMatterNumbering ` +
+      `[@unipress/book] invalid structure.frontMatterNumbering ` +
         `"${merged.frontMatterNumbering}". Allowed: ${validModes.join(', ')}`,
     )
   }
