@@ -56,8 +56,8 @@
     "@uniweb/core": "workspace:~",
     "@uniweb/runtime": "workspace:~",
     "@uniweb/semantic-parser": "workspace:~",
-    "handlebars": "^4.7.8",
-    "js-yaml": "^4.1.0",
+    "handlebars": "^4.7.10",
+    "js-yaml": "^4.3.2",
     "prompts": "^2.4.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
