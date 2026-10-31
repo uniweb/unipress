@@ -171,13 +171,13 @@ async function sha256OfFile(path) {
 }
 
 async function extractArchive(archivePath, destDir) {
-  // `tar -xf` handles both tar.xz (via libarchive/GNU tar+xz) and .zip
-  // on macOS, Linux, and modern Windows (ships bsdtar since 2017).
+  // Typst's archives are what each system's `tar` reads: a .tar.xz on macOS and Linux (GNU tar
+  // runs `xz` for it), a .zip on Windows, whose tar is bsdtar. GNU tar reads no zip.
   await run('tar', ['-xf', archivePath, '-C', destDir], {
     onError: (err) => new TypstBinaryError(
       `failed to extract ${archivePath}\n` +
       `cause: ${err.message}\n` +
-      `hint: is \`tar\` on PATH? (macOS/Linux ship it; Windows 10+ does too)`
+      `hint: Linux needs \`tar\` and \`xz\` (the xz-utils package). Or install typst yourself and pass --typst-binary <path>`
     )
   })
 }

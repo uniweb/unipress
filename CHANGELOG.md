@@ -20,6 +20,10 @@ newer framework. This release fixes that, and stops it happening again.
 
 ### Fixed
 
+- **PDF never worked on Linux.** Every PDF compile stopped with a `tar` error, in the npm package
+  and the binary alike: unipress unpacked its Typst sources with the system's `tar`, and GNU tar
+  reads no zip. It now unpacks them itself. CI makes a PDF on Linux, and so does the release
+  pipeline before uploading.
 - **A compiled binary could not start**, on any command, since 2026-09-28. CI now compiles one and
   runs it, and so does the release pipeline before uploading.
 - **Pinned foundations changed under people.** A deployed version is now never rebuilt, and
