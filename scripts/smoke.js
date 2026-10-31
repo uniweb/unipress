@@ -67,7 +67,13 @@ function run(args, { cwd = work, timeout = 180_000 } = {}) {
   return { status: r.status, text: `${r.stdout ?? ''}${r.stderr ?? ''}`.trim() }
 }
 
-const lastLine = (text) => text.split('\n').filter(Boolean).pop() ?? ''
+// What a failed command said, from its `error:` line on: that is where the cause is, and the last
+// line is only ever a hint.
+const whatItSaid = (text) => {
+  const lines = text.split('\n').filter(Boolean)
+  const from = lines.findIndex((line) => /^(internal )?error:/.test(line))
+  return (from < 0 ? lines.slice(-3) : lines.slice(from)).join('\n      ')
+}
 
 /** The files in a zip, by name. Enough for what the Office libraries and JSZip write. */
 function readZip(file) {
@@ -153,7 +159,7 @@ function compile(entry, dir, format, extra = []) {
 }
 
 function checkCompiled(label, { file, status, text }, format, want) {
-  if (!check(`${label} compiles`, status === 0 && existsSync(file), lastLine(text))) return
+  if (!check(`${label} compiles`, status === 0 && existsSync(file), whatItSaid(text))) return
   check(`${label} is a ${format} file`, KIND_OF[format](readFileSync(file)))
   if (want && PAGE_OF[format]) {
     const page = PAGE_OF[format](file)
@@ -168,7 +174,7 @@ process.stdout.write(`foundations: ${localFoundations ? 'this checkout' : 'as th
 
 // ── It starts, and is the version it says ───────────────────────────────────
 const version = run(['--version'])
-check(`--version is ${pkg.version}`, version.status === 0 && version.text === pkg.version, lastLine(version.text))
+check(`--version is ${pkg.version}`, version.status === 0 && version.text === pkg.version, whatItSaid(version.text))
 
 // ── Every template, every format, each paper ───────────────────────────────
 for (const entry of catalog) {
@@ -177,7 +183,7 @@ for (const entry of catalog) {
     const dir = `${entry.id}-${paper}`
     process.stdout.write(`\n${entry.id}, --paper ${paper}\n`)
     const created = run(['create', dir, '--template', entry.id, '--title', `Smoke ${entry.id}`, '--author', 'A. Tester', '--yes', '--paper', paper])
-    if (!check(`${dir} scaffolds`, created.status === 0 && existsSync(join(work, dir, 'document.yml')), lastLine(created.text))) continue
+    if (!check(`${dir} scaffolds`, created.status === 0 && existsSync(join(work, dir, 'document.yml')), whatItSaid(created.text))) continue
     for (const format of formats) {
       // The UofT template's LaTeX takes its page from its class, and that file states none.
       const want = entry.id === 'thesis' && format === 'latex' ? null : paper
@@ -202,13 +208,13 @@ if (article) {
   check('--paper legal is refused, by name', refused.status === 1 && /is not a paper/.test(refused.text), refused.text)
 
   const epub = compile(article, 'article-a4', 'epub', ['--paper', 'letter'])
-  check('--paper on a format with no pages says so', epub.status === 0 && /has no pages/.test(epub.text), lastLine(epub.text))
+  check('--paper on a format with no pages says so', epub.status === 0 && /has no pages/.test(epub.text), whatItSaid(epub.text))
 }
 
 if (book) {
   process.stdout.write('\nbook, the shape it is trimmed to and the title it opens with\n')
   const created = run(['create', 'book-plain', '--template', 'book', '--title', 'Smoke book', '--author', 'A. Tester', '--yes'])
-  check('a book scaffolds with no paper named', created.status === 0, lastLine(created.text))
+  check('a book scaffolds with no paper named', created.status === 0, whatItSaid(created.text))
   check('and keeps its trim', /^\s*trim: trade-6x9$/m.test(readFileSync(join(work, 'book-plain/document.yml'), 'utf8')))
   const pagedjs = compile(book, 'book-plain', 'pagedjs')
   check('the same trim in every format', PAGE_OF.pagedjs(pagedjs.file) === '6in 9in', PAGE_OF.pagedjs(pagedjs.file))
@@ -230,7 +236,7 @@ const report = catalog.find((e) => e.id === 'report')
 if (report) {
   process.stdout.write('\nreport, the table it opens with\n')
   const created = run(['create', 'report-plain', '--template', 'report', '--title', 'Smoke report', '--author', 'A. Tester', '--yes'])
-  check('a report scaffolds', created.status === 0, lastLine(created.text))
+  check('a report scaffolds', created.status === 0, whatItSaid(created.text))
   const typst = compile(report, 'report-plain', 'typst')
   check('its table reaches Typst', readZip(typst.file).get('content.typ')().includes('#table('))
   const latex = compile(report, 'report-plain', 'latex')
@@ -251,7 +257,7 @@ if (article) {
   const args = ['compile', dir, '--yes', '--format', 'pagedjs', '--paper', 'letter', '--out', file]
   if (localFoundations) args.push('--foundation', foundationDir(article))
   const result = run(args)
-  check('compiles with --yes', result.status === 0 && existsSync(file), lastLine(result.text))
+  check('compiles with --yes', result.status === 0 && existsSync(file), whatItSaid(result.text))
   check('writes a document.yml', existsSync(join(dir, 'document.yml')))
   if (existsSync(join(dir, 'document.yml'))) {
     const yml = readFileSync(join(dir, 'document.yml'), 'utf8')
