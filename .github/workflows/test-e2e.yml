@@ -126,9 +126,12 @@ jobs:
           - platform: ubuntu-22.04
             target: bun-linux-x64
             artifact: unipress-linux-x64
+          # With what the templates pin, always: a person on Windows fetches a foundation,
+          # and @uniweb/build can't make one there yet.
           - platform: windows-latest
             target: bun-windows-x64
             artifact: unipress-windows-x64.exe
+            foundations: pinned
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout
@@ -156,7 +159,7 @@ jobs:
         run: pnpm install --ignore-workspace --no-frozen-lockfile
 
       - name: Build foundations
-        if: ${{ inputs.foundations != 'pinned' }}
+        if: ${{ (matrix.foundations || inputs.foundations) != 'pinned' }}
         shell: bash
         run: |
           set -e
@@ -172,4 +175,4 @@ jobs:
       # Git's own tar first on the PATH.
       - name: The same, on the binary
         shell: bash
-        run: node scripts/smoke.js --bin "dist-bin/${{ matrix.artifact }}" --foundations ${{ inputs.foundations || 'local' }}
+        run: node scripts/smoke.js --bin "dist-bin/${{ matrix.artifact }}" --foundations ${{ matrix.foundations || inputs.foundations || 'local' }}
