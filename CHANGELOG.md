@@ -1,6 +1,49 @@
 # Changelog
 
-## Unreleased
+## 1.x, since the 0.4.29 binary
+
+The first binary and Homebrew release since 0.4.29. If you have that one and can't compile
+a new document: it broke on fresh downloads when a foundation it pins was rebuilt against a
+newer framework. This release fixes that, and stops it happening again.
+
+### Added
+
+- **A4 or US Letter, everywhere.** `paper: a4` or `paper: letter` in `document.yml`, for every
+  template and every format with pages. `--paper` prints one build on the other paper, on
+  `compile` and on `create`. When unipress writes a `document.yml`, it asks, offering what your
+  system's region uses, and says what it chose when it can't ask. Foundations declare it per
+  output (`outputs.<format>.paper`), and `--paper` refuses an output that doesn't say it takes
+  one, rather than make a file at the wrong size.
+- **Footnotes** in the book foundation: `[^id]` and `[^id]: the note`.
+- **A title in frontmatter**, for a file that opens with no heading.
+- **`scripts/smoke.js`**: every template, every format, each paper, the result opened and read.
+
+### Fixed
+
+- **A compiled binary could not start**, on any command, since 2026-09-28. CI now compiles one and
+  runs it, and so does the release pipeline before uploading.
+- **Pinned foundations changed under people.** A deployed version is now never rebuilt, and
+  foundations deploy from the release tag rather than every push.
+- **Tables were dropped** from PDF, Typst and LaTeX output.
+- **Chapter titles printed twice**, in every format. In LaTeX each chapter was two.
+- **Every EPUB failed EPUBCheck**, which stores use to accept a book. They now pass.
+- **The invoice as Paged.js HTML** was a flat list of lines. It's now the invoice, in your theme.
+- **Page sizes disagreed between formats.** Paged.js printed everything on 6×9, LaTeX ignored a
+  `book.trim` preset, and an invoice was Letter as HTML and A4 in Word.
+- **`frontMatterNumbering: roman`** numbered front matter in arabic.
+- **An invoice's tables** ran past Word's margins on A4, and a four-figure total wrapped.
+- An error in a document's files now reads as one, with exit code 1, not as an internal error.
+- A missing image now names the file, not a temp folder.
+
+### Breaking, since 0.4
+
+- **Node 22.12 or later** for the npm package. The binaries bundle their own runtime.
+- **Documents keep their records in `records/`**, and declare them with `queries:` and `query:`.
+  See [Upgrading a document from 0.4](./docs/troubleshooting.md#upgrading-a-document-from-04).
+- The bundled foundations are named `@unipress/*`. A document pinning `@uniweb/book@<version>`
+  still resolves.
+
+## Between 0.2.3 and 0.4.29
 
 ### Changed
 
