@@ -137,7 +137,9 @@ export async function createCommand({ dir, template, title, author, paper, force
   log(`  scaffold:  ${scaffoldName}`)
   // Said, not asked, without a terminal: `--yes` is how an agent runs this.
   if (entry.takesPaper || flagPaper) {
-    log(`  paper:     ${PAPER_LABELS[vars.paper]}${yes && !flagPaper ? `, from this system's region — change it in document.yml, or --paper for one build` : ''}`)
+    const { region } = detectPaper()
+    const why = region ? `the paper of this system's region (${region})` : 'the default, with no region to go by'
+    log(`  paper:     ${PAPER_LABELS[vars.paper]}${yes && !flagPaper ? `, ${why} — change it in document.yml, or --paper for one build` : ''}`)
   }
 
   await scaffold({

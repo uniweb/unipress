@@ -169,6 +169,6 @@ export async function compileCommand({ dir, format = null, foundation = null, ou
       ? ` via ${result.pressFormat}`
       : ''
   process.stdout.write(
-    `wrote ${result.outPath} (${result.bytes} bytes, ${result.format}${pressFormatNote}, ${result.pageCount} pages)\n`
+    `wrote ${result.outPath} (${result.bytes} bytes, ${result.format}${pressFormatNote})\n`
   )
 }
