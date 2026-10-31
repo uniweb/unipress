@@ -15,9 +15,9 @@ cd my-docs        # a folder of .md files
 unipress compile .
 ```
 
-There's no project to set up. The first time, unipress sees there's no config, offers to create a small `document.yml` for you, and produces the PDF — a clean, single-column **article**: A4, typeset prose, an inline title block, no chapters. Numbered filenames (`01-intro.md`, `02-overview.md`) set the section order; `README.md` and draft files (`_notes.md`) are left out.
+There's no project to set up. The first time, unipress sees there's no config, offers to create a small `document.yml` for you, and produces the PDF — a clean, single-column **article**: typeset prose, an inline title block, no chapters, on the paper your region uses. Numbered filenames (`01-intro.md`, `02-overview.md`) set the section order; `README.md` and draft files (`_notes.md`) are left out.
 
-Prefer no prompts? `--yes` takes the defaults — the A4 article, PDF output:
+Prefer no prompts? `--yes` takes the defaults — an article, PDF output:
 
 ```bash
 unipress compile . --yes
@@ -28,15 +28,21 @@ The generated `document.yml` is yours to keep and edit — it holds the title, r
 
 ### A4 or US Letter?
 
-The default page size is **A4**. In the US and Canada you'll want **Letter** — open the generated `document.yml` and change `book.trim` from `a4` to `letter`:
+Both, in every template and every format with pages. When unipress writes a `document.yml` — `create`, or the first compile of a folder — it asks, and offers the paper your system's region uses: Letter in the US, Canada and the other [countries that use it](./docs/publishing/size-and-layout.md#paper), A4 everywhere else. Without a terminal it picks that one and says so. From then on the file states it, so the document prints the same on any machine:
 
 ```yaml
-book:
-  kind: article
-  trim: letter      # 8.5 × 11 in  (was: a4)
+paper: letter       # or a4
 ```
 
-Then re-run `unipress compile .`. A couple of other one-line tweaks live in the same `book:` block — numbered sections (`structure: { numberHeadings: true }`) and a table of contents (`structure: { toc: true }`). See the [`article` guide](./docs/templates/article.md) for the full list.
+To print one build on the other paper, or to choose when creating:
+
+```bash
+unipress compile . --paper a4                       # this build only
+unipress compile . --paper a4 --out my-doc-a4.pdf   # keep both
+unipress create my-report --template data-report --paper letter
+```
+
+A couple of other one-line tweaks live in the `book:` block — numbered sections (`structure: { numberHeadings: true }`) and a table of contents (`structure: { toc: true }`). See the [`article` guide](./docs/templates/article.md) for the full list.
 
 ## Starting from scratch
 
@@ -102,12 +108,14 @@ Built-in templates ship with the binary. Run `unipress list-templates` for the p
 
 | Template | Foundation | Outputs | Use case |
 |---|---|---|---|
-| `article` | `@unipress/book` | pdf, typst, pagedjs, epub | Single-column paper (A4/Letter, no chapters) — the default for a loose folder of markdown |
+| `article` | `@unipress/book` | pdf, typst, pagedjs, epub | Single-column paper (A4 or Letter, no chapters) — the default for a loose folder of markdown |
 | `book` | `@unipress/book` | pdf, typst, pagedjs, epub | Trade book, long-form prose with chapters |
 | `monograph` | `@unipress/book` | pdf, typst, pagedjs, epub | Scholarly monograph (royal-octavo, classical typography) |
 | `report` | `@unipress/book` | pdf, typst, pagedjs, epub | Technical report (trade-7x10, block paragraphs) |
+| `thesis` | `@unipress/book` | latex, pdf, typst, pagedjs, epub | Graduate thesis (UofT-shaped LaTeX, biblatex) |
 | `data-report` | `@unipress/data` | xlsx, docx | Aggregate metrics across structured records |
 | `directory` | `@unipress/data` | xlsx, docx | Flat records listing with a filterable surface |
+| `invoice` | `@unipress/business-docs` | docx, pagedjs | An invoice with computed totals |
 
 `article` and `book`/`monograph`/`report` are one foundation, two genres: `article` is single-column and chapter-less (LaTeX's `article`), the others are chaptered with a title page and TOC. Switch by setting `book.kind`.
 
@@ -146,6 +154,7 @@ unipress compile <dir> [options]
                         - URL:           https://…/entry.js
                         - path:          ./foundation, /abs/path, …
   --out <path>        Output file (default: ./<dir-basename>.<ext>).
+  --paper <size>      Print this build on a4 or letter, over what document.yml says.
   --variant <name>    Build an alternate top-level config <name>.yml inside <dir>
                       (e.g. --variant document-book → document-book.yml) instead of the
                       default document.yml. Lets one manuscript hold several cuts —
@@ -156,7 +165,7 @@ unipress compile <dir> [options]
   --keep-temp         On typst-compile failure, keep the temp dir for inspection.
   --yes               If no document.yml exists, generate one from the folder's
                       markdown without prompting (book foundation by default;
-                      honors --foundation/--format).
+                      honors --foundation/--format/--paper).
   --verbose           Per-step progress to stderr + stack traces on errors.
 
 unipress create <dir> [options]
@@ -164,6 +173,8 @@ unipress create <dir> [options]
                       Run `unipress list-templates` to see available ids.
   --title <str>       Document title (prompts if omitted).
   --author <str>      Document author (prompts if omitted).
+  --paper <size>      a4 or letter. Without it, what your system's region uses; a
+                      template with a book trim keeps its trim.
   --force             Overwrite non-empty <dir>.
   --yes               Skip prompts (requires --template).
 
@@ -197,6 +208,7 @@ The content-directory-level config. Fields unipress reads:
 | `name` | Document name (used as a title fallback). |
 | `foundation` | Registry ref (`@ns/name@ver`), URL, or local path to the foundation. |
 | `format` | Default output format. Overridable by CLI `--format` or `unipress.config.js`. |
+| `paper` | The paper it prints on: `a4` or `letter`, for every format with pages. Overridable by CLI `--paper` or `unipress.config.js`. A `book.trim` beside it wins: a 6×9 book stays 6×9. |
 | `content:` | Reading order — chapter names with any numeric prefix stripped (`00-intro.md` → `intro`). `pages:` is accepted as an alias. |
 | `paths:` | Content-directory overrides. `paths: { pages: . }` reads markdown loose at the project root instead of a `content/` subfolder. |
 | `queries:` | The queries a document's sections fetch by name (`query: bibliography`); a query's records live under `records/<name>/`. |
@@ -237,6 +249,7 @@ import { defineUnipressConfig } from '@uniweb/unipress'
 export default defineUnipressConfig({
   out: './dist/my-book.pdf',           // overrides --out default
   format: 'pdf',                        // overrides document.yml format
+  paper: 'letter',                      // overrides document.yml paper and book.trim
 
   typst: {
     version: '0.14.2',                  // override the pinned Typst version
@@ -267,7 +280,7 @@ Applied per-field.
 
 ## Where things stand
 
-unipress is on **1.x**, like every Uniweb package since 1.0.1. The CLI is stable enough to write real documents with — the `book` template, in particular, is well-tested. Future versions may change small things, and a change you may need to act on arrives as a minor version, but `document.yml` files and project folders from today should keep working: scaffolded projects pin a specific foundation version, and registry artifacts are immutable.
+unipress is on **1.x**, like every Uniweb package since 1.0.1. The CLI is stable enough to write real documents with — the `book` template, in particular, is well-tested. Future versions may change small things, and a change you may need to act on arrives as a minor version, but `document.yml` files and project folders from today should keep working: scaffolded projects pin a specific foundation version, and a version, once deployed, is never rebuilt. A document from before 1.0 has [a few names to change](./docs/troubleshooting.md#upgrading-a-document-from-04).
 
 **Foundations are fetched on first use.** The bundled templates pin foundations served from `https://uniweb.github.io/unipress/foundations/…`; the first compile downloads and caches the one your `document.yml` names (alongside the Typst binary). To iterate on a foundation locally, pass `--foundation <path>` pointing at a built foundation directory; to point at a different registry, set `UNIWEB_REGISTRY_URL`.
 

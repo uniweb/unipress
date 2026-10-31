@@ -1,13 +1,13 @@
 # `article`
 
-A single-column paper — A4 (default) or US Letter, continuous prose, no chapters. Clean typography, symmetric margins tuned for a comfortable ~75-character measure, an inline title block (no separate title page), and unnumbered section headings. It's the natural shape for turning a folder of notes, a report, a proposal, or an essay into one shareable PDF — and the default when you run `unipress compile .` on a loose folder of markdown.
+A single-column paper — A4 or US Letter, continuous prose, no chapters. Clean typography, symmetric margins tuned for a comfortable ~75-character measure, an inline title block (no separate title page), and unnumbered section headings. It's the natural shape for turning a folder of notes, a report, a proposal, or an essay into one shareable PDF — and the default when you run `unipress compile .` on a loose folder of markdown.
 
 The same `@unipress/book` foundation drives `article`, `book`, `monograph`, and `report`. The difference is the genre: `article` sets `book.kind: article`, which renders continuous prose instead of chapters.
 
 ## Scaffold
 
 ```bash
-unipress create my-paper --template article --title "On Systems" --author "Your Name"
+unipress create my-paper --template article --title "On Systems" --author "Your Name" --paper letter
 cd my-paper
 unipress compile . --format pdf --out my-paper.pdf
 ```
@@ -23,7 +23,7 @@ unipress compile . --yes
 
 ```
 my-paper/
-├── document.yml          pinned to @unipress/book@<version>; book.kind: article, trim: a4
+├── document.yml          pinned to @unipress/book@<version>; paper: a4 or letter; book.kind: article
 ├── content/
 │   ├── 01-introduction.md
 │   └── 02-main.md
@@ -48,7 +48,7 @@ Same `book:` shape as the other genres (see [book.md](./book.md)), with these ar
 | Field                       | `article` default / note                                        |
 |-----------------------------|-----------------------------------------------------------------|
 | `book.kind`                 | `article` — selects the single-column genre                     |
-| `book.trim`                 | `a4` (or `letter` for US/Canada)                                |
+| `paper`                     | `a4` or `letter`. `create` asks, offering what your region uses; `--paper` prints one build on the other |
 | `book.structure.toc`        | `false` — a paper has no TOC by default; set `true` for a longer one |
 | `book.structure.numberHeadings` | `false` — set `true` for numbered sections (`1`, `1.1`, `1.1.1`) |
 | `book.title` / `subtitle` / `author` | render as a centered title block atop page 1; clear the title to omit the block entirely |
@@ -57,11 +57,11 @@ Cover artwork, title pages, copyright pages, and chapter numbering don't apply t
 
 ## Common customizations
 
-- **US Letter instead of A4**: `book.trim: letter`.
+- **US Letter instead of A4**: `paper: letter`, or `--paper letter` for one build.
 - **Numbered sections**: `book.structure: { numberHeadings: true }` → `1`, `1.1`, `1.1.1`.
 - **Add a table of contents**: `book.structure: { toc: true, tocDepth: 2 }`.
 - **Different body font**: `book.typography.bodyFont: ["EB Garamond", "Georgia"]`.
-- **Tighter or looser measure**: override `book.trim` with an object — `{ preset: a4, margins: { inside: 40mm, outside: 40mm } }` — for narrower text.
+- **Tighter or looser measure**: set `book.trim` to an object — `{ preset: a4, margins: { inside: 40mm, outside: 40mm } }` — for narrower text.
 - **Grow into a book**: remove `book.kind` (and set a book trim like `trade-6x9`), or start fresh with `unipress create --template book`.
 
 ## Foundation reference

@@ -2,6 +2,10 @@ name: "{{title}}"
 foundation: ../../foundations/book
 format: latex
 
+# The paper the PDF prints on: a4 or letter. The LaTeX output takes its
+# page from ut-thesis.cls, the page your institution requires.
+paper: {{paper}}
+
 book:
   # Selects the UofT-shaped LaTeX template. Requires `tlmgr install
   # ut-thesis` on your TeX install (the community-maintained UofT SGS-

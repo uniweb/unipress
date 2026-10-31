@@ -34,6 +34,7 @@ import { loadUnipressConfig } from './config.js'
 import { writeBlobToFile } from './sinks/blob.js'
 import { writePdfViaTypst } from './sinks/typst.js'
 import { DocumentYmlError, CompileError } from './errors.js'
+import { checkPaper, normalizePaper } from './paper.js'
 
 // Sink selection. `pdf` is special-cased because the Press output (via
 // the typst adapter) is a source-bundle zip, not a PDF — unipress
@@ -53,6 +54,7 @@ export async function compile({
   keepTemp = false,
   configPath: cliConfigPath = null,
   documentConfig = null,
+  paper: cliPaper = null,
   onProgress = () => {}
 } = {}) {
   onProgress('loading content...')
@@ -101,6 +103,16 @@ export async function compile({
   const typstBinaryPath = cliTypstBinaryPath ?? config.typst?.binary ?? null
   const typstVersion = config.typst?.version ?? null
 
+  // The paper. An override (--paper, unipress.config.js) reaches the foundation as a host hint,
+  // for this build and over the document's own settings; the document's `paper:` is the
+  // foundation's to read from `website.config`, after a `book.trim` beside it. Normalized here,
+  // so a foundation reads one spelling.
+  const paperOverride = cliPaper != null
+    ? normalizePaper(cliPaper, '--paper')
+    : normalizePaper(config.paper, configPath ?? 'unipress.config.js')
+  const documentPaper = normalizePaper(content.config?.paper, configFile)
+  if (documentPaper) content.config.paper = documentPaper
+
   onProgress('resolving foundation...')
   const foundationInfo = await resolveFoundation({
     // Already merged CLI + config.foundation above; document.yml foundation
@@ -140,6 +152,15 @@ export async function compile({
     )
   }
 
+  const notes = checkPaper({
+    outputSpec,
+    format,
+    paper: paperOverride ?? documentPaper,
+    override: Boolean(paperOverride),
+    foundationRef: foundationInfo.ref,
+    configFile
+  })
+
   // Default output filename: `./<dir-basename>.<ext>`. The foundation
   // declares the extension; fall back to the format name if it didn't.
   // Precedence: CLI --out > config.out > default.
@@ -151,9 +172,12 @@ export async function compile({
 
   // Host hints for the foundation's getOptions. For pdf, pass
   // mode: 'sources' so the foundation returns a typst source bundle the
-  // typst sink can then compile locally. Other formats receive no
-  // extra hints for now — foundations decide their own defaults.
-  const hostHints = format === 'pdf' ? { mode: 'sources' } : {}
+  // typst sink can then compile locally. A paper named for this build goes
+  // to every format that takes one.
+  const hostHints = {
+    ...(format === 'pdf' ? { mode: 'sources' } : {}),
+    ...(paperOverride && outputSpec.paper ? { paper: paperOverride } : {})
+  }
 
   onProgress(`compiling to ${format}${outputSpec.via ? ` (via ${outputSpec.via})` : ''}...`)
   const blob = await compileDocumentWithFoundation(foundation, website, {
@@ -180,6 +204,7 @@ export async function compile({
     format,
     pressFormat: outputSpec.via ?? format,
     pageCount: website.pages.length,
-    foundation: foundationInfo
+    foundation: foundationInfo,
+    notes
   }
 }

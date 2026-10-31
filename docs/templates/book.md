@@ -31,7 +31,7 @@ my-book/
 | `book.author`               | Author byline.                                    |
 | `book.language`             | BCP-47 primary tag (`en`, `fr`, `es`, …) for label localization. |
 | `book.rights`, `.publisher`, `.isbn` | Copyright-page strings.                  |
-| `book.trim`                 | `trade-6x9` (default), `trade-7x10`, `crown-octavo`, `royal-octavo`, `a5`. |
+| `book.trim`                 | `trade-6x9` (default), `trade-7x10`, `crown-octavo`, `royal-octavo`, `a5`, or full-size paper: `a4`, `letter`. |
 | `book.typography.bodySize`, `.leading`, `.firstLineIndent` | Body-copy spacing. |
 | `book.typography.bodyFont`, `.headingFont`, `.codeFont` | Font lists; null for Typst defaults. |
 | `book.structure.titlePage`, `.copyrightPage`, `.toc`     | Toggle front-matter blocks. |

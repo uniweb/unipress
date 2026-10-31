@@ -2,14 +2,15 @@ name: "{{title}}"
 foundation: ../../foundations/book
 format: pdf
 
+# The paper it prints on: a4 or letter. `unipress compile . --paper a4`
+# prints one build on the other.
+paper: {{paper}}
+
 book:
-  # The `article` genre: single-column continuous prose on a paper size —
+  # The `article` genre: single-column continuous prose on a full page —
   # no chapters, no cover, no separate title page. Remove `kind` (and pick
   # a book trim like trade-6x9) to render a chaptered book instead.
   kind: article
-
-  # Paper size. `a4` (default) or `letter` (US / Canada).
-  trim: a4
 
   title: "{{title}}"
   subtitle: ""

@@ -8,7 +8,7 @@ book:
   author: "{{author}}"
   language: en
   rights: "© {{year}} {{author}}."
-  trim: trade-7x10
+  trim: {{#if paperChosen}}{{paper}}{{else}}trade-7x10{{/if}}
   typography:
     bodySize: 10.5pt
     leading: 0.7em

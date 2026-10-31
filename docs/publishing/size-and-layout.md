@@ -28,13 +28,29 @@ book:
 | `royal-octavo` | 6.14 × 9.21 in (156 × 234 mm) | Academic and scholarly hardcover. |
 | `a5` | 148 × 210 mm | Compact European paperback; pocket guides. |
 
-Two more sizes exist for the **article** genre — full-size paper for documents and
-proofing copies rather than bound books:
+### Paper
+
+Two more sizes are full-size paper, for documents and proofing copies rather than
+bound books:
 
 | Preset | Size | Good for |
 |---|---|---|
 | `a4` | 210 × 297 mm | The world's standard paper. A roomy proofing copy. |
-| `letter` | 8.5 × 11 in | US/Canada paper. A roomy proofing copy. |
+| `letter` | 8.5 × 11 in | US Letter, used in the US, Canada, Mexico, the Philippines, Puerto Rico, and much of Central and South America (Belize, Chile, Colombia, Costa Rica, El Salvador, Guatemala, Nicaragua, Panama, Venezuela). |
+
+Every template takes these the same way, in every format with pages, and they need no
+`book:` block:
+
+```yaml
+paper: letter
+```
+
+A `book.trim` beside it wins, so a bound book keeps its shape. To print one build on
+paper without touching the file, whatever it says, use the flag:
+
+```bash
+unipress compile . --paper letter --out proof.pdf
+```
 
 ### A custom size
 

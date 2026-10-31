@@ -1,7 +1,7 @@
 # Introduction
 
 You're looking at an article — a single-column document on a full page of
-paper (A4 by default, or US Letter), typeset for comfortable reading. No
+paper (A4 or US Letter), typeset for comfortable reading. No
 chapters, no cover, no separate title page: just your title at the top and
 your writing flowing underneath.
 

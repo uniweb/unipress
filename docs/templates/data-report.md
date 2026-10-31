@@ -29,6 +29,8 @@ The starter ships three sample members so the first compile produces a non-empty
 
 ## `document.yml` fields
 
+`paper: a4` or `paper: letter` sets the page of the Word report and the print setup of the workbook. `create` asks, offering what your region uses; `--paper` prints one build on the other.
+
 | Field                      | Purpose                                                |
 |----------------------------|--------------------------------------------------------|
 | `name`, `author`, `year`   | Workbook metadata (shown in the file's properties).    |
@@ -59,7 +61,7 @@ The Cover section's Loom expressions (`{COUNT OF members}`, `{totalPublications}
 
 ## Filter the active selection
 
-`document.yml`'s `collections.members.queryable:` block declares the filterable fields exposed in the FilterPanel UI:
+`document.yml`'s `queries.members.queryable:` block declares the filterable fields exposed in the FilterPanel UI:
 
 - `enum` → multi-select dropdown.
 - `boolean` → toggle.

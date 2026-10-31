@@ -113,7 +113,8 @@ export function buildDocumentYml({
   format,
   contentDir,
   chapters = [],
-  author = ''
+  author = '',
+  paper = null
 }) {
   const q = (s) => JSON.stringify(String(s ?? ''))
   const isBook = String(foundationRef).startsWith('@unipress/book')
@@ -125,6 +126,13 @@ export function buildDocumentYml({
     `foundation: ${q(foundationRef)}`,
     `format: ${format}`
   ]
+  if (paper) {
+    lines.push(
+      '',
+      '# The paper it prints on: a4 or letter. `--paper` prints one build on the other.',
+      `paper: ${paper}`
+    )
+  }
   if (contentDir === '.') {
     lines.push(
       '',
@@ -138,11 +146,9 @@ export function buildDocumentYml({
     lines.push(
       '',
       'book:',
-      '  # Single-column A4 paper (the article genre). Set trim: letter for',
-      '  # US/Canada, or remove `kind` (and pick a book trim) for a chaptered',
-      '  # book — or run `unipress create --template book`.',
+      '  # A single-column paper (the article genre). Remove `kind` (and pick a',
+      '  # book trim) for a chaptered book — or run `unipress create --template book`.',
       '  kind: article',
-      '  trim: a4',
       `  title: ${q(name)}`,
       `  author: ${q(author)}`,
       '  language: en'

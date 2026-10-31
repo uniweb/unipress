@@ -8,7 +8,7 @@ book:
   author: "{{author}}"
   language: en
   rights: "© {{year}} {{author}}."
-  trim: royal-octavo
+  trim: {{#if paperChosen}}{{paper}}{{else}}royal-octavo{{/if}}
   typography:
     bodySize: 10.5pt
     leading: 0.68em

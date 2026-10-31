@@ -25,6 +25,8 @@ Commands:
                                                  latex emits a LaTeX source bundle (run latexmk yourself)
                            --foundation <ref>  override document.yml's foundation: field
                            --out <path>        output file (default: ./<dir>.<ext>)
+                           --paper <size>      print this build on a4 or letter, whatever
+                                                 document.yml says
                            --variant <name>    build an alternate config <name>.yml in <dir>
                                                  (e.g. --variant document-book) instead of
                                                  document.yml — several cuts of one manuscript
@@ -33,11 +35,13 @@ Commands:
                            --keep-temp         keep the typst temp dir on failure (for debugging)
                            --yes               if no document.yml exists, generate one from the
                                                  folder's markdown without prompting (defaults to
-                                                 the book foundation; honors --foundation/--format)
+                                                 the book foundation; honors --foundation/--format/--paper)
   create <dir>           Scaffold a new unipress project from a template
                            --template <id>     template to use (interactive picker if omitted)
                            --title <str>       document title (prompts if omitted)
                            --author <str>      document author (prompts if omitted)
+                           --paper <size>      a4 or letter (default: what this system's region uses;
+                                                 a book template keeps its trim unless this is given)
                            --force             overwrite non-empty <dir>
                            --yes               skip prompts (requires --template)
   inspect <dir>          Dump the parsed content as JSON
@@ -90,6 +94,7 @@ async function main(argv) {
       out: { type: 'string' },
       config: { type: 'string' },
       variant: { type: 'string' },
+      paper: { type: 'string' },
       title: { type: 'string' },
       author: { type: 'string' },
       force: { type: 'boolean' },
@@ -136,6 +141,7 @@ async function main(argv) {
           out: values.out ?? null,
           config: values.config ?? null,
           variant: values.variant ?? null,
+          paper: values.paper ?? null,
           typstBinary: values['typst-binary'] ?? null,
           keepTemp: !!values['keep-temp'],
           yes: !!values.yes,
@@ -152,6 +158,7 @@ async function main(argv) {
           template: values.template ?? null,
           title: values.title ?? null,
           author: values.author ?? null,
+          paper: values.paper ?? null,
           force: !!values.force,
           yes: !!values.yes,
         })

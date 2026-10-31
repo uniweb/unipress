@@ -11,7 +11,8 @@ book:
 
   # Trim size. Common values:
   #   trade-6x9  (default), trade-7x10, crown-octavo, royal-octavo, a5
-  trim: trade-6x9
+  #   a4, letter (full-size paper: a proofing copy)
+  trim: {{#if paperChosen}}{{paper}}{{else}}trade-6x9{{/if}}
 
   # Front matter and structure.
   structure:

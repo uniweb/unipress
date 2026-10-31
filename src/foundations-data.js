@@ -71,6 +71,14 @@
  * override too, instead of silently pinning to our origin.
  *
  * ─────────────────────────────────────────────────────────────────────────
+ * takesPaper
+ * ─────────────────────────────────────────────────────────────────────────
+ *
+ * A template whose document.yml states a `paper:` — `create` asks which at a
+ * terminal. The ones without it have a book trim, a 6×9 say, and keep it unless
+ * `--paper` names a paper.
+ *
+ * ─────────────────────────────────────────────────────────────────────────
  * Storage format
  * ─────────────────────────────────────────────────────────────────────────
  *
@@ -89,23 +97,24 @@ import { foundationUrl } from './registry-base.js'
 const publicUrl = (name, version) => foundationUrl(name, version)
 
 const BOOK_FOUNDATION = {
-  ref: '@unipress/book@0.4.3',
-  source: { url: publicUrl('book', '0.4.3') },
+  ref: '@unipress/book@0.5.0',
+  source: { url: publicUrl('book', '0.5.0') },
 }
 
 const DATA_FOUNDATION = {
-  ref: '@unipress/data@0.1.1',
-  source: { url: publicUrl('data', '0.1.1') },
+  ref: '@unipress/data@0.2.0',
+  source: { url: publicUrl('data', '0.2.0') },
 }
 
 const BUSINESS_DOCS_FOUNDATION = {
-  ref: '@unipress/business-docs@0.1.1',
-  source: { url: publicUrl('business-docs', '0.1.1') },
+  ref: '@unipress/business-docs@0.2.0',
+  source: { url: publicUrl('business-docs', '0.2.0') },
 }
 
 export const FOUNDATIONS = [
   {
     id: 'article',
+    takesPaper: true,
     name: 'Article',
     description:
       'Single-column paper — A4 or US Letter, continuous prose, no ' +
@@ -150,6 +159,7 @@ export const FOUNDATIONS = [
   },
   {
     id: 'thesis',
+    takesPaper: true,
     name: 'Thesis (UofT-shaped)',
     description:
       'Graduate thesis targeting the University of Toronto SGS formatting ' +
@@ -163,6 +173,7 @@ export const FOUNDATIONS = [
   },
   {
     id: 'data-report',
+    takesPaper: true,
     name: 'Data Report',
     description:
       'Aggregate metrics across a set of records — publications, funding, ' +
@@ -173,6 +184,7 @@ export const FOUNDATIONS = [
   },
   {
     id: 'directory',
+    takesPaper: true,
     name: 'Directory',
     description:
       'Listing of records (people, organizations, items) with filterable ' +
@@ -183,6 +195,7 @@ export const FOUNDATIONS = [
   },
   {
     id: 'invoice',
+    takesPaper: true,
     name: 'Invoice',
     description:
       'A multi-line subscription invoice referencing a signed statement of ' +

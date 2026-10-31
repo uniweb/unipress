@@ -23,6 +23,8 @@ faculty/
 
 ## `document.yml` fields
 
+`paper: a4` or `paper: letter` sets the page of the Word report and the print setup of the workbook. `create` asks, offering what your region uses; `--paper` prints one build on the other.
+
 | Field                       | Purpose                                                |
 |-----------------------------|--------------------------------------------------------|
 | `name`                      | Workbook title.                                        |

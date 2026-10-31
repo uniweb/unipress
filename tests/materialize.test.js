@@ -93,7 +93,7 @@ describe('buildDocumentYml', () => {
     const yml = buildDocumentYml({ ...base, contentDir: '.', name: 'A: B' })
     expect(yml).toContain('book:')
     expect(yml).toContain('  kind: article')
-    expect(yml).toContain('  trim: a4')
+    expect(yml).not.toContain('trim:')
     expect(yml).toContain('  title: "A: B"')
     expect(yml).toContain('name: "A: B"')
   })

@@ -32,17 +32,21 @@ If the folder already holds markdown, you don't have to write one by hand —
 
 ```
 $ unipress compile .
-No document.yml here. Generate one (A4 article, pdf) from the 12 markdown files at the project root and compile? (Y/n)
+No document.yml here. Generate one (article, pdf) from the 12 markdown files at the project root and compile? (Y/n)
 Document title › My Document
+Page size › US Letter
 created /path/to/document.yml
 ```
 
-By default this produces a clean single-column **article** (A4, no chapters).
-Pass `--yes` to skip the prompt (handy in scripts or non-interactive shells):
+By default this produces a clean single-column **article** (no chapters), on the
+paper your system's region uses.
+Pass `--yes` to skip the prompts (handy in scripts or non-interactive shells), and it
+says what it chose:
 
 ```bash
-unipress compile . --yes                     # generate + compile → A4 article PDF
-unipress compile . --yes --foundation @unipress/data@0.1.1 --format docx
+unipress compile . --yes                     # generate + compile → article PDF
+unipress compile . --yes --paper a4          # …on A4, whatever the region
+unipress compile . --yes --foundation @unipress/data@0.2.0 --format docx
 ```
 
 The generated `document.yml` pins a foundation, sets the format, lists the
@@ -53,8 +57,9 @@ with `paths: { pages: . }`. It's an ordinary config file; edit it freely.
 To write one by hand instead:
 
 ```yaml
-foundation: "@unipress/book@0.4.3"
+foundation: "@unipress/book@0.5.0"
 format: pdf
+paper: letter
 paths:
   pages: .          # only needed when sections live at the root (no content/ folder)
 book:
@@ -159,6 +164,43 @@ The downloaded Typst archive doesn't match the pinned digest. Either the downloa
 
 Quick retry: delete the cache directory (`$UNIPRESS_CACHE_DIR/typst/<version>`) and re-run. If the mismatch persists, the pin is out of date — file an issue, or override with `--typst-binary <path>` pointing at a locally-installed Typst.
 
+## The PDF stops at `the document names a file that is not there`
+
+A markdown image, or a cover in `document.yml`, points at a file unipress can't find.
+The error names it. Check the spelling and the path: a PDF can't be typeset without it.
+
+## `CompileError: <foundation> does not say its <format> output takes a paper`
+
+`--paper` was given, and the foundation's output doesn't declare that it honors one, so
+the file might come out at the wrong size. A document that pins an older bundled
+foundation gets the version to pin in the message:
+
+```yaml
+foundation: '@unipress/book@0.5.0'
+```
+
+A foundation of your own declares it as `paper: true` on the output
+([the foundation guide](https://github.com/uniweb/docs/blob/main/reference/foundation-config.md#document-outputs)).
+
+A `paper:` in `document.yml` for such an output is a note rather than an error, since
+the same file may be built for other formats.
+
+## Upgrading a document from 0.4
+
+A document made before unipress 1.0 stops with a message like
+`` `data:` is retired `` or `` `collection: "members"` is retired ``. The names changed
+when documents and websites came to share one vocabulary. Four edits bring it across:
+
+1. Rename the `collections/` folder to `records/`.
+2. In `document.yml`, change `collections:` to `queries:`, and delete any
+   `path: collections/…` line under it.
+3. In each page's frontmatter or `page.yml`, change `data: <name>` to `query: <name>`,
+   and `collection: <name>` to `query: <name>`.
+4. Point `foundation:` at the current version: `@unipress/book@0.5.0`,
+   `@unipress/data@0.2.0` or `@unipress/business-docs@0.2.0`.
+
+`unipress list-templates` shows the versions this unipress pins.
+
 ## `TypstBinaryError: typst exited with code 1`
 
 Typst rejected the foundation-generated source bundle. The error includes Typst's own stderr and a hint:
@@ -176,7 +218,7 @@ typst exited with code 1 (temp dir kept at /var/folders/.../unipress-typst-XXXXX
 Inspect `main.typ`, `template.typ`, `meta.typ`, `content.typ` in that directory. The root cause is usually:
 
 - **The foundation's `outputs[format].getOptions` produced a partial `meta` object** missing a field the foundation's template expects. Check the foundation's `compile-options.js` against its `template.typ`.
-- **An image asset the bundle references is missing.** Foundation-side: verify `gatherCovers` (or equivalent) found the image at the URL it computed.
+- **An asset the bundle references is missing**, if it isn't the case above. Foundation-side: verify `gatherCovers` (or equivalent) found the image at the URL it computed.
 - **A Typst syntax issue in the foundation's preamble or template.** Check against the installed Typst version (`typst --version`).
 
 ## `OutputWriteError: failed to write output to <path>`

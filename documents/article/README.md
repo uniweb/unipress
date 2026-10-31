@@ -14,7 +14,7 @@ unipress compile . --format epub      # or pagedjs, or the typst source bundle
 
 ```
 article/
-├── document.yml          pinned to @unipress/book; book.kind: article, trim: a4
+├── document.yml          pinned to @unipress/book; paper: a4 or letter; book.kind: article
 └── content/
     ├── 01-introduction.md
     └── 02-main.md
@@ -29,8 +29,8 @@ dropping in `content/03-<name>.md` and listing its base name under
 
 ### Page size
 
-`book.trim` is `a4` by default; set it to `letter` for US/Canada. Both ship
-as presets — it's a one-word change.
+`paper:` in `document.yml` is `a4` or `letter`. To print one build on the other
+paper without changing the file, use `unipress compile . --paper a4`.
 
 ### Title block
 

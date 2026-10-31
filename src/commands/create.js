@@ -20,6 +20,7 @@ import prompts from 'prompts'
 import { listCatalog, findCatalogEntry } from '../catalog.js'
 import { scaffold } from '../scaffold.js'
 import { TemplateError } from '../errors.js'
+import { detectPaper, normalizePaper, PAPER_LABELS, PAPERS } from '../paper.js'
 
 function log(line) {
   process.stdout.write(line + '\n')
@@ -52,33 +53,48 @@ async function pickTemplate() {
   return response.id
 }
 
-async function collectVars({ flagTitle, flagAuthor, interactive }) {
+// `paper`: the page the document.yml will state — the flag, else what this system's region uses
+// (`paper.js`), asked at a terminal where the template prints on paper. `paperChosen`: whether it
+// was asked for by name, which a template with a book trim reads: a 6×9 book stays one unless
+// someone says otherwise.
+async function collectVars({ flagTitle, flagAuthor, flagPaper, takesPaper, interactive }) {
   const now = new Date()
+  const detected = detectPaper()
   const defaults = {
     title: flagTitle || 'Untitled document',
     author: flagAuthor || '',
     year: String(now.getFullYear()),
     date: now.toISOString().slice(0, 10),
+    paper: flagPaper || detected.paper,
+    paperChosen: Boolean(flagPaper),
   }
   if (!interactive) return defaults
   const answers = await prompts([
     { type: flagTitle ? null : 'text', name: 'title', message: 'Title', initial: defaults.title },
     { type: flagAuthor ? null : 'text', name: 'author', message: 'Author', initial: defaults.author },
+    {
+      type: takesPaper && !flagPaper ? 'select' : null,
+      name: 'paper',
+      message: 'Page size',
+      choices: PAPERS.map((p) => ({ title: PAPER_LABELS[p], value: p })),
+      initial: PAPERS.indexOf(detected.paper),
+    },
   ])
   return {
+    ...defaults,
     title: flagTitle || answers.title || defaults.title,
     author: flagAuthor || answers.author || defaults.author,
-    year: defaults.year,
-    date: defaults.date,
+    paper: answers.paper ?? defaults.paper,
   }
 }
 
-export async function createCommand({ dir, template, title, author, force = false, yes = false }) {
+export async function createCommand({ dir, template, title, author, paper, force = false, yes = false }) {
   if (!dir) {
     throw new TemplateError(
-      `usage: unipress create <dir> [--template <id>] [--title <t>] [--author <a>]`
+      `usage: unipress create <dir> [--template <id>] [--title <t>] [--author <a>] [--paper <a4|letter>]`
     )
   }
+  const flagPaper = normalizePaper(paper, '--paper')
   const targetDir = resolve(dir)
 
   let templateId = template
@@ -107,12 +123,22 @@ export async function createCommand({ dir, template, title, author, force = fals
     )
   }
 
-  const vars = await collectVars({ flagTitle: title, flagAuthor: author, interactive: !yes })
+  const vars = await collectVars({
+    flagTitle: title,
+    flagAuthor: author,
+    flagPaper,
+    takesPaper: Boolean(entry.takesPaper),
+    interactive: !yes,
+  })
   vars.foundation = templateId
 
   log(`scaffolding ${targetDir}`)
   log(`  template:  ${entry.name || entry.id} (id: ${entry.id})`)
   log(`  scaffold:  ${scaffoldName}`)
+  // Said, not asked, without a terminal: `--yes` is how an agent runs this.
+  if (entry.takesPaper || flagPaper) {
+    log(`  paper:     ${PAPER_LABELS[vars.paper]}${yes && !flagPaper ? `, from this system's region — change it in document.yml, or --paper for one build` : ''}`)
+  }
 
   await scaffold({
     templateName: scaffoldName,
