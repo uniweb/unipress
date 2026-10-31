@@ -1,43 +1,38 @@
 # ─────────────────────────────────────────────────────────
 # unipress — deploy bundled foundations to GitHub Pages
 #
-# Builds every foundation under foundations/<name>/ and publishes the
-# resulting dist/ tree at:
+# Builds the foundations under foundations/<name>/ whose version is not
+# deployed yet, and publishes each dist/ tree at:
 #
 #   https://uniweb.github.io/unipress/foundations/<name>/<version>/
 #
-# Versions accumulate. The workflow checks out the existing gh-pages
-# branch, layers in the freshly-built dist for each foundation under
-# its own version directory, and pushes back. A foundation whose
-# package.json version was already deployed is overwritten in place
-# (idempotent for unchanged content); a bumped version creates a new
-# directory alongside the older ones, so existing URLs keep resolving
-# forever.
+# ⛔ A DEPLOYED VERSION NEVER CHANGES. A document pins a foundation by version,
+# and a binary out in the world bundles the @uniweb/core it was built with. A
+# foundation is built against the kit on npm, and a kit newer than a binary's
+# core can import what that core does not have. So rebuilding a version in place
+# breaks every older binary on its next fresh download. (Until this rule, it did:
+# a rebuild of 0.4.2 left the installed 0.4.29 binary failing on 7 of 8 templates.)
+# New code needs a new version in foundations/<name>/package.json.
 #
 # Trigger:
-#   - push to main      (default cadence — every commit gets a deploy
-#                        if any foundation built cleanly)
+#   - a v* tag, which the release pushes after publishing to npm. A foundation is
+#     built against what is on npm, so this is the moment that holds what the
+#     release ships. A push to main does not deploy: it would freeze a new
+#     version against the previous release's Press and kit.
 #   - workflow_dispatch (manual re-run from the Actions tab)
 #
 # This is the open-source distribution path for unipress's bundled
 # foundations. The Uniweb registry remains the path for private,
 # CDN-backed foundations served to the commercial editor; this
 # workflow is for the public artifacts the unipress CLI scaffolds
-# into. See docs/foundations-distribution.md (when written) for the
-# rationale.
+# into.
 # ─────────────────────────────────────────────────────────
 
 name: Deploy Foundations
 
 on:
   push:
-    branches: [main]
-    # A commit that only touches CI config cannot change a foundation's output,
-    # so it should not republish one. Without this, editing a workflow file
-    # redeploys every foundation as a side effect. Use the manual trigger to
-    # verify a change to this file.
-    paths-ignore:
-      - '.github/**'
+    tags: ['v*']
   workflow_dispatch:
 
 permissions:
@@ -53,6 +48,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0   # the previous tag, to say what changed without a new version
 
       # pnpm is installed before setup-node on purpose. setup-node v5+ turns on
       # package-manager caching by itself when package.json carries a
@@ -66,6 +63,23 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: 22
+
+      - name: Wait for this release on npm
+        # The tag follows the publish, but the registry can take a while to show
+        # it, and a foundation built before it does is frozen against the last one.
+        if: github.ref_type == 'tag'
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          for attempt in $(seq 1 40); do
+            if [ "$(npm view "@uniweb/unipress@$version" version 2>/dev/null)" = "$version" ]; then
+              echo "@uniweb/unipress@$version is on npm"
+              exit 0
+            fi
+            echo "not on npm yet ($attempt)"; sleep 30
+          done
+          echo "::error::@uniweb/unipress@$version never appeared on npm"
+          exit 1
 
       - name: Flip workspace:* to npm versions
         # Foundations and the CLI declare @uniweb/* deps as workspace:*
@@ -81,16 +95,35 @@ jobs:
       - name: Install dependencies
         run: pnpm install --ignore-workspace --no-frozen-lockfile
 
-      - name: Build foundations
+      - name: Check out what is deployed
+        shell: bash
+        run: |
+          if git fetch origin gh-pages 2>/dev/null; then
+            git worktree add -b gh-pages _gh-pages FETCH_HEAD
+          else
+            git worktree add --detach _gh-pages
+            (cd _gh-pages && git checkout --orphan gh-pages && git rm -rf . 2>/dev/null || true)
+          fi
+
+      - name: Build the versions not deployed yet
         shell: bash
         run: |
           set -e
           mkdir -p _staging
+          previous=$(git describe --tags --abbrev=0 --match 'v*' HEAD^ 2>/dev/null || true)
           for foundation_dir in foundations/*/; do
             name=$(basename "$foundation_dir")
             version=$(jq -r '.version' "$foundation_dir/package.json")
             if [ -z "$version" ] || [ "$version" = "null" ]; then
               echo "::warning::skipping $name — no version in package.json"
+              continue
+            fi
+
+            if [ -d "_gh-pages/foundations/$name/$version" ]; then
+              echo "$name@$version is deployed, and a deployed version never changes"
+              if [ -n "$previous" ] && ! git diff --quiet "$previous" HEAD -- "$foundation_dir/src"; then
+                echo "::warning::foundations/$name changed since $previous, but $version is already deployed. Bump its version to ship the change."
+              fi
               continue
             fi
 
@@ -134,21 +167,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Fetch existing gh-pages (or start fresh if the branch doesn't
-          # exist yet — happens on the very first deploy).
-          if git fetch origin gh-pages 2>/dev/null; then
-            git worktree add _gh-pages gh-pages
-          else
-            git worktree add --detach _gh-pages
-            (cd _gh-pages && git checkout --orphan gh-pages && git rm -rf . 2>/dev/null || true)
-          fi
-
-          # Layer the staged versions onto the existing tree. Newer
-          # versions of the same foundation create new directories
-          # alongside older ones; same-version content gets overwritten
-          # in place (idempotent on unchanged content).
+          # Layer the staged versions onto the existing tree: a new
+          # directory beside the older ones, which stay as they are.
           mkdir -p _gh-pages/foundations
-          cp -R _staging/foundations/. _gh-pages/foundations/
+          if [ -d _staging/foundations ]; then
+            cp -R _staging/foundations/. _gh-pages/foundations/
+          fi
 
           # Disable Jekyll. GitHub Pages defaults to Jekyll processing,
           # which silently excludes any file or directory starting with
@@ -170,7 +194,7 @@ jobs:
             echo '<p>URL pattern: <code>https://uniweb.github.io/unipress/foundations/&lt;name&gt;/&lt;version&gt;/entry.js</code></p>'
             for fdir in _gh-pages/foundations/*/; do
               name=$(basename "$fdir")
-              echo "<h2>@uniweb/$name</h2><ul>"
+              echo "<h2>@unipress/$name</h2><ul>"
               for vdir in "$fdir"*/; do
                 version=$(basename "$vdir")
                 echo "<li><a href=\"foundations/$name/$version/entry.js\">$version</a></li>"

@@ -8,7 +8,7 @@
  *   node scripts/build-binaries.js --target <t>    # bun target, e.g., bun-darwin-arm64
  *   node scripts/build-binaries.js --out <dir>     # output directory (default: dist-bin)
  *
- * Supported bun targets (matches .github/workflows/release.yml matrix):
+ * Supported bun targets:
  *   bun-darwin-arm64      macOS Apple Silicon
  *   bun-linux-x64         Linux x64
  *   bun-windows-x64       Windows x64  (produces .exe)

@@ -1,103 +1,40 @@
 # Releasing unipress
 
-Notes for cutting a release tag (`unipress@<version>`). The release workflow at `.github/workflows/release.yml` watches for tag pushes matching that pattern, builds three binaries (darwin-arm64, linux-x64, windows-x64), and creates a GitHub Release with the binaries and SHA-256 sidecars attached.
+unipress reaches people three ways, and a release is all three, in this order. Each step is the maintainer's.
 
-A separate workflow at `.github/workflows/deploy-foundations.yml` builds and deploys the bundled foundations (`foundations/<name>/`) to the unipress repo's GitHub Pages site under `https://uniweb.github.io/unipress/foundations/<name>/<version>/`. It runs on every push to main, accumulating versions on the `gh-pages` branch — older versions stay reachable indefinitely. No tag needed; foundation deployment is decoupled from the binary-release tag cadence.
+## 1. npm
 
-This file mostly exists to flag one thing the binary-release workflow currently can't handle on its own.
+The framework's release publishes `@uniweb/unipress` with the framework packages it depends on, and pushes a `v<version>` tag here.
 
----
+## 2. Foundations
 
-## The CI install tension
+The tag runs [`deploy-foundations.yml`](./.github/workflows/deploy-foundations.yml), which builds each `foundations/<name>/` whose version is not deployed yet and adds it to GitHub Pages at `https://uniweb.github.io/unipress/foundations/<name>/<version>/`.
 
-unipress's runtime depends on five `@uniweb/*` framework packages (`@uniweb/build`, `@uniweb/content-reader`, `@uniweb/core`, `@uniweb/runtime`, `@uniweb/semantic-parser`). The CLI is developed inside a larger monorepo where these are sibling packages and resolve via `workspace:*`. That works for local dev — pnpm symlinks the local sources directly — but the release workflow checks out only this repo, with no monorepo around it.
+**Wait for it to finish.** The CLI just published pins those versions, and a binary's smoke test (below) fetches them.
 
-Two strategies have been tried, and each has a failure mode:
+**A deployed version never changes.** A document pins a foundation by version, and a binary bundles the `@uniweb/core` it was built with. A foundation is built against the kit on npm, and a kit newer than a binary's core can import what that core does not have, so rebuilding a version in place breaks every older binary on its next fresh download.
 
-- **`^X.Y.Z` (npm version specs).** Lets CI install standalone from npm. Failure mode: when framework changes ship in unpublished workspace versions, dev machines pnpm-resolve to the npm-published copy instead of the local sibling — meaning `pnpm install` from inside the monorepo silently picks up an older framework. This bit us once; the developer-side breakage is silent and hard to spot.
+So changing a foundation takes three things in the same commit: a new `version` in its `package.json`, its pin in [`src/foundations-data.js`](./src/foundations-data.js), and the regenerated templates (`node scripts/generate-templates-data.js`). `tests/paper.test.js` fails when a pin and a version disagree. The deploy warns when a foundation's source changed under a version already deployed.
 
-- **`workspace:*` (current).** Dev machines always get the local siblings. Failure mode: CI's `pnpm install --ignore-workspace --no-frozen-lockfile` has no way to resolve `workspace:*` outside a workspace — it will error.
+## 3. Binaries and Homebrew
 
-Both strategies are correct for one audience and broken for the other. The current state is `workspace:*`, which means **the next release tag will fail at the CI install step until one of the two fixes below lands.**
+Standalone binaries are built, signed and notarized in a private pipeline, which the maintainer dispatches with the version. It checks out the `v<version>` tag, compiles for macOS, Linux and Windows, runs [`scripts/smoke.js`](./scripts/smoke.js) on each binary against the foundations just deployed, uploads to the GitHub Release, and bumps the Homebrew tap.
 
-## Two ways out
-
-### (a) Publish all `@uniweb/*` framework packages to npm at the release version, then flip the specs back to npm ranges at release time
-
-The `pnpm framework:publish:*` shortcuts in the outer monorepo handle the framework publish. Workflow:
-
-1. From the outer monorepo, bump + publish all framework packages: `pnpm framework:publish:patch` (or `:minor`).
-2. Wait for the publish to settle on npm.
-3. In the unipress repo, change the five `@uniweb/*` deps in `package.json` from `workspace:*` back to `^<published-version>` matching what just shipped.
-4. Commit, tag `unipress@<version>`, push.
-5. After the release CI succeeds and the binary is out, switch the deps back to `workspace:*` so dev resolution stays correct.
-
-Pros: keeps the CI workflow simple — `pnpm install --ignore-workspace --no-frozen-lockfile` continues to work standalone. The release artifact is reproducible from npm with no monorepo context.
-
-Cons: requires a framework publish before every unipress release. Adds a step. The flip-back-to-`workspace:*` after release is easy to forget; if you skip it, the next dev `pnpm install` quietly downgrades the framework deps to the npm-published versions. Worth automating the flip with a script if this becomes the standard path.
-
-### (b) Build the unipress binary inside the outer monorepo's CI
-
-Add a release workflow at the **outer monorepo** that:
-
-1. Watches for tag pushes matching `unipress@*`.
-2. Checks out the outer monorepo (which has the workspace + all `@uniweb/*` siblings cloned via `pnpm clone`).
-3. Runs `pnpm install` at the outer root (resolves `workspace:*` correctly).
-4. Runs `node scripts/build-binaries.js` from inside `framework/unipress/`.
-5. Uploads the resulting binaries to a GitHub Release in the **unipress** repo (cross-repo release via `gh release` with a PAT).
-
-Pros: matches the dev environment exactly — workspace:* always resolves the same way locally and in CI. No extra publish step. No flip-back dance.
-
-Cons: more workflow complexity. Cross-repo release upload requires a PAT (the workflow's default `GITHUB_TOKEN` is scoped to its own repo). The outer monorepo is private, so the workflow runs there and can't be inspected by anyone outside the org — fine for our purposes but worth noting if unipress ever gets external contributors who want to understand how releases are produced.
-
-## Recommendation
-
-**Go with (a) for v0.x releases. Move to (b) once unipress's release cadence outpaces the framework's**, or once the outer monorepo's CI matures enough that adding a cross-repo build step is cheap.
-
-Why (a) first:
-
-- The framework already publishes to npm on its own cadence. Tagging unipress *after* a framework publish settles is a normal sequencing — every framework feature unipress depends on is on npm anyway by the time a release ships.
-- The flip-back-to-`workspace:*` step is the only friction, and it's a one-line change. Easy to script.
-- (b) is strictly more invasive and ties the unipress release pipeline to the outer monorepo's existence — a coupling worth deferring.
-
-When (b) starts to make sense:
-
-- If unipress needs to release patches against unpublished framework changes (rare, but possible).
-- If the framework publish cadence becomes the bottleneck on shipping unipress fixes.
-- If cross-repo release infrastructure is already in place for other reasons (e.g., other tools in `framework/` shipping binaries).
-
-## Concrete checklist for the next release
-
-Until (b) lands, every release goes through this:
+## Before a release
 
 ```bash
-# 1. From the outer monorepo: bump + publish framework
-pnpm framework:publish:patch    # or :minor
-
-# 2. Note the new versions: check `framework/<pkg>/package.json` for each.
-
-# 3. In framework/unipress/, edit package.json:
-#    - "@uniweb/build": "workspace:*"      → "^<new-version>"
-#    - (repeat for content-reader, core, runtime, semantic-parser)
-
-# 4. Bump unipress version + update CHANGELOG (this file's git history
-#    should make the pattern obvious).
-
-# 5. Commit + tag + push:
-git add package.json CHANGELOG.md
-git commit -m "release: <version>"
-git tag -a unipress@<version> -m "..."
-git push origin main
-git push origin unipress@<version>
-
-# 6. Wait for the release workflow. Confirm artifacts uploaded.
-#    The release is created as a draft — review and publish it via
-#    `gh release edit unipress@<version> --draft=false`.
-
-# 7. Flip framework deps back to workspace:* so dev resolution stays
-#    correct against unpublished framework changes:
-git revert <step-3-commit>     # or hand-edit + commit
-git push origin main
+pnpm test                  # unit tests
+pnpm audit:docs            # every document in documents/, in .outputs/
+node scripts/smoke.js      # every template, every format, each paper
 ```
 
-Step 7 is the easy-to-forget one. If a dev pulls and runs `pnpm install` while the package.json still has the npm specs from step 3, they'll silently get the npm-published framework copies — which means any unpublished framework features won't be available locally. Don't skip step 7.
+To test a binary from this checkout (`bun` 1.3.9, `foundations/` built):
+
+```bash
+node scripts/build-binaries.js --out dist-bin
+node scripts/smoke.js --bin dist-bin/unipress-darwin-arm64 --foundations local
+```
+
+## CI and unpublished framework changes
+
+CI checks out this repo alone and installs the framework from npm (`scripts/ci-flip-workspace-deps.js`), so a commit that needs an unpublished framework change fails [`test-e2e.yml`](./.github/workflows/test-e2e.yml) until that change is published. Inside the monorepo the same packages resolve to their working copies through `workspace:` specs.
