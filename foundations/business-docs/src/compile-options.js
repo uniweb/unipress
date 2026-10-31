@@ -11,14 +11,47 @@
  * Paged.js stylesheet) — the things hosts need but shouldn't own
  * per-host.
  */
+import { pageSizes } from '@uniweb/press/docx'
 
-const PRINT_STYLESHEET = `
+// The page a document prints on, the same in every format: a `paper` the host
+// names for this build (`unipress compile --paper`), then the document's own
+// `paper:`, then Letter.
+function paperOf(website, hostHints = {}) {
+  return hostHints.paper ?? website?.config?.paper ?? 'letter'
+}
+
+const WORD_PAGE = { a4: pageSizes.A4, letter: pageSizes.LETTER }
+
+// What a Word builder tree needs in order to read as a document on paper. The HTML a section
+// registers is the tree it hands Word: `data-*` attributes on plain elements, which only the docx
+// adapter reads. The roles and colors are the ones DEFAULT_BUSINESS_DOCS_TYPOGRAPHY gives Word.
+const hex = (color) => `#${color}`
+const fontStack = (name) => `${JSON.stringify(name)}, Carlito, ui-sans-serif, system-ui, sans-serif`
+
+const printStylesheet = (paper, { colors, fonts }) => `
 @page {
-  size: letter;
+  size: ${paper === 'a4' ? 'A4' : 'letter'};
   margin: 1in 0.75in;
   @bottom-right { content: counter(page) " / " counter(pages); font-size: 9pt; color: #666; }
 }
-body { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 10.5pt; line-height: 1.45; color: #111; }
+body { font-family: ${fontStack(fonts.body)}; font-size: 11pt; line-height: 1.3; color: ${hex(colors.body)}; }
+[data-type="paragraph"] { margin: 0; }
+[data-alignment="right"] { text-align: right; }
+[data-paragraph-style="Title"] { font-family: ${fontStack(fonts.heading)}; font-size: 28pt; font-weight: 700; color: ${hex(colors.accent)}; margin-bottom: 12pt; }
+[data-style="Label"] { font-size: 9pt; font-weight: 700; color: ${hex(colors.muted)}; text-transform: uppercase; letter-spacing: 0.02em; }
+[data-style="Caption"] { font-size: 9pt; color: ${hex(colors.muted)}; }
+[data-style="Display"] { font-size: 14pt; font-weight: 700; }
+[data-style="BodyStrong"] { font-weight: 700; }
+[data-style="TableHeader"] { font-family: ${fontStack(fonts.heading)}; font-size: 10pt; font-weight: 700; color: ${hex(colors.surface)}; }
+[data-style="TotalLine"] { font-family: ${fontStack(fonts.heading)}; font-size: 13pt; font-weight: 700; color: ${hex(colors.surface)}; }
+[data-type="table"] { margin: 0 0 10pt; }
+[data-type="tableRow"] { display: flex; break-inside: avoid; }
+[data-table-column-widths] > [data-type="tableRow"] { display: grid; grid-template-columns: 8.4fr 1.5fr 3fr 3fr; }
+[data-grid-span="3"] { grid-column: span 3; }
+[data-type="tableCell"] { padding: 4pt 6pt; }
+[data-type="tableCell"][data-borders-bottom-style="single"] { border-bottom: 0.5pt solid ${hex(colors.softBorder)}; }
+[data-valign="center"] { display: flex; flex-direction: column; justify-content: center; }
+[data-shading-fill] { background: ${hex(colors.accent)}; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 h1 { font-size: 22pt; margin: 0 0 0.5em; }
 h2 { font-size: 14pt; margin: 1.5em 0 0.4em; }
 h3 { font-size: 11.5pt; margin: 1em 0 0.3em; }
@@ -41,11 +74,13 @@ function buildMeta(website, hostHints = {}) {
 }
 
 export function buildPagedjsOptions(website, hostHints = {}) {
+  const theme = resolveBusinessDocsTheme(website)
   return {
+    theme,
     adapterOptions: {
       mode: 'html',
       meta: buildMeta(website, hostHints),
-      stylesheet: PRINT_STYLESHEET,
+      stylesheet: printStylesheet(paperOf(website, hostHints), theme),
     },
   }
 }
@@ -190,6 +225,7 @@ export function buildDocxOptions(website, hostHints = {}) {
       // conflict, except for built-in IDs which override the
       // default.<slot> instead).
       theme,
+      pageSize: WORD_PAGE[paperOf(website, hostHints)],
       paragraphStyles: hostHints.paragraphStyles,
       loadAsset: hostHints.loadAsset,
     },
@@ -198,6 +234,9 @@ export function buildDocxOptions(website, hostHints = {}) {
 
 export function buildXlsxOptions(website, hostHints = {}) {
   return {
-    adapterOptions: buildMeta(website, hostHints),
+    adapterOptions: {
+      ...buildMeta(website, hostHints),
+      paper: paperOf(website, hostHints),
+    },
   }
 }

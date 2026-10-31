@@ -159,6 +159,11 @@ function CoverSlice({ bd }) {
   )
 }
 
+// The line items and the totals under them share their columns. Together they fill
+// the text block of the narrower of the two papers: on A4 with Word's 1in margins,
+// 15.9cm, and on Letter 16.5cm. The amount column holds a total in `TotalLine`.
+const LINE_ITEM_WIDTHS = [cm(8.4), cm(1.5), cm(3), cm(3)]
+
 function LineItemsSlice({ bd }) {
   const { items, invoice } = bd
   if (!Array.isArray(items) || items.length === 0) return null
@@ -166,7 +171,7 @@ function LineItemsSlice({ bd }) {
 
   return (
     <Table
-      columnWidths={[cm(10), cm(2), cm(2.5), cm(2.5)]}
+      columnWidths={LINE_ITEM_WIDTHS}
       borders={themedGrid()}
     >
       <Tr header>
@@ -218,7 +223,7 @@ function TotalsSlice({ bd }) {
 
   return (
     <Table
-      columnWidths={[cm(10), cm(2), cm(2.5), cm(2.5)]}
+      columnWidths={LINE_ITEM_WIDTHS}
       borders={borderless()}
     >
       <Tr>

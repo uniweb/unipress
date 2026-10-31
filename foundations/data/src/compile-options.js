@@ -12,6 +12,16 @@
  * style packs) — the things hosts need to pass through but don't want to
  * own per-host.
  */
+import { pageSizes } from '@uniweb/press/docx'
+
+// The page a document prints on: a `paper` the host names for this build
+// (`unipress compile --paper`), then the document's own `paper:`. Unnamed, the
+// docx adapter's default stands (A4) and a workbook leaves it to the printer.
+function paperOf(website, hostHints = {}) {
+  return hostHints.paper ?? website?.config?.paper ?? undefined
+}
+
+const WORD_PAGE = { a4: pageSizes.A4, letter: pageSizes.LETTER }
 
 /**
  * Word paragraph style pack used by the docx adapter so PublicationsList
@@ -42,15 +52,21 @@ function buildMeta(website, hostHints = {}) {
 }
 
 export function buildXlsxOptions(website, hostHints = {}) {
+  const paper = paperOf(website, hostHints)
   return {
-    adapterOptions: buildMeta(website, hostHints),
+    adapterOptions: {
+      ...buildMeta(website, hostHints),
+      ...(paper ? { paper } : {}),
+    },
   }
 }
 
 export function buildDocxOptions(website, hostHints = {}) {
+  const paper = paperOf(website, hostHints)
   return {
     adapterOptions: {
       ...buildMeta(website, hostHints),
+      ...(paper ? { pageSize: WORD_PAGE[paper] } : {}),
       paragraphStyles: hostHints.paragraphStyles ?? DOCX_PARAGRAPH_STYLES,
       loadAsset: hostHints.loadAsset,
     },

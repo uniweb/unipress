@@ -297,18 +297,22 @@ export default {
   // pickSink), so declaring `pdf: { via: 'pagedjs' }` here would route
   // the html blob through the typst extractor. v1 ships Paged.js HTML
   // (browser print-to-PDF) and docx for direct files; a typst-based pdf
-  // adapter is a v2 follow-up.
+  // adapter is a v2 follow-up. `paper: true` says an output honors a page size
+  // a host or the document names.
   outputs: {
     pagedjs: {
       extension: 'html',
+      paper: true,
       getOptions: buildPagedjsOptions,
     },
     docx: {
       extension: 'docx',
+      paper: true,
       getOptions: buildDocxOptions,
     },
     xlsx: {
       extension: 'xlsx',
+      paper: true,
       getOptions: buildXlsxOptions,
     },
   },

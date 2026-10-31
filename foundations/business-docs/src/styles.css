@@ -44,6 +44,30 @@
   margin: 0 0 0.7em;
 }
 
+/* The tables a section hands Word, on screen. See printStylesheet (compile-options.js)
+   for the same rows on paper. */
+
+.business-docs-document [data-type="tableRow"] {
+  display: flex;
+}
+
+.business-docs-document [data-table-column-widths] > [data-type="tableRow"] {
+  display: grid;
+  grid-template-columns: 8.4fr 1.5fr 3fr 3fr;
+}
+
+.business-docs-document [data-grid-span="3"] {
+  grid-column: span 3;
+}
+
+.business-docs-document [data-alignment="right"] {
+  text-align: right;
+}
+
+.business-docs-document [data-type="tableCell"] {
+  padding: 4pt 6pt;
+}
+
 /* Engagement report */
 
 .engagement-report > header {

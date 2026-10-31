@@ -111,7 +111,7 @@ describe('Invoice section: per-slice structural output', () => {
     })
     // Fixed table layout with 4 cm column widths.
     // Column widths are floor-rounded twips: cm(10)=5669, cm(2)=1133, cm(2.5)=1417.
-    expect(html).toContain('data-table-column-widths="5669,1133,1417,1417"')
+    expect(html).toContain('data-table-column-widths="4762,850,1700,1700"')
     expect(html).toContain('data-table-layout="fixed"')
     // Repeating header row.
     expect(html).toContain('data-row-header')

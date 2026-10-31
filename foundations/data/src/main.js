@@ -114,14 +114,17 @@ export default {
   // foundation, ...hostHints })`. Per-section sheet / paragraph
   // registrations still happen inside each section via useDocumentOutput;
   // these entries own document-level adapterOptions (workbook metadata,
-  // paragraph style pack).
+  // paragraph style pack). `paper: true` says an output honors a page size a
+  // host or the document names.
   outputs: {
     xlsx: {
       extension: 'xlsx',
+      paper: true,
       getOptions: (website, opts) => buildXlsxOptions(website, opts),
     },
     docx: {
       extension: 'docx',
+      paper: true,
       getOptions: (website, opts) => buildDocxOptions(website, opts),
     },
   },
