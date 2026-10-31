@@ -45,6 +45,7 @@ const SCAFFOLD_VARS = {
   author: 'Audit Bot',
   year: new Date().getFullYear(),
   date: new Date().toISOString().slice(0, 10),
+  paper: 'a4',
 }
 
 const TYPST_BINARY = process.env.UNIPRESS_TYPST_BINARY || null
