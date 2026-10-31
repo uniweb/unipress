@@ -14,9 +14,24 @@
 import { spawn } from 'node:child_process'
 import { mkdtemp, mkdir, rm, writeFile, stat } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { dirname, join } from 'node:path'
+import { dirname, join, relative } from 'node:path'
 import { TypstBinaryError, OutputWriteError } from '../errors.js'
 import { resolveTypstBinary } from '../typst/binary-manager.js'
+
+// The failure an author meets most: the markdown names an image that is not there. Typst reports
+// the path it searched, in a temp folder of ours, which says nothing about the author's file. The
+// name as written in the document is the path's tail under that folder.
+function describeMissingFile(stderr, workDir) {
+  const searched = /file not found \(searched at ([^)\n]+)\)/.exec(stderr ?? '')?.[1]
+  if (!searched) return null
+  const named = relative(workDir, searched)
+  // A path that leaves the folder, or under a realpath'd temp, keeps only its file name.
+  const name = named.startsWith('..') ? searched.split(/[\\/]/).pop() : named
+  return (
+    `the document names a file that is not there: ${name}\n` +
+    `hint: check the path in your markdown, or in document.yml for a cover`
+  )
+}
 
 export async function writePdfViaTypst(blob, outPath, { typstBinaryPath = null, typstVersion = null, keepTemp = false, onProgress = () => {} } = {}) {
   const bytes = Buffer.from(await blob.arrayBuffer())
@@ -52,6 +67,7 @@ export async function writePdfViaTypst(blob, outPath, { typstBinaryPath = null, 
     onProgress(`running typst compile...`)
     await runCapture(binary, ['compile', mainTyp, outPath], {
       onFail: (code, stderr) => new TypstBinaryError(
+        describeMissingFile(stderr, workDir) ??
         `typst exited with code ${code}${keepTemp ? ` (temp dir kept at ${workDir})` : ''}\n` +
         (stderr ? `--- typst stderr ---\n${stderr.trim()}\n` : '') +
         (keepTemp ? '' : 'hint: pass --keep-temp to inspect the source bundle\n')

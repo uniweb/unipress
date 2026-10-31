@@ -13,7 +13,7 @@ import { resolve, join, basename } from 'node:path'
 import { collectSiteContent, processQueries, resolveRecordsDir } from '@uniweb/build/content'
 import { resolveFetchConfigs, evaluateQuery, parentRouteOf, fetchLevels } from '@uniweb/core'
 import { detectConfigFile, CONFIG_FILE_NAMES } from './document-yml.js'
-import { ContentDirectoryError, DocumentYmlError } from './errors.js'
+import { ContentDirectoryError, ContentParseError, DocumentYmlError } from './errors.js'
 
 // Match a parsed query-backed fetch path. parseFetchConfig (in @uniweb/build)
 // normalises `{ query: <name> }` into `{ query, path: '/data/<name>.json',
@@ -216,6 +216,20 @@ function listConfigsHint(sitePath) {
   }
 }
 
+// The build states what is wrong with an author's files under `[uniweb]`. That is the author's to
+// fix, not an internal error: an error the CLI reports as one, naming the file, and exit 1. The
+// names a release retires are most of what a document from before 1.0 meets, so they point at the
+// way through.
+function fromTheBuild(err) {
+  if (typeof err?.message !== 'string' || !err.message.startsWith('[uniweb]')) return err
+  const message = err.message.replace(/^\[uniweb\]\s*/, '')
+  return new ContentParseError(
+    /\bretired\b/.test(message)
+      ? `${message}\nhint: a document from before unipress 1.0 has a few names to change: docs/troubleshooting.md, "Upgrading a document from 0.4"`
+      : message
+  )
+}
+
 export async function loadContent(dir, options = {}) {
   const sitePath = resolve(dir)
 
@@ -273,10 +287,14 @@ export async function loadContent(dir, options = {}) {
         `cause: ${err.reason || err.message}`
       )
     }
-    throw err
+    throw fromTheBuild(err)
   }
 
-  await resolveLocalQueries(content, sitePath)
+  try {
+    await resolveLocalQueries(content, sitePath)
+  } catch (err) {
+    throw fromTheBuild(err)
+  }
 
   // Cross-reference registry is built AFTER the foundation loads, in
   // orchestrator.loadAndInit, so foundation-declared `xref.kinds`
