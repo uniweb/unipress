@@ -3,13 +3,12 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import JSZip from 'jszip'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { TypstBinaryError } from '../src/errors.js'
-import { extractSourceBundle } from '../src/sinks/typst.js'
+import { unzip } from '../src/unzip.js'
 
-// The bundle a foundation hands the PDF sink is a zip Press writes with JSZip. It was unpacked with
-// the system's `tar`, which reads a zip on macOS and not on Linux. `scripts/smoke.js` proves a PDF
-// on Linux in CI; this is what the unpacking has to keep doing, on any system.
-describe('extractSourceBundle', () => {
+// The Typst sources a foundation hands the PDF sink are a zip, and so is Typst itself on Windows.
+// They were unpacked with the system's `tar`, which reads a zip on macOS and not on Linux.
+// `scripts/smoke.js` proves a PDF on each system in CI; this is what the unpacking has to keep doing.
+describe('unzip', () => {
   let dest
 
   beforeEach(() => {
@@ -27,7 +26,7 @@ describe('extractSourceBundle', () => {
 
   it('writes every file at its path, nested folders and non-ASCII names included', async () => {
     const image = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x00, 0xff, 0x0d, 0x0a])
-    await extractSourceBundle(
+    await unzip(
       await bundle({ 'main.typ': '#import "x"', 'assets/a/b.png': image, 'assets/página.txt': 'ñ' }),
       dest
     )
@@ -41,18 +40,17 @@ describe('extractSourceBundle', () => {
     zip.file('main.typ', 'x'.repeat(10_000))
     const bytes = await zip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' })
     expect(bytes.length).toBeLessThan(10_000)
-    await extractSourceBundle(bytes, dest)
+    await unzip(bytes, dest)
     expect(readFileSync(join(dest, 'main.typ'), 'utf8')).toHaveLength(10_000)
   })
 
   it('keeps a name that climbs out of the bundle inside the folder', async () => {
-    await extractSourceBundle(await bundle({ '../../escaped.typ': 'x' }), dest)
+    await unzip(await bundle({ '../../escaped.typ': 'x' }), dest)
     expect(existsSync(join(dest, '..', '..', 'escaped.typ'))).toBe(false)
     expect(existsSync(join(dest, 'escaped.typ'))).toBe(true)
   })
 
-  it('says so, as a user-facing error, when the bundle is not a zip', async () => {
-    await expect(extractSourceBundle(Buffer.from('not a zip'), dest)).rejects.toThrow(TypstBinaryError)
-    await expect(extractSourceBundle(Buffer.from('not a zip'), dest)).rejects.toThrow(/is not a zip/)
+  it('rejects what is not a zip', async () => {
+    await expect(unzip(Buffer.from('not a zip'), dest)).rejects.toThrow()
   })
 })

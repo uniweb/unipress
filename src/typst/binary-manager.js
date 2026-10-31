@@ -14,7 +14,7 @@
 
 import { createHash } from 'node:crypto'
 import { spawn } from 'node:child_process'
-import { mkdir, rm, rename, readdir, chmod, stat } from 'node:fs/promises'
+import { mkdir, rm, rename, readdir, chmod, readFile, stat } from 'node:fs/promises'
 import { createWriteStream, existsSync } from 'node:fs'
 import { join, dirname, resolve, isAbsolute } from 'node:path'
 import { homedir, tmpdir } from 'node:os'
@@ -27,6 +27,7 @@ import {
   getChecksum
 } from './versions.js'
 import { TypstBinaryError } from '../errors.js'
+import { unzip } from '../unzip.js'
 
 const EXE = process.platform === 'win32' ? 'typst.exe' : 'typst'
 
@@ -171,10 +172,12 @@ async function sha256OfFile(path) {
 }
 
 async function extractArchive(archivePath, destDir) {
-  // Typst's archives are what each system's `tar` reads: a .tar.xz on macOS and Linux (GNU tar
-  // runs `xz` for it), a .zip on Windows, whose tar is bsdtar. GNU tar reads no zip.
-  await run('tar', ['-xf', archivePath, '-C', destDir], {
-    onError: (err) => new TypstBinaryError(
+  // Windows gets a zip. macOS and Linux get a .tar.xz, which `tar` reads, running `xz` on Linux.
+  const extract = archivePath.endsWith('.zip')
+    ? unzip(await readFile(archivePath), destDir)
+    : run('tar', ['-xf', archivePath, '-C', destDir])
+  await extract.catch((err) => {
+    throw new TypstBinaryError(
       `failed to extract ${archivePath}\n` +
       `cause: ${err.message}\n` +
       `hint: Linux needs \`tar\` and \`xz\` (the xz-utils package). Or install typst yourself and pass --typst-binary <path>`

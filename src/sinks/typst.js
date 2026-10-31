@@ -14,10 +14,10 @@
 import { spawn } from 'node:child_process'
 import { mkdtemp, mkdir, rm, writeFile, stat } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { dirname, join, relative, resolve, sep } from 'node:path'
-import JSZip from 'jszip'
+import { dirname, join, relative } from 'node:path'
 import { TypstBinaryError, OutputWriteError } from '../errors.js'
 import { resolveTypstBinary } from '../typst/binary-manager.js'
+import { unzip } from '../unzip.js'
 
 // The failure an author meets most: the markdown names an image that is not there. Typst reports
 // the path it searched, in a temp folder of ours, which says nothing about the author's file. The
@@ -34,26 +34,6 @@ function describeMissingFile(stderr, workDir) {
   )
 }
 
-// Unpacked here, and not by the system's `tar`: only macOS's and Windows's read a zip. GNU tar, on
-// Linux, does not.
-export async function extractSourceBundle(bytes, destDir) {
-  let zip
-  try {
-    zip = await JSZip.loadAsync(bytes)
-  } catch (err) {
-    throw new TypstBinaryError(`the foundation's typst source bundle is not a zip\ncause: ${err.message}`)
-  }
-  for (const entry of Object.values(zip.files)) {
-    if (entry.dir) continue
-    const target = resolve(destDir, entry.name)
-    if (!target.startsWith(resolve(destDir) + sep)) {
-      throw new TypstBinaryError(`the foundation's typst source bundle names a path outside it: ${entry.name}`)
-    }
-    await mkdir(dirname(target), { recursive: true })
-    await writeFile(target, await entry.async('nodebuffer'))
-  }
-}
-
 export async function writePdfViaTypst(blob, outPath, { typstBinaryPath = null, typstVersion = null, keepTemp = false, onProgress = () => {} } = {}) {
   const bytes = Buffer.from(await blob.arrayBuffer())
 
@@ -63,7 +43,9 @@ export async function writePdfViaTypst(blob, outPath, { typstBinaryPath = null, 
   let succeeded = false
   try {
     onProgress('extracting source bundle...')
-    await extractSourceBundle(bytes, workDir)
+    await unzip(bytes, workDir).catch((err) => {
+      throw new TypstBinaryError(`can't unpack the foundation's typst source bundle\ncause: ${err.message}`)
+    })
 
     const mainTyp = join(workDir, 'main.typ')
     const mainStat = await statOrNull(mainTyp)
