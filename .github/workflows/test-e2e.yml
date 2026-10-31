@@ -1,15 +1,19 @@
 # ─────────────────────────────────────────────────────────
 # unipress — end-to-end smoke test
 #
-# scripts/smoke.js, twice: on this checkout under Node, and on a binary compiled
-# from it. Each scaffolds every template, compiles it to every format it lists on
-# each paper, and reads the result: a file of the right kind, on the page asked
-# for, with its chapter titles once and its tables and footnotes where they go.
-# EPUBs also go through EPUBCheck, which stores use to accept a book.
+# scripts/smoke.js on this checkout under Node, then on a binary compiled from it,
+# on each system the release builds for. Each scaffolds every template, compiles it
+# to every format it lists on each paper, and reads the result: a file of the right
+# kind, on the page asked for, with its chapter titles once and its tables and
+# footnotes where they go. EPUBs also go through EPUBCheck, which stores use to
+# accept a book.
 #
 # The binary is the part nothing else runs. A native module reaching its import
 # graph stops it starting, on every command, with everything under Node still
 # green. (From 2026-09-28 to 2026-10-31 no binary built from this repo could start.)
+#
+# A system is the other part. Until 2026-10-31 this ran on Linux with no PDF, and
+# the PDFs were made on macOS alone: none could be made on Linux.
 #
 # ⚠️ Foundations and the CLI are built against what is on npm (see
 # ci-flip-workspace-deps.js), so a commit that needs an unpublished framework
@@ -18,6 +22,9 @@
 # Trigger:
 #   - push to main (post-merge regression net)
 #   - pull_request (pre-merge gate)
+#   - by hand, with foundations: pinned, to run the binaries as the release does:
+#     with what the templates pin, fetched over the network. Those have to be
+#     deployed, so it is for a release whose foundations already are.
 # ─────────────────────────────────────────────────────────
 
 name: E2E Smoke Test
@@ -26,6 +33,13 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+    inputs:
+      foundations:
+        description: 'What the binaries compile with'
+        type: choice
+        options: [local, pinned]
+        default: local
 
 permissions:
   contents: read
@@ -99,13 +113,63 @@ jobs:
       - name: Every template, every format, each paper
         run: node scripts/smoke.js --epubcheck _epubcheck/epubcheck-5.2.1/epubcheck.jar
 
+  # The release's three builds, on its runners, short of signing them. What fails
+  # here would otherwise fail in the release, after the version is on npm.
+  binary:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            target: bun-darwin-arm64
+            artifact: unipress-darwin-arm64
+          - platform: ubuntu-22.04
+            target: bun-linux-x64
+            artifact: unipress-linux-x64
+          - platform: windows-latest
+            target: bun-windows-x64
+            artifact: unipress-windows-x64.exe
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: '1.3.9'
 
-      - name: Compile the binary
-        run: node scripts/build-binaries.js --target bun-linux-x64 --out dist-bin
+      - name: Flip workspace:* to npm versions
+        run: node scripts/ci-flip-workspace-deps.js
 
+      - name: Install CLI dependencies
+        run: pnpm install --ignore-workspace --no-frozen-lockfile
+
+      - name: Build foundations
+        if: ${{ inputs.foundations != 'pinned' }}
+        shell: bash
+        run: |
+          set -e
+          for foundation_dir in foundations/*/; do
+            (cd "$foundation_dir" && pnpm install --ignore-workspace --no-frozen-lockfile)
+            (cd "$foundation_dir" && pnpm build)
+          done
+
+      - name: Compile the binary
+        run: node scripts/build-binaries.js --target ${{ matrix.target }} --out dist-bin
+
+      # bash on every system: it is what the release runs this in, and on Windows it puts
+      # Git's own tar first on the PATH.
       - name: The same, on the binary
-        run: node scripts/smoke.js --bin dist-bin/unipress-linux-x64 --foundations local
+        shell: bash
+        run: node scripts/smoke.js --bin "dist-bin/${{ matrix.artifact }}" --foundations ${{ inputs.foundations || 'local' }}
