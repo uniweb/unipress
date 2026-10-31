@@ -35,6 +35,8 @@ node scripts/build-binaries.js --out dist-bin
 node scripts/smoke.js --bin dist-bin/unipress-darwin-arm64 --foundations local
 ```
 
+[`test-e2e.yml`](./.github/workflows/test-e2e.yml) runs the same on Linux, then a binary on each system the release builds for, on its runners. **Have it green on `main` before publishing.** The private pipeline runs the same check, and a failure there comes after the version is on npm, so it takes another version to fix. To run the binaries as that pipeline does, with the foundations the templates pin fetched over the network, dispatch it with `foundations: pinned`.
+
 ## CI and unpublished framework changes
 
 CI checks out this repo alone and installs the framework from npm (`scripts/ci-flip-workspace-deps.js`), so a commit that needs an unpublished framework change fails [`test-e2e.yml`](./.github/workflows/test-e2e.yml) until that change is published. Inside the monorepo the same packages resolve to their working copies through `workspace:` specs.
