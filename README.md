@@ -2,6 +2,8 @@
 
 **Compile a directory of markdown into a document — typeset PDF, EPUB, Word, Excel, Paged.js HTML, Typst source — using a foundation that knows the conventions of the kind of document you're writing.**
 
+**[unipress.app](https://unipress.app)** has the docs, the templates and the publishing guide.
+
 You already write in markdown, and you keep it organized — a folder of files, numbered for order, maybe a `README` and some assets. That's good structure. But turning it into one polished, shareable document usually means pandoc incantations, a LaTeX toolchain, or a pile of glue scripts.
 
 unipress does it in one command.
@@ -285,6 +287,8 @@ unipress is on **1.x**, like every Uniweb package since 1.0.1. The CLI is stable
 **Foundations are fetched on first use.** The bundled templates pin foundations served from `https://uniweb.github.io/unipress/foundations/…`; the first compile downloads and caches the one your `document.yml` names (alongside the Typst binary). To iterate on a foundation locally, pass `--foundation <path>` pointing at a built foundation directory; to point at a different registry, set `UNIWEB_REGISTRY_URL`.
 
 ## Documentation
+
+Also at **[unipress.app](https://unipress.app/docs)**.
 
 - **[Publishing your book](./docs/publishing/README.md)** — the end-to-end guide for authors: the proof → final workflow, covers and images, trim sizes, EPUB, print-on-demand, ISBNs, and metadata.
 - **Template guides** — conventions and settings per document kind: [article](./docs/templates/article.md), [book](./docs/templates/book.md), [monograph](./docs/templates/monograph.md), [report](./docs/templates/report.md), [data-report](./docs/templates/data-report.md), [directory](./docs/templates/directory.md).

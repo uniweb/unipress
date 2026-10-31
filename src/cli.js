@@ -57,6 +57,8 @@ Options:
   -h, --help             Show this help
   -v, --version          Show version
       --verbose          Include stack traces in error output
+
+Docs: https://unipress.app
 `
 
 function printHelp() {
