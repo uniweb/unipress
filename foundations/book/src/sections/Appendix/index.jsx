@@ -13,8 +13,10 @@
  */
 
 import { useDocumentOutput } from '@uniweb/press'
-import { ChapterOpener, Sequence, Raw } from '@uniweb/press/typst'
+import { Sequence, Raw } from '@uniweb/press/typst'
 import { Prose, H1 } from '@uniweb/kit'
+import { UnnumberedOpener, proseUnderTitle, typstBody, withoutTitleHeading } from '#utils/chapter-opening.jsx'
+import { FootnoteList, htmlFootnotes, printFootnotes } from '#utils/footnotes.jsx'
 
 const APPENDIX_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
@@ -47,7 +49,9 @@ function classifyAppendix(block) {
 }
 
 export default function Appendix({ content, params, block }) {
-    const { title, sequence } = content || {}
+    const title = content?.title || params?.title
+    const sequence = printFootnotes(content?.sequence)
+    const { content: withMarks, notes } = htmlFootnotes(content)
     const info = classifyAppendix(block)
     const headingText = title
         ? `Appendix ${info.letter} — ${title}`
@@ -65,7 +69,7 @@ export default function Appendix({ content, params, block }) {
         <>
             {emitSwitch ? <Raw>{'\\appendix\n'}</Raw> : null}
             <Raw>{`\\chapter{${(title || '').replace(/[\\{}]/g, '')}}`}</Raw>
-            <Sequence data={sequence || []} />
+            <Sequence data={withoutTitleHeading(sequence, title)} />
         </>,
     )
 
@@ -77,8 +81,8 @@ export default function Appendix({ content, params, block }) {
         block,
         'typst',
         <>
-            <ChapterOpener title={headingText} />
-            <Sequence data={sequence || []} />
+            <UnnumberedOpener title={headingText} />
+            <Sequence data={typstBody(sequence, title, block?.website)} />
         </>,
     )
 
@@ -87,7 +91,8 @@ export default function Appendix({ content, params, block }) {
         'html',
         <article className="appendix">
             <h1>{headingText}</h1>
-            <Prose content={content} block={block} />
+            <Prose content={proseUnderTitle(withMarks)} block={block} />
+            <FootnoteList notes={notes} />
         </article>,
     )
 
@@ -97,7 +102,8 @@ export default function Appendix({ content, params, block }) {
                 text={headingText}
                 className="text-heading text-3xl font-bold mb-6"
             />
-            <Prose content={content} block={block} className="prose-book" />
+            <Prose content={proseUnderTitle(withMarks)} block={block} className="prose-book" />
+            <FootnoteList notes={notes} />
         </article>
     )
 }

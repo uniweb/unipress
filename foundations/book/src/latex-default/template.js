@@ -11,11 +11,14 @@
  * select it via `book.kind: 'thesis-uoft'` in document.yml.
  */
 
-const DEFAULT_TRIM = { width: '6in', height: '9in', margin: '0.75in' }
+import { resolveTrim } from '../typst-default/presets.js'
 
+// The page the document prints on: the same trim, by the same resolver, as the
+// Typst and Paged.js paths, so a document does not change size with its format.
 function trimLine(trim) {
-  const t = { ...DEFAULT_TRIM, ...(trim || {}) }
-  return `\\usepackage[paperwidth=${t.width}, paperheight=${t.height}, margin=${t.margin}]{geometry}`
+  if (!trim) return `\\usepackage[paperwidth=6in, paperheight=9in, margin=0.75in]{geometry}`
+  const { width, height, margins: m } = resolveTrim(trim)
+  return `\\usepackage[paperwidth=${width}, paperheight=${height}, inner=${m.inside}, outer=${m.outside}, top=${m.top}, bottom=${m.bottom}]{geometry}`
 }
 
 const DEFAULT_TEMPLATE = `% Default book-class template.
@@ -39,9 +42,9 @@ ${trimLine(null)}
 export default DEFAULT_TEMPLATE
 
 /**
- * Parameterised LaTeX template builder. Today consumes `trim`
- * (paperwidth / paperheight / margin) and `language` (passed to
- * `babel`). Future thesis-uoft variants override the entire string.
+ * Parameterised LaTeX template builder. Today consumes `trim` (a preset
+ * or spec, as `resolveTrim` takes) and `language` (passed to `babel`).
+ * Future thesis-uoft variants override the entire string.
  */
 export function createTemplate({ trim = null, language = 'en', covers = null } = {}) {
   // covers: thesis layouts may want a separate full-bleed cover image

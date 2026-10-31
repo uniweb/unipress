@@ -12,6 +12,8 @@ import * as nature from 'citestyle/styles/nature'
 import * as science from 'citestyle/styles/science'
 import { resolveInlineInsets } from '#utils/resolve-inline-insets.js'
 import { formatCiteInsetAsText, formatInlineInsetAsLatex } from '#utils/cite-format.js'
+import { proseUnderTitle, typstBody, withoutTitleHeading } from '#utils/chapter-opening.jsx'
+import { FootnoteList, htmlFootnotes, printFootnotes } from '#utils/footnotes.jsx'
 
 const STYLES = {
   apa,
@@ -40,7 +42,9 @@ const DEFAULT_STYLE = 'chicago-author-date'
  * appendices).
  */
 export default function Chapter({ content, block, params }) {
-  const { title, subtitle, sequence } = content || {}
+  const { subtitle, sequence } = content || {}
+  // The file's first heading, or a title in its frontmatter when it opens with none.
+  const title = content?.title || params?.title
 
   const pageInfo = classifyPage(block?.page)
   const openerTitle = formatTitle(title, pageInfo)
@@ -60,16 +64,21 @@ export default function Chapter({ content, block, params }) {
   // \printbibliography back-matter at PDF compile time.
   const styleName = block?.website?.config?.book?.citationStyle || DEFAULT_STYLE
   const style = STYLES[styleName] || STYLES[DEFAULT_STYLE]
-  const typstSequence = resolveInlineInsets(
-    sequence || [],
-    block,
-    (insetBlock) => formatCiteInsetAsText(insetBlock, block?.website, style),
+  const typstSequence = printFootnotes(
+    resolveInlineInsets(
+      sequence || [],
+      block,
+      (insetBlock) => formatCiteInsetAsText(insetBlock, block?.website, style),
+    ),
   )
-  const latexSequence = resolveInlineInsets(
-    sequence || [],
-    block,
-    (insetBlock) => formatInlineInsetAsLatex(insetBlock, block?.website),
+  const latexSequence = printFootnotes(
+    resolveInlineInsets(
+      sequence || [],
+      block,
+      (insetBlock) => formatInlineInsetAsLatex(insetBlock, block?.website),
+    ),
   )
+  const { content: withMarks, notes } = htmlFootnotes(content)
 
   useDocumentOutput(
     block,
@@ -80,7 +89,7 @@ export default function Chapter({ content, block, params }) {
         title={openerTitle}
         subtitle={subtitle}
       />
-      <Sequence data={typstSequence} />
+      <Sequence data={typstBody(typstSequence, title, block?.website)} />
     </>,
   )
   useDocumentOutput(
@@ -92,7 +101,7 @@ export default function Chapter({ content, block, params }) {
         title={openerTitle}
         subtitle={subtitle}
       />
-      <Sequence data={latexSequence} />
+      <Sequence data={withoutTitleHeading(latexSequence, title)} />
     </>,
   )
 
@@ -106,7 +115,8 @@ export default function Chapter({ content, block, params }) {
     <article className="chapter">
       {openerTitle ? <h1>{openerTitle}</h1> : null}
       {subtitle ? <p className="subtitle">{subtitle}</p> : null}
-      <Prose content={content} block={block} />
+      <Prose content={proseUnderTitle(withMarks)} block={block} />
+      <FootnoteList notes={notes} />
     </article>,
   )
 
@@ -125,7 +135,8 @@ export default function Chapter({ content, block, params }) {
           ) : null}
         </header>
       ) : null}
-      <Prose content={content} block={block} className="prose-book" />
+      <Prose content={title ? proseUnderTitle(withMarks) : withMarks} block={block} className="prose-book" />
+      <FootnoteList notes={notes} />
     </article>
   )
 }

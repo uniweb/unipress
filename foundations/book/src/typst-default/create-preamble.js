@@ -5,11 +5,15 @@
  * call into. Currently two functions: #chapter-opener and #section-break.
  *
  * `chapter-opener` is genre-dependent. For the book genre (default) it
- * starts a new page with a large centered chapter title. For the
- * `article` genre it is a no-op: the section's `= H1` that follows it in
- * the body renders as an ordinary section heading (styled by the article
- * template), so sections flow continuously instead of each starting a new
- * page. The "Chapter" overline label is localized via `labels`.
+ * starts a new page with a large centered chapter title, which is the
+ * chapter's level-1 heading: the contents and the running heads find it
+ * there, so the section leaves its own H1 out of the body
+ * (`utils/chapter-opening.jsx`). `numbered: false` keeps a section that
+ * is not a numbered chapter out of the numbering. For the `article` genre
+ * it is a no-op: the section's `= H1` that follows it in the body renders
+ * as an ordinary section heading (styled by the article template), so
+ * sections flow continuously instead of each starting a new page. The
+ * "Chapter" overline label is localized via `labels`.
  */
 import { resolveLabels } from './labels.js'
 
@@ -22,9 +26,9 @@ export function createPreamble({ language, labels, kind } = {}) {
   const chapterOpener =
     kind === 'article'
       ? String.raw`// ─── Chapter opener (article: no-op — sections flow continuously) ─────────
-#let chapter-opener(number: none, title: "", subtitle: "") = []`
+#let chapter-opener(number: none, title: "", subtitle: "", numbered: true) = []`
       : String.raw`// ─── Chapter opener ──────────────────────────────────────────────────────
-#let chapter-opener(number: none, title: "", subtitle: "") = {
+#let chapter-opener(number: none, title: "", subtitle: "", numbered: true) = {
   pagebreak(weak: true)
   v(1.5in)
   if number != none {
@@ -36,13 +40,20 @@ export function createPreamble({ language, labels, kind } = {}) {
     )
     v(0.4em)
   }
-  align(
-    center,
-    par(
-      justify: false,
-      text(size: 20pt, weight: "bold")[#title],
-    ),
-  )
+  if title != "" {
+    show heading.where(level: 1): it => align(
+      center,
+      par(
+        justify: false,
+        text(size: 20pt, weight: "bold", it.body),
+      ),
+    )
+    if numbered {
+      heading(level: 1, title)
+    } else {
+      heading(level: 1, numbering: none, title)
+    }
+  }
   if subtitle != "" {
     v(0.4em)
     align(

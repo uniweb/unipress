@@ -1,29 +1,27 @@
 /**
  * Abstract — labeled "Abstract" section that wraps the prose.
  *
- * Rendered as an unnumbered chapter on the LaTeX path (so it doesn't
- * disrupt chapter numbering — \chapter* not \chapter), via Typst's
- * regular chapter-opener (Typst's heading numbering is template-
- * controlled and the foundation's template skips numbers for front
- * matter), and as a styled article in the HTML/EPUB paths.
+ * Rendered as an unnumbered chapter so it doesn't disrupt chapter
+ * numbering — \chapter* not \chapter on the LaTeX path, an unnumbered
+ * opener on the Typst path — and as a styled article in the HTML/EPUB
+ * paths.
  */
 
 import { useDocumentOutput } from '@uniweb/press'
-import { ChapterOpener, Sequence, Raw } from '@uniweb/press/typst'
+import { Sequence, Raw } from '@uniweb/press/typst'
 import { Prose, H1 } from '@uniweb/kit'
+import { UnnumberedOpener, proseUnderTitle, typstBody, withoutTitleHeading } from '#utils/chapter-opening.jsx'
 
 export default function Abstract({ content, params, block }) {
     const { sequence } = content || {}
     const heading = params?.title || content?.title || 'Abstract'
 
-    // Typst path uses ChapterOpener like Cover/BackMatter — the
-    // foundation's template renders these without a chapter number.
     useDocumentOutput(
         block,
         'typst',
         <>
-            <ChapterOpener title={heading} />
-            <Sequence data={sequence || []} />
+            <UnnumberedOpener title={heading} />
+            <Sequence data={typstBody(sequence, content?.title, block?.website)} />
         </>,
     )
 
@@ -35,7 +33,7 @@ export default function Abstract({ content, params, block }) {
         'latex',
         <>
             <Raw>{`\\chapter*{${heading.replace(/[\\{}]/g, '')}}`}</Raw>
-            <Sequence data={sequence || []} />
+            <Sequence data={withoutTitleHeading(sequence, content?.title)} />
         </>,
     )
 
@@ -44,7 +42,7 @@ export default function Abstract({ content, params, block }) {
         'html',
         <article className="abstract">
             <h1>{heading}</h1>
-            <Prose content={content} block={block} />
+            <Prose content={proseUnderTitle(content)} block={block} />
         </article>,
     )
 
@@ -54,7 +52,7 @@ export default function Abstract({ content, params, block }) {
                 text={heading}
                 className="text-heading text-3xl font-bold mb-6"
             />
-            <Prose content={content} block={block} className="prose-book" />
+            <Prose content={proseUnderTitle(content)} block={block} className="prose-book" />
         </article>
     )
 }

@@ -137,28 +137,37 @@ export default {
     // Declared document outputs. Hosts (the in-page Download button,
     // unipress compile) consume this map via compileDocument(website,
     // { format, foundation }). getOptions receives the caller's rest
-    // options (mode, endpoint, rootPath, …) and returns the adapterOptions
-    // for the underlying Press format adapter.
+    // options (mode, endpoint, rootPath, paper, …) and returns the
+    // adapterOptions for the underlying Press format adapter.
+    //
+    // `paper` says what the output does with a page size a host or the
+    // document names: true honors it, false has no pages to size. A host
+    // reads the entry's absence as not knowing, and says so.
     outputs: {
         typst: {
             extension: 'zip',
+            paper: true,
             getOptions: (website, opts) => buildTypstOptions(website, opts),
         },
         pdf: {
             extension: 'pdf',
             via: 'typst',
+            paper: true,
             getOptions: (website, opts) => buildTypstOptions(website, opts),
         },
         latex: {
             extension: 'zip',
+            paper: true,
             getOptions: (website, opts) => buildLatexOptions(website, opts),
         },
         pagedjs: {
             extension: 'html',
+            paper: true,
             getOptions: buildPagedjsOptions,
         },
         epub: {
             extension: 'epub',
+            paper: false,
             getOptions: buildEpubOptions,
         },
     },

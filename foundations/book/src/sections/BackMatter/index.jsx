@@ -1,29 +1,30 @@
 import { useDocumentOutput } from '@uniweb/press'
-import { ChapterOpener, Sequence, Raw } from '@uniweb/press/typst'
+import { Sequence, Raw } from '@uniweb/press/typst'
 import { Prose, H1 } from '@uniweb/kit'
+import { UnnumberedOpener, proseUnderTitle, typstBody, withoutTitleHeading } from '#utils/chapter-opening.jsx'
+import { FootnoteList, htmlFootnotes, printFootnotes } from '#utils/footnotes.jsx'
 
 /**
  * BackMatter — for acknowledgments, colophon, author note, and other
  * non-chapter pages that should appear in the book but aren't numbered
- * chapters. Like Cover, it skips the chapter-opener's numbering.
+ * chapters. Like Cover, it opens without a number.
  *
  * LaTeX path uses \\chapter* (starred form, unnumbered) plus
  * \\addcontentsline so the entry still shows in the table of contents
  * — the canonical way LaTeX handles "front-matter-shaped chapter that
  * shouldn't consume a chapter number".
  */
-export default function BackMatter({ content, block }) {
-  const { title, sequence } = content || {}
+export default function BackMatter({ content, block, params }) {
+  const title = content?.title || params?.title
+  const sequence = printFootnotes(content?.sequence)
+  const { content: withMarks, notes } = htmlFootnotes(content)
 
-  // Typst path keeps using ChapterOpener — Typst's heading numbering
-  // is template-controlled, and the foundation's typst template
-  // already skips numbers for front / back matter sections.
   useDocumentOutput(
     block,
     'typst',
     <>
-      <ChapterOpener title={title} />
-      <Sequence data={sequence || []} />
+      <UnnumberedOpener title={title} />
+      <Sequence data={typstBody(sequence, title, block?.website)} />
     </>,
   )
 
@@ -35,7 +36,7 @@ export default function BackMatter({ content, block }) {
       <Raw>
         {`\\chapter*{${safeTitle}}\n\\addcontentsline{toc}{chapter}{${safeTitle}}`}
       </Raw>
-      <Sequence data={sequence || []} />
+      <Sequence data={withoutTitleHeading(sequence, title)} />
     </>,
   )
 
@@ -44,7 +45,8 @@ export default function BackMatter({ content, block }) {
     'html',
     <article className="backmatter">
       {title ? <h1>{title}</h1> : null}
-      <Prose content={content} block={block} />
+      <Prose content={proseUnderTitle(withMarks)} block={block} />
+      <FootnoteList notes={notes} />
     </article>,
   )
 
@@ -53,7 +55,8 @@ export default function BackMatter({ content, block }) {
       {title ? (
         <H1 text={title} className="text-heading text-3xl font-bold mb-6" />
       ) : null}
-      <Prose content={content} block={block} className="prose-book" />
+      <Prose content={proseUnderTitle(withMarks)} block={block} className="prose-book" />
+      <FootnoteList notes={notes} />
     </article>
   )
 }

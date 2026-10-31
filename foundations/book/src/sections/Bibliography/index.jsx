@@ -36,6 +36,7 @@ import { useEffect, useMemo } from 'react'
 import { SafeHtml, H1 } from '@uniweb/kit'
 import { useDocumentOutput } from '@uniweb/press'
 import { ChapterOpener, Sequence, Raw } from '@uniweb/press/typst'
+import { UnnumberedOpener } from '#utils/chapter-opening.jsx'
 import * as apa from 'citestyle/styles/apa'
 import * as mla from 'citestyle/styles/mla'
 import * as chicagoAuthorDate from 'citestyle/styles/chicago-author-date'
@@ -147,7 +148,7 @@ export default function Bibliography({ content, params, block }) {
     block,
     'typst',
     <>
-      <ChapterOpener title={heading} />
+      <UnnumberedOpener title={heading} />
       <Sequence
         data={entries.map((entry) => ({
           type: 'paragraph',

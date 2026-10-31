@@ -23,10 +23,20 @@ import {
     createTemplate as createLatexTemplate,
     createThesisUoftTemplate,
 } from './latex-default/index.js'
-import { stylesheet as pagedjsStylesheet } from './pagedjs-default/index.js'
+import { createStylesheet as createPagedjsStylesheet } from './pagedjs-default/index.js'
 import { bibliographyCss } from './utils/bibliography-css.js'
 import { exportBibtex } from 'citestyle'
 import { recordsToCsl } from './utils/to-csl.js'
+
+/**
+ * The page a document prints on — one rule for every paged output. A `paper` the
+ * host names for this build (`unipress compile --paper`) comes first, then
+ * `book.trim` (the shape of a bound book), then the document's own `paper:`.
+ * Undefined leaves the genre's default: 6×9 for a book, A4 for an article.
+ */
+function pageOf(website, paper) {
+    return paper ?? website?.config?.book?.trim ?? website?.config?.paper ?? undefined
+}
 
 /**
  * Document-level metadata object, the shape the Typst and HTML adapters
@@ -128,7 +138,7 @@ function resolveTypographyWithCssFallback(typographyFromConfig) {
  * compileDocument's rest-options; defaults are sources-mode with no
  * endpoint (works for unipress and the in-browser sources download).
  */
-export async function buildTypstOptions(website, { mode = 'sources', endpoint, loadAsset } = {}) {
+export async function buildTypstOptions(website, { mode = 'sources', endpoint, loadAsset, paper } = {}) {
     const bookCfg = website?.config?.book || {}
     const language = bookCfg.language ?? website?.config?.language
     const meta = buildBookMeta(website)
@@ -137,18 +147,19 @@ export async function buildTypstOptions(website, { mode = 'sources', endpoint, l
         bookCfg.covers,
         loadAsset,
     )
+    const trim = pageOf(website, paper)
     // book.kind selects the template genre. 'article' renders a single-
     // column paper (A4/Letter, continuous prose, no chapters/cover/front
     // matter); the unset default renders the chaptered book.
     const template =
         bookCfg.kind === 'article'
             ? createArticleTemplate({
-                  trim: bookCfg.trim,
+                  trim,
                   typography,
                   structure: bookCfg.structure,
               })
             : createTemplate({
-                  trim: bookCfg.trim,
+                  trim,
                   typography,
                   structure: bookCfg.structure,
                   labels: bookCfg.labels,
@@ -185,7 +196,7 @@ export async function buildTypstOptions(website, { mode = 'sources', endpoint, l
  */
 export async function buildLatexOptions(
     website,
-    { mode = 'sources', endpoint, loadAsset } = {},
+    { mode = 'sources', endpoint, loadAsset, paper } = {},
 ) {
     const bookCfg = website?.config?.book || {}
     const language = bookCfg.language ?? website?.config?.language
@@ -231,6 +242,14 @@ export async function buildLatexOptions(
     // kinds (the unset default for book / monograph / report) use the
     // generic book-class template. New kinds layer in here.
     const kind = bookCfg.kind || null
+    if (kind === 'thesis-uoft' && paper) {
+        // ut-thesis.cls owns the geometry (createThesisUoftTemplate), so this
+        // one template has no page to change. Named for this build, it is said.
+        // eslint-disable-next-line no-console
+        console.warn(
+            `[@unipress/book] book.kind: thesis-uoft takes its page from ut-thesis.cls; paper "${paper}" does not change the LaTeX output.`,
+        )
+    }
     const template =
         kind === 'thesis-uoft'
             ? createThesisUoftTemplate({
@@ -238,7 +257,7 @@ export async function buildLatexOptions(
                   degree: website?.config?.thesis?.degree?.level,
               })
             : createLatexTemplate({
-                  trim: bookCfg.trim,
+                  trim: pageOf(website, paper) ?? (kind === 'article' ? 'a4' : undefined),
                   language,
                   covers,
               })
@@ -263,12 +282,15 @@ export async function buildLatexOptions(
 /**
  * Paged.js output: HTML-string mode, with the shared book stylesheet.
  */
-export async function buildPagedjsOptions(website) {
+export async function buildPagedjsOptions(website, { paper } = {}) {
     return {
         adapterOptions: {
             mode: 'html',
             meta: buildBookMeta(website),
-            stylesheet: pagedjsStylesheet,
+            stylesheet: createPagedjsStylesheet({
+                trim: pageOf(website, paper),
+                kind: website?.config?.book?.kind,
+            }),
         },
     }
 }
@@ -318,6 +340,7 @@ pre {
   overflow: auto;
   white-space: pre-wrap;
 }
+.footnotes { font-size: 0.9em; border-top: 1px solid #bbb; margin-top: 2em; padding-top: 0.5em; }
 `
 
 export async function buildEpubOptions(website, { loadAsset } = {}) {

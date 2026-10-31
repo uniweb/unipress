@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.5.0
+
+### Added
+
+- **`paper`** — a top-level `paper: a4 | letter` in `document.yml`, on every output with
+  pages, and a `paper` a host names for one build (`unipress compile --paper`). A host's
+  comes first, then `book.trim`, then `paper:`. Each output declares it: `paper: true`
+  on `typst`, `pdf`, `latex` and `pagedjs`, `paper: false` on `epub`.
+- **Footnotes.** `[^id]` where the mark goes and a `[^id]: the note` paragraph in the same
+  file: at the foot of the page in Typst and LaTeX, at the end of the section in Paged.js
+  and EPUB.
+- A title in frontmatter, for a file that opens with no heading.
+- The article genre on Paged.js: its own page, its title block, and sections that flow on.
+
+### Fixed
+
+- A chapter's title printed twice, in every format and in LaTeX as an extra chapter. The
+  opener now is the chapter's heading, so the contents and the running heads still find it.
+- Paged.js ignored `book.trim` and printed everything on 6×9.
+- LaTeX ignored a `book.trim` preset, and a trim's margins.
+- `frontMatterNumbering: roman` numbered the front matter in arabic, and `none` numbered it
+  anyway.
+- Abstract, appendix, bibliography and back matter took a chapter number in the contents.
+
 ## 0.4.3
 
 ### Changed

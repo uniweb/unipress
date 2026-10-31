@@ -93,11 +93,13 @@ export function createTemplate({
       }
     },
     footer: context {
-      let pg = counter(page).get().first()
-      if calc.odd(pg) {
-        align(right, counter(page).display("1"))
-      } else {
-        align(left, counter(page).display("1"))
+      if page.numbering != none {
+        let pg = counter(page).get().first()
+        if calc.odd(pg) {
+          align(right, counter(page).display())
+        } else {
+          align(left, counter(page).display())
+        }
       }
     },
   )

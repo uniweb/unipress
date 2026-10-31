@@ -1,6 +1,7 @@
 import { useDocumentOutput } from '@uniweb/press'
 import { ChapterOpener, Sequence } from '@uniweb/press/typst'
 import { Prose } from '@uniweb/kit'
+import { UnnumberedOpener, proseUnderTitle, typstBody, withoutTitleHeading } from '#utils/chapter-opening.jsx'
 
 /**
  * Cover — the book's front page.
@@ -12,15 +13,22 @@ import { Prose } from '@uniweb/kit'
 export default function Cover({ content, block }) {
   const { title, subtitle, sequence } = content || {}
 
-  const compileTree = (
+  useDocumentOutput(
+    block,
+    'typst',
+    <>
+      <UnnumberedOpener title={title} subtitle={subtitle} />
+      <Sequence data={typstBody(sequence, title, block?.website)} />
+    </>,
+  )
+  useDocumentOutput(
+    block,
+    'latex',
     <>
       <ChapterOpener title={title} subtitle={subtitle} />
-      <Sequence data={sequence || []} />
-    </>
+      <Sequence data={withoutTitleHeading(sequence, title)} />
+    </>,
   )
-
-  useDocumentOutput(block, 'typst', compileTree)
-  useDocumentOutput(block, 'latex', compileTree)
 
   useDocumentOutput(
     block,
@@ -28,7 +36,7 @@ export default function Cover({ content, block }) {
     <article className="cover">
       {title ? <h1>{title}</h1> : null}
       {subtitle ? <p className="subtitle">{subtitle}</p> : null}
-      <Prose content={content} />
+      <Prose content={proseUnderTitle(content)} />
     </article>,
   )
 
@@ -40,7 +48,7 @@ export default function Cover({ content, block }) {
       {subtitle ? (
         <p className="text-subtle text-2xl font-light mb-8">{subtitle}</p>
       ) : null}
-      <Prose content={content} className="prose-book" />
+      <Prose content={proseUnderTitle(content)} className="prose-book" />
     </section>
   )
 }
