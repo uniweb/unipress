@@ -88,15 +88,15 @@ Foundations consume [@uniweb/press](https://github.com/uniweb/press) for the byt
 
 ## Install
 
-**Homebrew (macOS and Linux — recommended).** No Node, no manual download:
+**Homebrew (Apple Silicon Macs and x64 Linux — recommended).** No Node, no manual download:
 
 ```bash
 brew install uniweb/unipress/unipress
 ```
 
-Updates land via `brew upgrade unipress`. On recent Homebrew (6.x), the first `install` or `upgrade` may refuse the tap until you trust it once — run `brew trust uniweb/unipress`, then re-run the command. The macOS binary is signed with the Proximify Inc. Developer ID and Apple-notarized — no Gatekeeper warnings.
+Updates land via `brew upgrade unipress`. If Homebrew stops with `untrusted tap`, run `brew trust uniweb/unipress` once, then re-run the command ([why](./docs/troubleshooting.md)). The macOS binary is signed with the Proximify Inc. Developer ID and Apple-notarized — no Gatekeeper warnings.
 
-**Manual download (Windows, or any platform without Homebrew).** Grab the asset for your platform from [the releases page](https://github.com/uniweb/unipress/releases), make it executable (Unix), and put it somewhere on your `PATH`. On macOS and Linux, `/usr/local/bin/unipress` is a common location.
+**Manual download (Windows, or without Homebrew).** Grab the asset for your platform (Apple Silicon Mac, x64 Linux or x64 Windows) from [the releases page](https://github.com/uniweb/unipress/releases), make it executable (Unix), and put it somewhere on your `PATH`. On macOS and Linux, `/usr/local/bin/unipress` is a common location.
 
 **npm.** If you already have Node ≥ 22.12:
 

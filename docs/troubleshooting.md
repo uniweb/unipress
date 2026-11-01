@@ -8,7 +8,7 @@ Every `unipress` *compile* error exits with code `1` (user-addressable). Unknown
 
 ## Homebrew: `Error: Refusing to load formula ... from untrusted tap uniweb/unipress`
 
-Recent Homebrew (6.x) won't load a formula from a third-party tap until you've trusted it once. This blocks both the first `brew install uniweb/unipress/unipress` and later `brew upgrade unipress`.
+Homebrew won't load a formula from a third-party tap until it's trusted. Current Homebrew trusts it when you name it in full, so `brew install uniweb/unipress/unipress` goes through. An install from before that check has no such record, and `brew upgrade unipress` stops here. Homebrew 6.x could stop the first install too.
 
 Trust the tap once, then re-run the command:
 
