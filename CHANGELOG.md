@@ -1,5 +1,15 @@
 # Changelog
 
+## After 1.1.26
+
+### Changed
+
+- **A spreadsheet is written by Press itself now**, with no `exceljs` behind it, so `@unipress/data` and
+  `@unipress/business-docs` take new versions (0.2.2). A foundation's spreadsheet code goes from 944 KB to
+  14 KB. A value with no form in a spreadsheet (`NaN`, an invalid date, text over 32,767 characters) no
+  longer makes a file Excel offers to repair, a total shows in a reader that doesn't calculate, and a long
+  total no longer reads `#####`. A document pinned to 0.2.1 keeps working, on the old writer.
+
 ## After 1.1.25
 
 ### Fixed

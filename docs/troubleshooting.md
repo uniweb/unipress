@@ -46,7 +46,7 @@ says what it chose:
 ```bash
 unipress compile . --yes                     # generate + compile → article PDF
 unipress compile . --yes --paper a4          # …on A4, whatever the region
-unipress compile . --yes --foundation @unipress/data@0.2.1 --format docx
+unipress compile . --yes --foundation @unipress/data@0.2.2 --format docx
 ```
 
 The generated `document.yml` pins a foundation, sets the format, lists the
@@ -199,7 +199,7 @@ when documents and websites came to share one vocabulary. Four edits bring it ac
 3. In each page's frontmatter or `page.yml`, change `data: <name>` to `query: <name>`,
    and `collection: <name>` to `query: <name>`.
 4. Point `foundation:` at the current version: `@unipress/book@0.5.4`,
-   `@unipress/data@0.2.1` or `@unipress/business-docs@0.2.1`.
+   `@unipress/data@0.2.2` or `@unipress/business-docs@0.2.2`.
 
 `unipress list-templates` shows the versions this unipress pins.
 

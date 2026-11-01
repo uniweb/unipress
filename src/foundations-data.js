@@ -102,13 +102,13 @@ const BOOK_FOUNDATION = {
 }
 
 const DATA_FOUNDATION = {
-  ref: '@unipress/data@0.2.1',
-  source: { url: publicUrl('data', '0.2.1') },
+  ref: '@unipress/data@0.2.2',
+  source: { url: publicUrl('data', '0.2.2') },
 }
 
 const BUSINESS_DOCS_FOUNDATION = {
-  ref: '@unipress/business-docs@0.2.1',
-  source: { url: publicUrl('business-docs', '0.2.1') },
+  ref: '@unipress/business-docs@0.2.2',
+  source: { url: publicUrl('business-docs', '0.2.2') },
 }
 
 export const FOUNDATIONS = [
