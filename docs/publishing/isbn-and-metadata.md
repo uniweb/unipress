@@ -86,5 +86,5 @@ conventions vary by market and you can match yours.
 
 ## Next
 
-- Back to the [overview and checklist](./README.md#before-you-publish--a-checklist).
+- Back to the [overview and checklist](./overview.md#before-you-publish--a-checklist).
 - Make your [ebook](./ebooks.md) or [print](./print.md) files.

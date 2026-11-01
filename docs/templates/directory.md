@@ -1,4 +1,4 @@
-# `directory`
+# Directory
 
 A simple records listing — a faculty directory, an alumni list, an item catalog. Pinned to `@unipress/data`. Outputs an Excel workbook (one sheet, one row per record) or a Word listing.
 
@@ -49,7 +49,7 @@ joined_year: 2024
 
 ## Adjust the queryable fields
 
-The fields exposed in the FilterPanel UI come from `document.yml`'s `collections.members.queryable:` block. Each field becomes a control:
+The fields exposed in the FilterPanel UI come from `document.yml`'s `queries.members.queryable:` block. Each field becomes a control:
 
 - `enum` → multi-select dropdown.
 - `boolean` → toggle.
@@ -72,4 +72,4 @@ For multi-section aggregate reports (publications-by-year, funding totals, super
 
 ## Foundation reference
 
-`@unipress/data` — see the foundation's README: `framework/unipress/foundations/data/README.md`.
+`@unipress/data` — see the foundation's README: [foundations/data/README.md](https://github.com/uniweb/unipress/blob/main/foundations/data/README.md).

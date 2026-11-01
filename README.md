@@ -30,21 +30,7 @@ The generated `document.yml` is yours to keep and edit — it holds the title, r
 
 ### A4 or US Letter?
 
-Both, in every template and every format with pages. When unipress writes a `document.yml` — `create`, or the first compile of a folder — it asks, and offers the paper your system's region uses: Letter in the US, Canada and the other [countries that use it](./docs/publishing/size-and-layout.md#paper), A4 everywhere else. Without a terminal it picks that one and says so. From then on the file states it, so the document prints the same on any machine:
-
-```yaml
-paper: letter       # or a4
-```
-
-To print one build on the other paper, or to choose when creating:
-
-```bash
-unipress compile . --paper a4                       # this build only
-unipress compile . --paper a4 --out my-doc-a4.pdf   # keep both
-unipress create my-report --template data-report --paper letter
-```
-
-A couple of other one-line tweaks live in the `book:` block — numbered sections (`structure: { numberHeadings: true }`) and a table of contents (`structure: { toc: true }`). See the [`article` guide](./docs/templates/article.md) for the full list.
+Both, in every template and every format with pages. unipress offers the paper your region uses, the `document.yml` states it (`paper: letter`), and `--paper a4` prints one build on the other. [The quick start](./docs/quick-start.md#a4-or-us-letter) has the rest.
 
 ## Starting from scratch
 
@@ -57,7 +43,7 @@ cd my-book && unipress compile .
 
 `create` writes a content-only directory — markdown, a `document.yml`, optional `theme.yml` and `assets/`; no `package.json`, no `node_modules`. Pick the template that matches your document (see [Pick a template](#pick-a-template)) — it carries the typography and structure so a book reads like a book and a directory like a directory.
 
-> **Planning to publish?** There's a full author's guide that takes a book from your folder all the way to Amazon and print — [Publishing your book](./docs/publishing/README.md).
+> **Planning to publish?** There's a full author's guide that takes a book from your folder all the way to Amazon and print — [Publishing your book](./docs/publishing/overview.md).
 
 ## What it makes
 
@@ -74,7 +60,7 @@ Equations work in the standard LaTeX style — `$E = mc^2$` for inline, `$$...$$
 
 ## Publishing your book
 
-Making the files is half the job; getting your book onto Amazon, Apple Books, and print-on-demand is the other half. The **[Publishing your book](./docs/publishing/README.md)** guide is an end-to-end walkthrough written for authors — the proof → final workflow, covers and images, trim sizes, EPUB validation, print-on-demand, ISBNs, and metadata — with links to every store and service.
+Making the files is half the job; getting your book onto Amazon, Apple Books, and print-on-demand is the other half. The **[Publishing your book](./docs/publishing/overview.md)** guide is an end-to-end walkthrough written for authors — the proof → final workflow, covers and images, trim sizes, EPUB validation, print-on-demand, ISBNs, and metadata — with links to every store and service.
 
 ## Two ways to use it
 
@@ -88,21 +74,12 @@ Foundations consume [@uniweb/press](https://github.com/uniweb/press) for the byt
 
 ## Install
 
-**Homebrew (Apple Silicon Macs and x64 Linux — recommended).** No Node, no manual download:
-
 ```bash
-brew install uniweb/unipress/unipress
+brew install uniweb/unipress/unipress   # Apple Silicon Macs and x64 Linux. No Node.
+npm i -g @uniweb/unipress               # any system, with Node ≥ 22.12
 ```
 
-Updates land via `brew upgrade unipress`. If Homebrew stops with `untrusted tap`, run `brew trust uniweb/unipress` once, then re-run the command ([why](./docs/troubleshooting.md)). The macOS binary is signed with the Proximify Inc. Developer ID and Apple-notarized — no Gatekeeper warnings.
-
-**Manual download (Windows, or without Homebrew).** Grab the asset for your platform (Apple Silicon Mac, x64 Linux or x64 Windows) from [the releases page](https://github.com/uniweb/unipress/releases), make it executable (Unix), and put it somewhere on your `PATH`. On macOS and Linux, `/usr/local/bin/unipress` is a common location.
-
-**npm.** If you already have Node ≥ 22.12:
-
-```bash
-npm i -g @uniweb/unipress
-```
+Or download a binary from [the releases page](https://github.com/uniweb/unipress/releases), which also has x64 Windows. [The install guide](./docs/install.md) has the details.
 
 ## Pick a template
 
@@ -123,7 +100,7 @@ Built-in templates ship with the binary. Run `unipress list-templates` for the p
 
 Per-template guides: [docs/templates/](./docs/templates/).
 
-More templates land as more foundations ship — `cv`, `resume`, `thesis` are on the roadmap for upcoming releases.
+More templates land as more foundations ship — `cv` and `resume` are on the roadmap for upcoming releases.
 
 ## Custom foundations
 
@@ -141,144 +118,10 @@ unipress compile my-doc --foundation ../my-foundation
 
 For the foundation contract — the `outputs:` map, the `getOptions(website, hostHints)` function, what bytes a foundation can emit — see the [foundation authors' guide](https://github.com/uniweb/docs/blob/main/reference/foundation-config.md#document-outputs). A foundation is not an npm package: unipress loads its built `entry.js` by URL — a registry ref is turned into one — or from a local path.
 
----
+## Reference
 
-Below this point is reference material — useful when you want to do something beyond the basics, or when something doesn't behave as expected.
-
-## CLI reference
-
-```text
-unipress compile <dir> [options]
-  --format <fmt>      Output format (pdf | typst | docx | xlsx | pagedjs | epub).
-                      Overrides the format: field in document.yml.
-  --foundation <ref>  Override document.yml's foundation. Accepts:
-                        - registry ref:  @<namespace>/<name>@<version>
-                        - URL:           https://…/entry.js
-                        - path:          ./foundation, /abs/path, …
-  --out <path>        Output file (default: ./<dir-basename>.<ext>).
-  --paper <size>      Print this build on a4 or letter, over what document.yml says.
-  --variant <name>    Build an alternate top-level config <name>.yml inside <dir>
-                      (e.g. --variant document-book → document-book.yml) instead of the
-                      default document.yml. Lets one manuscript hold several cuts —
-                      an A4 article and a trade book — side by side. The name is used
-                      as given (a .yml extension is assumed if omitted).
-  --config <path>     Explicit config file (default: <dir>/unipress.config.js).
-  --typst-binary <p>  Path to a typst binary (skips the managed download).
-  --keep-temp         On typst-compile failure, keep the temp dir for inspection.
-  --yes               If no document.yml exists, generate one from the folder's
-                      markdown without prompting (book foundation by default;
-                      honors --foundation/--format/--paper).
-  --verbose           Per-step progress to stderr + stack traces on errors.
-
-unipress create <dir> [options]
-  --template <id>     Template to scaffold (interactive picker if omitted).
-                      Run `unipress list-templates` to see available ids.
-  --title <str>       Document title (prompts if omitted).
-  --author <str>      Document author (prompts if omitted).
-  --paper <size>      a4 or letter. Without it, what your system's region uses; a
-                      template with a book trim keeps its trim.
-  --force             Overwrite non-empty <dir>.
-  --yes               Skip prompts (requires --template).
-
-unipress list-templates
-  List the templates available, one per line, with description, outputs,
-  the foundation each pins, and the source URL where the foundation lives.
-
-unipress inspect <dir> [options]
-  Dump the parsed content as JSON (debugging aid).
-  --full              Include web-only fields (assets, icons, etc.).
-  --summary           Replace pages[] with route strings only.
-  --page <route>      Keep only the page matching <route>.
-  --depth <n>         Truncate nested values beyond depth n.
-  --foundation <ref>  Override document.yml's foundation.
-  --no-orchestrate    Skip running the foundation; show only the parsed content.
-
-unipress --help
-unipress --version
-```
-
-Exit codes: `0` success, `1` user-addressable error, `2` internal error (re-run with `--verbose` for a stack trace).
-
-## Configuration
-
-### `document.yml`
-
-The content-directory-level config. Fields unipress reads:
-
-| Field | Purpose |
-|---|---|
-| `name` | Document name (used as a title fallback). |
-| `foundation` | Registry ref (`@ns/name@ver`), URL, or local path to the foundation. |
-| `format` | Default output format. Overridable by CLI `--format` or `unipress.config.js`. |
-| `paper` | The paper it prints on: `a4` or `letter`, for every format with pages. Overridable by CLI `--paper` or `unipress.config.js`. A `book.trim` beside it wins: a 6×9 book stays 6×9. |
-| `content:` | Reading order — chapter names with any numeric prefix stripped (`00-intro.md` → `intro`). `pages:` is accepted as an alias. |
-| `paths:` | Content-directory overrides. `paths: { pages: . }` reads markdown loose at the project root instead of a `content/` subfolder. |
-| `queries:` | The queries a document's sections fetch by name (`query: bibliography`); a query's records live under `records/<name>/`. |
-| `book:`, `report:`, `thesis:` … | Foundation-specific config blocks. The foundation's `getOptions` reads these. |
-
-`site.yml` is also accepted as a fallback for compatibility with existing Uniweb site directories.
-
-#### Several cuts of one manuscript
-
-Keep more than one top-level config beside your content and pick one per build with
-`--variant`. The same chapters can ship as an A4 article and a trade book:
-
-```text
-my-book/
-  document.yml         # A4 article (the default: unipress compile .)
-  document-book.yml    # trade 6×9 with covers
-  assets/front.png
-  01-intro.md  02-…
-
-unipress compile .                          # → article (document.yml)
-unipress compile . --variant document-book  # → book (document-book.yml)
-```
-
-`--variant <name>` reads `<name>.yml` from the content directory — the name is used as
-given (no prefixing) with `.yml` assumed when omitted. Config-declared assets —
-`book.covers.front`, banners, logos — are resolved from the config the build reads, so
-**covers must live in the config unipress reads** (the `--variant` file or the default
-`document.yml`), not in a `unipress.config.js` `--config` override, whose asset paths
-aren't scanned.
-
-### `unipress.config.js`
-
-Optional ESM file for things awkward in YAML — imports, computed values, format-specific overrides. Auto-discovered at `<dir>/unipress.config.js` or explicit via `--config <path>`.
-
-```js
-import { defineUnipressConfig } from '@uniweb/unipress'
-
-export default defineUnipressConfig({
-  out: './dist/my-book.pdf',           // overrides --out default
-  format: 'pdf',                        // overrides document.yml format
-  paper: 'letter',                      // overrides document.yml paper and book.trim
-
-  typst: {
-    version: '0.14.2',                  // override the pinned Typst version
-    binary: '/usr/local/bin/typst',     // skip the managed download
-  },
-})
-```
-
-Plain `export default { … }` works equally well; `defineUnipressConfig` is an identity wrapper for editor autocomplete.
-
-Relative paths in the config (`out`, `foundation`, `typst.binary`) resolve against the **config file's directory** — matching Vite / Astro convention.
-
-### Precedence chain
-
-```
-CLI flags > unipress.config.js > document.yml > defaults
-```
-
-Applied per-field.
-
-## Typst binary
-
-`--format pdf` requires a Typst binary. unipress pins `0.14.2` and manages the download:
-
-- **Cache location:** `$UNIPRESS_CACHE_DIR` > `$XDG_CACHE_HOME/unipress` > `~/Library/Caches/unipress` (macOS) > `~/.cache/unipress` (fallback). Binary path: `<cache>/typst/<version>/typst`.
-- **Override:** pass `--typst-binary <path>` or set `typst.binary` in `unipress.config.js`.
-- **Checksum verified:** each download is SHA-256-checked against the digest pinned in `src/typst/versions.js`.
+- **[CLI reference](./docs/cli.md)** — every command and flag.
+- **[Configuration](./docs/configuration.md)** — `document.yml`, several cuts of one manuscript, `unipress.config.js`, what wins over what, the Typst binary.
 
 ## Where things stand
 
@@ -290,8 +133,9 @@ unipress is on **1.x**, like every Uniweb package since 1.0.1. The CLI is stable
 
 Also at **[unipress.app](https://unipress.app/docs)**.
 
-- **[Publishing your book](./docs/publishing/README.md)** — the end-to-end guide for authors: the proof → final workflow, covers and images, trim sizes, EPUB, print-on-demand, ISBNs, and metadata.
-- **Template guides** — conventions and settings per document kind: [article](./docs/templates/article.md), [book](./docs/templates/book.md), [monograph](./docs/templates/monograph.md), [report](./docs/templates/report.md), [data-report](./docs/templates/data-report.md), [directory](./docs/templates/directory.md).
+- **[Quick start](./docs/quick-start.md)**, **[install](./docs/install.md)**, **[CLI](./docs/cli.md)** and **[configuration](./docs/configuration.md)**.
+- **[Publishing your book](./docs/publishing/overview.md)** — the end-to-end guide for authors: the proof → final workflow, covers and images, trim sizes, EPUB, print-on-demand, ISBNs, and metadata.
+- **Template guides** — conventions and settings per document kind: [article](./docs/templates/article.md), [book](./docs/templates/book.md), [monograph](./docs/templates/monograph.md), [report](./docs/templates/report.md), [thesis](./docs/templates/thesis.md), [data-report](./docs/templates/data-report.md), [directory](./docs/templates/directory.md).
 - **[Troubleshooting](./docs/troubleshooting.md)** — common errors and fixes; every named error class maps to a cause and a concrete next step.
 - **[For developers](./docs/for-developers.md)** — building a foundation: section types, data sources, and custom output formats.
 

@@ -111,7 +111,7 @@ so the cut never leaves a white sliver.
   interior art. Keep interior images within the text block, or ask your printer how
   they want full-bleed interior pages supplied.
 - **Your cover is where bleed really matters**, and that's handled separately by
-  your print service's cover template — see [covers-and-images.md](./covers-and-images.md#covers).
+  your print service's cover template — see [Covers and images](./covers-and-images.md#covers).
 
 ## Front matter
 
@@ -132,7 +132,7 @@ book:
   already carries the title (many do), you may want this **off** to avoid repeating
   it: `titlePage: false`.
 - **`copyrightPage`** — the copyright/imprint page. Pulls from `book.rights`,
-  `book.publisher`, `book.isbn` (see [isbn-and-metadata.md](./isbn-and-metadata.md)).
+  `book.publisher`, `book.isbn` (see [ISBNs and metadata](./isbn-and-metadata.md)).
 - **`toc`** — a generated table of contents from your chapter titles.
 - **`frontMatterNumbering: roman`** is the traditional convention: front matter is
   numbered i, ii, iii…; Chapter 1 resets to page 1. Use `none` to leave front

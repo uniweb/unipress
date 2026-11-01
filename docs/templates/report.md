@@ -1,4 +1,4 @@
-# `report`
+# Report
 
 A technical report — executive summary up top, findings in the body, methodology at the bottom. Trade-7x10 trim (wider than a book — tables and code need room), block paragraphs with no first-line indent, code-block margin relief so wide content extends past the body column. Same `@unipress/book` foundation as the `book` and `monograph` templates, configured for technical writing.
 
@@ -51,4 +51,4 @@ Same shape as `book` (see [book.md](./book.md)). The differences are defaults:
 
 ## Foundation reference
 
-`@unipress/book` — see the foundation's README: `framework/unipress/foundations/book/README.md`.
+`@unipress/book` — see the foundation's README: [foundations/book/README.md](https://github.com/uniweb/unipress/blob/main/foundations/book/README.md).

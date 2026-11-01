@@ -1,4 +1,4 @@
-# `article`
+# Article
 
 A single-column paper — A4 or US Letter, continuous prose, no chapters. Clean typography, symmetric margins tuned for a comfortable ~75-character measure, an inline title block (no separate title page), and unnumbered section headings. It's the natural shape for turning a folder of notes, a report, a proposal, or an essay into one shareable PDF — and the default when you run `unipress compile .` on a loose folder of markdown.
 
@@ -66,4 +66,4 @@ Cover artwork, title pages, copyright pages, and chapter numbering don't apply t
 
 ## Foundation reference
 
-`@unipress/book` — see the foundation's README: `foundations/book/README.md`.
+`@unipress/book` — see the foundation's README: [foundations/book/README.md](https://github.com/uniweb/unipress/blob/main/foundations/book/README.md).

@@ -13,7 +13,7 @@ the text, the chapters, and the metadata do.
 One command, from your book folder:
 
 ```bash
-unipress compile . --variant book --format epub --out my-book.epub
+unipress compile . --variant document-book --format epub --out my-book.epub
 ```
 
 This uses your final variant, so it picks up your [covers](./covers-and-images.md)
@@ -76,18 +76,18 @@ in your category charge.
 
 - **Cover thumbnail.** Kindle and most stores want a tall cover of at least
   ~1600 × 2560 px — the same front-cover image unipress already uses. See
-  [covers-and-images.md](./covers-and-images.md#size-and-resolution).
+  [Covers and images](./covers-and-images.md#size-and-resolution).
 - **DRM.** At upload each store asks whether to apply DRM (copy protection). Most
   independent authors publish **DRM-free**; it's your call and it's reversible only
   in one direction, so decide deliberately.
 - **ISBN.** An ebook doesn't strictly need one on every store (Amazon issues a free
   internal ID), but some stores prefer or require an ISBN. See
-  [isbn-and-metadata.md](./isbn-and-metadata.md).
+  [ISBNs and metadata](./isbn-and-metadata.md).
 - **Metadata.** Title, description, categories, and keywords are entered on each
   store, not baked into the file. Getting them right is how readers find you — see
-  [isbn-and-metadata.md](./isbn-and-metadata.md#metadata).
+  [ISBNs and metadata](./isbn-and-metadata.md#metadata).
 
 ## Next
 
-- Also selling in print? See [print.md](./print.md).
+- Also selling in print? See [Publishing in print](./print.md).
 - Sort out your [ISBN and metadata](./isbn-and-metadata.md).

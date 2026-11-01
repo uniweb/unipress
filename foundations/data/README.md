@@ -72,6 +72,6 @@ vars:
 
 ## See also
 
-- `framework/press/docs/concepts.md` — Press's adapter model.
-- `framework/loom/` — Loom expression syntax.
-- `framework/unipress/` — the CLI that compiles author-supplied content directories using this foundation.
+- [`@uniweb/press`: concepts](https://github.com/uniweb/press/blob/main/docs/concepts.md) — Press's adapter model.
+- [Loom](https://github.com/uniweb/loom) — Loom expression syntax.
+- [unipress](https://github.com/uniweb/unipress) — the CLI that compiles author-supplied content directories using this foundation.

@@ -39,11 +39,11 @@ All of these flow through the same foundation pipeline — same primitives wheth
 
 ### Academic writing: bibliographies and citations
 
-For scholarly work specifically, [`citestyle`](https://github.com/uniweb/csl) handles the formatting layer Loom is too general for. CSL-based, lightweight, used directly from foundations: pick from APA, MLA, Chicago author-date, IEEE, Vancouver, Harvard at the section level (`style: chicago-author-date`); citestyle dynamically loads only the styles you reference and formats every entry to spec — the author ordering, journal abbreviations, punctuation, and conventions academic readers expect.
+For scholarly work specifically, [`citestyle`](https://github.com/uniweb/csl) handles the formatting layer Loom is too general for. CSL-based, lightweight, used directly from foundations: pick from APA, MLA, Chicago author-date, IEEE, Vancouver, Harvard, AMA, Nature, Science at the section level (`style: chicago-author-date`); citestyle dynamically loads only the styles you reference and formats every entry to spec — the author ordering, journal abbreviations, punctuation, and conventions academic readers expect.
 
 The combination is the powerful part. Loom interpolates ("In {section.title}, we describe…"); citestyle formats bibliographic entries (a complete back-matter `Bibliography`, or inline `[Author Year]` citation marks). A thesis, monograph, or annual research report uses both: Loom for dynamic prose and per-section metadata, citestyle for every bibliographic touch in the document.
 
-Working example: the `data-report` template ships a `PublicationsList` section backed by YAML bib data in `records/members/*.yml`, with per-section style selection. Run `unipress create my-report --template data-report` to see it. Bibliography support in long-form prose templates (`book`, `monograph`, future `thesis`/`paper`) lands across upcoming releases.
+Working example: the `data-report` template ships a `PublicationsList` section backed by YAML bib data in `records/members/*.yml`, with per-section style selection. Run `unipress create my-report --template data-report` to see it. The `monograph` and `thesis` templates print citations and a bibliography in long-form prose: see the [monograph guide](./templates/monograph.md).
 
 ## Outputs are foundation-declared
 

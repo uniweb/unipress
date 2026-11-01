@@ -57,7 +57,7 @@ with `paths: { pages: . }`. It's an ordinary config file; edit it freely.
 To write one by hand instead:
 
 ```yaml
-foundation: "@unipress/book@0.5.0"
+foundation: "@unipress/book@0.5.1"
 format: pdf
 paper: letter
 paths:
@@ -167,7 +167,9 @@ Quick retry: delete the cache directory (`$UNIPRESS_CACHE_DIR/typst/<version>`) 
 ## The PDF stops at `the document names a file that is not there`
 
 A markdown image, or a cover in `document.yml`, points at a file unipress can't find.
-The error names it. Check the spelling and the path: a PDF can't be typeset without it.
+The error names it. Check the spelling and the path: a document can't be built without it,
+in any format. A path can start at the document's folder, as `assets/front.jpg` or
+`/assets/front.jpg`.
 
 ## `CompileError: <foundation> does not say its <format> output takes a paper`
 
@@ -176,7 +178,7 @@ the file might come out at the wrong size. A document that pins an older bundled
 foundation gets the version to pin in the message:
 
 ```yaml
-foundation: '@unipress/book@0.5.0'
+foundation: '@unipress/book@0.5.1'
 ```
 
 A foundation of your own declares it as `paper: true` on the output
@@ -196,7 +198,7 @@ when documents and websites came to share one vocabulary. Four edits bring it ac
    `path: collections/…` line under it.
 3. In each page's frontmatter or `page.yml`, change `data: <name>` to `query: <name>`,
    and `collection: <name>` to `query: <name>`.
-4. Point `foundation:` at the current version: `@unipress/book@0.5.0`,
+4. Point `foundation:` at the current version: `@unipress/book@0.5.1`,
    `@unipress/data@0.2.0` or `@unipress/business-docs@0.2.0`.
 
 `unipress list-templates` shows the versions this unipress pins.
@@ -244,12 +246,13 @@ export default { format: 'pdf' }
 
 ## Cover image (or other config asset) doesn't appear in the output
 
-Not an error — a silent drop. The book compiles, but the front/back cover (or a
-banner/logo declared in config) is missing from the PDF/EPUB.
+The book compiles, but the front/back cover (or a banner/logo declared in config) is
+missing from the PDF/EPUB. A path to a file that isn't there stops the build, by name, so
+this means unipress never saw the setting.
 
 Config-declared asset paths — `book.covers.front`, `book.covers.back`, and the like —
 are resolved from the top-level config unipress **reads for content collection**: the
-default `document.yml`, or the file you pass to `--document`. They are *not* scanned from
+default `document.yml`, or the file you pass to `--variant`. They are *not* scanned from
 a `unipress.config.js` supplied via `--config` (that file layers build settings — `out`,
 `format`, `typst` — over the compile, after content is collected).
 

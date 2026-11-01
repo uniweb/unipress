@@ -1,4 +1,4 @@
-# `data-report`
+# Data report
 
 An aggregate metrics report — counts, totals, and breakdowns across a set of records (members, publications, funding, supervisions). Pinned to `@unipress/data`. Outputs a downloadable Excel workbook (one sheet per section) and a Word report.
 
@@ -67,12 +67,7 @@ The Cover section's Loom expressions (`{COUNT OF members}`, `{totalPublications}
 - `boolean` → toggle.
 - `range` → numeric range input.
 
-The framework's transport-aware fetcher decides where the active where-object runs:
-
-- `fetcher.supports: []` (default; static `/data/members.json`) — predicates evaluated in JS, multiple sections share one cached fetch.
-- `fetcher.supports: [where]` — predicate ships with the request, backend returns only matching records.
-
-Same author code, same components, same compile output. Switching modes is one block in `document.yml`.
+`unipress compile` reads the records from your files and selects from them in place, so a document needs nothing running. A website built on the same foundation filters the same way, whichever host serves its records.
 
 ## When to pick `data-report` over `directory`
 
@@ -84,4 +79,4 @@ For a flat records listing, use `directory` instead.
 
 ## Foundation reference
 
-`@unipress/data` — see the foundation's README: `framework/unipress/foundations/data/README.md`.
+`@unipress/data` — see the foundation's README: [foundations/data/README.md](https://github.com/uniweb/unipress/blob/main/foundations/data/README.md).

@@ -74,7 +74,7 @@ Tax ({tax_label}): {tax_amount}
 
 `SHOW` is the default verb — `{number}` is identical to `{SHOW number}`.
 Reserve explicit verbs (`SHOW WHERE`, `COUNT OF`, `TOTAL OF`, `IF`) for
-cases that need them. See `framework/loom/docs/` for the Loom reference.
+cases that need them. See [its docs](https://github.com/uniweb/loom/tree/main/docs) for the Loom reference.
 
 ## Cross-record validation
 

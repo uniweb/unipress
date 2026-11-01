@@ -1,5 +1,38 @@
 # Changelog
 
+## After 1.1.21
+
+### Fixed
+
+- **`create` printed a next step that failed.** It now prints `unipress compile .`, and the
+  smoke test runs what it prints.
+- **`--out o.pdf` could write a file that wasn't a PDF**, since a template's default format
+  decided. A name that can only be one format now builds that format when nothing names one,
+  and is refused when `--format` names another.
+- **A cover that isn't there** left a book with no cover and exit 0. It now stops the build, by
+  name, as a missing image does, in every format. `/assets/front.jpg` finds the file in the
+  document's folder too, as the guide said it would.
+- **`inspect` wrote log lines into its JSON**, and every compile printed the build's progress,
+  such as default theme colours for a black-and-white PDF. They go to `--verbose` now.
+- **A font this machine doesn't have** was silent, so one folder could print differently on
+  another machine. A compile now says which.
+- **Every document with no cover opened on a blank page**: report, monograph and thesis.
+- **The thesis template printed broken output** on the Typst path: math as raw LaTeX, references
+  and citations as gaps in the sentence, a second title page ahead of its own, its contents before
+  its title page, and an empty list of figures as chapter 1.
+- **`[^b]: Word.` became a link**, and so did a note that was only a URL.
+- **A formula wrapped onto a second line** printed as raw LaTeX.
+- **Four starters listed their files in `content:` by names that match no page**, so moving an
+  entry did nothing. They now list page names, and a compile names any entry that matches nothing.
+
+### Changed
+
+- The reference in the README moved to `docs/`: [quick start](./docs/quick-start.md),
+  [install](./docs/install.md), [CLI](./docs/cli.md), [configuration](./docs/configuration.md). The
+  publishing guide's opening is now [`docs/publishing/overview.md`](./docs/publishing/overview.md).
+  A site can mount the folder as it stands, with titles and an order.
+- `monograph` and `thesis` have the guides they lacked or understated.
+
 ## 1.x, since the 0.4.29 binary
 
 The first binary and Homebrew release since 0.4.29. If you have that one and can't compile
@@ -182,7 +215,7 @@ separates create-time templates from runtime foundations.
   is the registry ref scaffolded `document.yml` files pin; the
   `foundation.source.url` is the human-readable "where this lives"
   pointer shown in `list-templates` output.
-- **Repo layout**: `framework/unipress/` is now a nested pnpm
+- **Repo layout**: this package is now a nested pnpm
   workspace. Foundations developed for unipress live under
   `foundations/<name>/`; documents (foundation-dev test harnesses
   AND bundled template starter content) live under `documents/<name>/`.
@@ -226,7 +259,7 @@ tree and exercised end-to-end against the v0.1 reference foundation
   foundation, ...hostHints })` and sinks the resulting Blob.
 - Format support: whatever the foundation declares in its `outputs:`
   map. Today that's PDF / Typst source zip / Paged.js HTML / EPUB via
-  `@proximify/press-book`; other formats land when their foundations do.
+  the book foundation; other formats land when their foundations do.
 - Typst binary manager: pinned to `0.14.2`, SHA-256-verified, cached
   under `$UNIPRESS_CACHE_DIR` or the platform default (XDG /
   `~/Library/Caches/unipress` / `~/.cache/unipress`). Override with

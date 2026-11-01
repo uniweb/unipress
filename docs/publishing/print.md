@@ -14,7 +14,7 @@ files**, not one:
    matter and chapters, sized to your trim.
 2. **The cover** — a single **wrap-around** image: back + spine + front, with
    bleed. Made from your print service's cover template. See
-   [covers-and-images.md](./covers-and-images.md#the-print-cover-is-a-different-file).
+   [Covers and images](./covers-and-images.md#the-print-cover-is-a-different-file).
 
 If you upload your with-covers PDF as the interior, your cover art prints as
 interior *pages* — wrong. So print gets its own cover-less cut of the book.
@@ -38,14 +38,14 @@ content: [ ... ]
 Build it:
 
 ```bash
-unipress compile . --variant print --format pdf --out interior.pdf
+unipress compile . --variant document-print --format pdf --out interior.pdf
 ```
 
 `interior.pdf` is your print interior. It's already what POD services want: pages at
 the exact trim size, with fonts embedded. Confirm your inside margin is generous
-enough for your page count ([size-and-layout.md](./size-and-layout.md#margins-and-the-gutter)),
+enough for your page count ([Size and layout](./size-and-layout.md#margins-and-the-gutter)),
 and if any interior image runs to the page edge, read the bleed note in
-[size-and-layout.md](./size-and-layout.md#bleed).
+[Size and layout](./size-and-layout.md#bleed).
 
 ## Choosing a print service
 
@@ -85,9 +85,9 @@ remember color interiors cost noticeably more to print than black-and-white.
 Print books effectively need an **ISBN** to sell through retail. KDP and IngramSpark
 can assign one free (tied to that service), or you can buy your own so it's portable
 across services. This is a real decision — see
-[isbn-and-metadata.md](./isbn-and-metadata.md#isbns).
+[ISBNs and metadata](./isbn-and-metadata.md#isbns).
 
 ## Next
 
 - Sort out your [ISBN and metadata](./isbn-and-metadata.md).
-- Also publishing digitally? See [ebooks.md](./ebooks.md).
+- Also publishing digitally? See [Publishing an ebook](./ebooks.md).

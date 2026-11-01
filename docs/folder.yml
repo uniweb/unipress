@@ -1,0 +1,11 @@
+# The docs as pages, when a site mounts this folder. Nothing on GitHub reads it.
+title: Docs
+pages:
+  - quick-start
+  - install
+  - cli
+  - configuration
+  - templates
+  - publishing
+  - troubleshooting
+  - for-developers

@@ -38,13 +38,13 @@ flowchart LR
 ## Two builds: a proof and a final
 
 unipress lets one manuscript produce several **cuts** — different shapes of the
-same content — from one folder, using [`--variant`](../../README.md#cli-reference).
+same content — from one folder, using [`--variant`](../cli.md).
 The recommended setup is two configs side by side:
 
 ```text
 my-book/
   document.yml         # the PROOF  — unipress compile .
-  document-book.yml    # the FINAL  — unipress compile . --variant book
+  document-book.yml    # the FINAL  — unipress compile . --variant document-book
   assets/front.png  assets/back.png
   01-…  02-…  (your chapters)
 ```
@@ -65,7 +65,7 @@ content: [ ... ]
 ```
 
 **`document-book.yml` — your final book (a variant).** The real trade 6×9, with
-covers and full front matter. Build it with `unipress compile . --variant book`.
+covers and full front matter. Build it with `unipress compile . --variant document-book`.
 This is the file you send to a store, and — via `--format epub` — your ebook. Build
 it near the end to also proof the **layout**: page breaks, widowed lines, where
 images land. Things the proofing copy can't show you.
@@ -88,43 +88,43 @@ two kinds of proofreading, and this covers both: **content** proofing in the pro
 copy, **layout** proofing in the final.
 
 > Going to print adds one more cut — a cover-less **print interior** for the
-> print-on-demand service. See [print.md](./print.md#the-two-files-you-upload).
+> print-on-demand service. See [Publishing in print](./print.md#the-two-files-you-upload).
 
 ## What you'll produce
 
 | File | Build | For |
 |---|---|---|
 | Proof PDF | `unipress compile .` | Reading and marking up while you write |
-| Final PDF (with covers) | `unipress compile . --variant book` | A shareable/sellable digital edition; layout proofing |
-| EPUB | `unipress compile . --variant book --format epub` | Ebook stores (Kindle, Apple, Kobo, Google) |
-| Print interior PDF | `unipress compile . --variant print` | Uploading to print-on-demand (see [print.md](./print.md)) |
+| Final PDF (with covers) | `unipress compile . --variant document-book` | A shareable/sellable digital edition; layout proofing |
+| EPUB | `unipress compile . --variant document-book --format epub` | Ebook stores (Kindle, Apple, Kobo, Google) |
+| Print interior PDF | `unipress compile . --variant document-print` | Uploading to print-on-demand (see [Publishing in print](./print.md)) |
 
 ## Before you publish — a checklist
 
 - [ ] **Content** proofread in the proof copy — spelling, grammar, facts, flow.
 - [ ] **Layout** proofread in the final variant — no widowed headings, images in
       place, chapters start cleanly, front matter correct.
-- [ ] **Trim size** chosen and consistent everywhere ([size-and-layout.md](./size-and-layout.md)).
-- [ ] **Covers** sized for your trim, front and back ([covers-and-images.md](./covers-and-images.md)).
-- [ ] **Images** are high-resolution enough for print ([covers-and-images.md](./covers-and-images.md#images-in-your-book)).
+- [ ] **Trim size** chosen and consistent everywhere ([Size and layout](./size-and-layout.md)).
+- [ ] **Covers** sized for your trim, front and back ([Covers and images](./covers-and-images.md)).
+- [ ] **Images** are high-resolution enough for print ([Covers and images](./covers-and-images.md#images-in-your-book)).
 - [ ] **Title page and copyright page** say what you want, including rights and
-      any ISBN ([isbn-and-metadata.md](./isbn-and-metadata.md)).
-- [ ] **EPUB validates** ([ebooks.md](./ebooks.md#validate-before-you-upload)).
+      any ISBN ([ISBNs and metadata](./isbn-and-metadata.md)).
+- [ ] **EPUB validates** ([Publishing an ebook](./ebooks.md#validate-before-you-upload)).
 - [ ] **A physical proof copy ordered and read** before you press publish
-      ([print.md](./print.md#order-a-proof-copy)).
+      ([Publishing in print](./print.md#order-a-proof-copy)).
 
 ## The rest of this guide
 
-- **[size-and-layout.md](./size-and-layout.md)** — trim sizes, margins, bleed,
+- **[Size and layout](./size-and-layout.md)** — trim sizes, margins, bleed,
   front matter, and typography. How to pick a shape for your book.
-- **[covers-and-images.md](./covers-and-images.md)** — front and back covers, and
+- **[Covers and images](./covers-and-images.md)** — front and back covers, and
   images inside the book. Dimensions, resolution, and the difference between the
   cover unipress makes and the wrap-around cover a printer wants.
-- **[ebooks.md](./ebooks.md)** — what an ebook is, generating and validating your
+- **[Publishing an ebook](./ebooks.md)** — what an ebook is, generating and validating your
   EPUB, and the stores and aggregators that sell it.
-- **[print.md](./print.md)** — print-on-demand explained, the two files you
+- **[Publishing in print](./print.md)** — print-on-demand explained, the two files you
   upload, KDP Print vs IngramSpark, and ordering a proof.
-- **[isbn-and-metadata.md](./isbn-and-metadata.md)** — ISBNs, the metadata stores
+- **[ISBNs and metadata](./isbn-and-metadata.md)** — ISBNs, the metadata stores
   ask for, and your copyright page.
 
 ## What unipress does and doesn't do

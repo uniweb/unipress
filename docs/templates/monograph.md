@@ -1,4 +1,4 @@
-# `monograph`
+# Monograph
 
 A scholarly monograph — sustained, single-author argument on a focused topic with a working citation system. Royal-octavo trim, classical typography (EB Garamond by default with Garamond and Georgia fall-backs), three-deep TOC, roman-numeralled front matter, inline `[@key]` cites, and a back-matter bibliography formatted by [citestyle](https://github.com/uniweb/csl) in any of nine styles. Same `@unipress/book` foundation as the `book` and `report` templates, configured for academic press conventions.
 
@@ -32,7 +32,7 @@ my-monograph/
 
 - You need cited bibliographic references in your prose.
 - You want section numbering deeper than two levels (default `tocDepth: 3`).
-- You want classical book typography (EB Garamond) rather than the foundation's default sans/serif fall-back.
+- You want classical book typography (EB Garamond, where it's installed) rather than the foundation's default sans/serif fall-back.
 - You want a slightly larger page (royal-octavo, 6.14×9.21in) common in academic hardcovers.
 
 For trade-paperback fiction or non-fiction prose, use `book` instead. For a technical report with tables and code, use `report`.

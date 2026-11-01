@@ -43,7 +43,7 @@ safe, widely-accepted size.
 Use PNG or high-quality JPEG. The title and author usually live **in the artwork**
 itself — if yours does, turn off the typeset title page so it isn't repeated:
 `book.structure.titlePage: false` (see
-[size-and-layout.md](./size-and-layout.md#front-matter)).
+[Size and layout](./size-and-layout.md#front-matter)).
 
 ### The print cover is a different file
 
@@ -62,7 +62,7 @@ exact dimensions for *your* book:
 
 Feed it your trim, page count, and paper, drop your art onto the template, and
 upload that as the cover — separate from the interior PDF. See
-[print.md](./print.md) for the full upload flow.
+[Publishing in print](./print.md) for the full upload flow.
 
 ### Getting cover art made
 
