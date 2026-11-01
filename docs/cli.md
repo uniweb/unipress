@@ -34,7 +34,9 @@ unipress create <dir> [options]
   --paper <size>      a4 or letter. Without it, what your system's region uses; a
                       template with a book trim keeps its trim.
   --force             Overwrite non-empty <dir>.
-  --yes               Skip prompts (requires --template).
+  --yes               Take the defaults without asking. A run with no terminal does the
+                      same, so an agent or a script can leave it out. Either way --template
+                      is required, and the output says what was chosen.
 
 unipress list-templates
   List the templates available, each with its description, outputs, the foundation it

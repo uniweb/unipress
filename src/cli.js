@@ -43,7 +43,8 @@ Commands:
                            --paper <size>      a4 or letter (default: what this system's region uses;
                                                  a book template keeps its trim unless this is given)
                            --force             overwrite non-empty <dir>
-                           --yes               skip prompts (requires --template)
+                           --yes               take the defaults without asking, as a run with no
+                                                 terminal does (either way, --template is required)
   inspect <dir>          Dump the parsed content as JSON
                            --full              include web-only fields (assets, icons, ...)
                            --summary           replace pages[] with route strings only

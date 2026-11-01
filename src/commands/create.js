@@ -3,13 +3,13 @@
 // foundation it pins is the runtime artifact unipress loads at compile.
 //
 // Flow:
-//   1. If --template is not given and not --yes, interactively pick from
-//      the catalog. If --yes without --template, fail.
+//   1. If --template is not given, interactively pick from the catalog. A
+//      run nobody can answer (--yes, or no terminal) fails instead.
 //   2. Look up the catalog entry — resolves to a scaffold name.
-//   3. Collect scaffold vars (title, author, year) via prompts unless
-//      --yes is set (then defaults are used; flags override).
+//   3. Collect scaffold vars (title, author, year) via prompts, or from
+//      defaults and flags in a run nobody can answer.
 //   4. Copy templates/<scaffold>/ to <dir> with Handlebars substitution.
-//   5. Print next steps.
+//   5. Print next steps, and in such a run what it chose.
 //
 // Result is a content-only folder — no package.json, no node_modules. On
 // first compile, unipress downloads the foundation from the catalog URL
@@ -69,6 +69,7 @@ async function collectVars({ flagTitle, flagAuthor, flagPaper, takesPaper, inter
     paperChosen: Boolean(flagPaper),
   }
   if (!interactive) return defaults
+  let cancelled = false
   const answers = await prompts([
     { type: flagTitle ? null : 'text', name: 'title', message: 'Title', initial: defaults.title },
     { type: flagAuthor ? null : 'text', name: 'author', message: 'Author', initial: defaults.author },
@@ -79,7 +80,13 @@ async function collectVars({ flagTitle, flagAuthor, flagPaper, takesPaper, inter
       choices: PAPERS.map((p) => ({ title: PAPER_LABELS[p], value: p })),
       initial: PAPERS.indexOf(detected.paper),
     },
-  ])
+  ], {
+    // Left to itself, prompts hands back the answers so far, and Ctrl-C would make the project.
+    onCancel: () => {
+      cancelled = true
+    },
+  })
+  if (cancelled) throw new TemplateError('cancelled — nothing created')
   return {
     ...defaults,
     title: flagTitle || answers.title || defaults.title,
@@ -97,11 +104,19 @@ export async function createCommand({ dir, template, title, author, paper, force
   const flagPaper = normalizePaper(paper, '--paper')
   const targetDir = resolve(dir)
 
+  // No terminal means nobody to ask. A prompt would read a stdin already at its end, the event loop
+  // would run out with the question open, and the process would exit 0 with nothing on disk. So
+  // that run goes the way of `--yes`: it finishes, and says what it chose.
+  const unattended = yes || !process.stdin.isTTY
+
   let templateId = template
   if (!templateId) {
-    if (yes) {
+    if (unattended) {
+      const ids = listCatalog().map((e) => e.id).join(', ')
       throw new TemplateError(
-        `--yes requires --template (no interactive selection when --yes is set)`
+        `no template named, and ${yes ? '--yes means nobody is asked' : 'no terminal to ask at'}\n` +
+        `hint: unipress create ${dir} --template <id>, one of: ${ids}\n` +
+        `hint: run 'unipress list-templates' for what each one is`
       )
     }
     templateId = await pickTemplate()
@@ -128,18 +143,20 @@ export async function createCommand({ dir, template, title, author, paper, force
     flagAuthor: author,
     flagPaper,
     takesPaper: Boolean(entry.takesPaper),
-    interactive: !yes,
+    interactive: !unattended,
   })
   vars.foundation = templateId
 
   log(`scaffolding ${targetDir}`)
   log(`  template:  ${entry.name || entry.id} (id: ${entry.id})`)
   log(`  scaffold:  ${scaffoldName}`)
-  // Said, not asked, without a terminal: `--yes` is how an agent runs this.
+  // Said, not asked, in a run nobody can answer: that is how an agent runs this.
+  if (unattended && !title) log(`  title:     ${vars.title} — change it in document.yml, or --title`)
+  if (unattended && !author) log(`  author:    none — change it in document.yml, or --author`)
   if (entry.takesPaper || flagPaper) {
     const { region } = detectPaper()
     const why = region ? `the paper of this system's region (${region})` : 'the default, with no region to go by'
-    log(`  paper:     ${PAPER_LABELS[vars.paper]}${yes && !flagPaper ? `, ${why} — change it in document.yml, or --paper for one build` : ''}`)
+    log(`  paper:     ${PAPER_LABELS[vars.paper]}${unattended && !flagPaper ? `, ${why} — change it in document.yml, or --paper for one build` : ''}`)
   }
 
   await scaffold({

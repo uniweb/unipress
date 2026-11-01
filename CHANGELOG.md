@@ -1,5 +1,15 @@
 # Changelog
 
+## After 1.1.28
+
+### Fixed
+
+- **`unipress create` with no terminal exited 0 and created nothing.** An agent or a script that left
+  out `--yes` read that as success. A run with no terminal now goes the way of `--yes`: it creates the
+  project and says which title, author and paper it took. With no `--template` it exits 1 and names
+  the ids.
+- **Ctrl-C at the Title question made the project anyway.** It stops there now, with nothing created.
+
 ## After 1.1.26
 
 ### Changed
