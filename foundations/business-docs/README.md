@@ -9,7 +9,7 @@ The same source ships in three forms:
 |---|---|
 | **Foundation** (`@unipress/business-docs`) | Hosted as a federated module on GitHub Pages; loaded by both unipress documents and uniweb sites. |
 | **Unipress doc template** (`unipress create my-invoice --template invoice`) | One worked invoice + the SOW it bills against; compiles to DOCX, and to Paged.js HTML you print to PDF from a browser. |
-| **Uniweb site template** (`uniweb create --template business-docs`) | A complete site: list of invoices, list of SOWs, per-record preview, filtered report page with XLSX export. |
+| **Uniweb site template** (`uniweb create --template business-docs`) | A complete site: lists of invoices and SOWs and an engagement report, each page downloadable as Word, Excel or a print page. |
 
 ## What it provides
 
