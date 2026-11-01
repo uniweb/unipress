@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useWebsite } from '@uniweb/kit'
+import { headingId, Link, useWebsite } from '@uniweb/kit'
 import { useDocumentOutput } from '@uniweb/press'
 import { Raw } from '@uniweb/press/typst'
 
@@ -59,7 +59,7 @@ export default function Contents({ content, block }) {
           .filter((n) => n.type === 'heading' && n.attrs?.level === 2)
           .map((n) => {
             const text = headingText(n)
-            return { text, slug: slugify(text) }
+            return { text, slug: headingId(text) }
           })
         result.push({
           title: h.label || h.title || page.title,
@@ -153,10 +153,3 @@ function headingText(node) {
     .join('')
 }
 
-function slugify(text) {
-  // Matches the runtime's kebab-case heading-id scheme.
-  return String(text)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}

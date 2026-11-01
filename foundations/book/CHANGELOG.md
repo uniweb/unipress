@@ -15,6 +15,8 @@
 - **A document with its own `TitlePage` got the template's too**, ahead of it. A document with a
   `Contents` section now gets the contents where it stands, on Typst and LaTeX.
 - **A cover that didn't load** was skipped in silence. It's now said, and a host may stop the build.
+- **The contents' links on the web** used an anchor of their own. They use kit's `headingId`, so they
+  land on a heading in any language.
 
 ## 0.5.0
 
