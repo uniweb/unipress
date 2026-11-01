@@ -1,5 +1,13 @@
 # Changelog
 
+## After 1.1.25
+
+### Fixed
+
+- **A link in a contents page on the web could lead nowhere**, for a heading with `<…>` in it or an
+  authored `{#id}`. Nothing a document prints changes, so a document pinned to `@unipress/book@0.5.3`
+  has no need to move.
+
 ## After 1.1.24
 
 ### Fixed
@@ -13,8 +21,8 @@
   `bolditalic`, and a numbered reference `[1]R. M. Karp`.
 - **Inline code printed as plain text** in a PDF and in LaTeX. It prints as code.
 
-These reach a document through its foundation: move its `foundation:` to `@unipress/book@0.5.3`,
-`@unipress/data@0.2.1` or `@unipress/business-docs@0.2.1`.
+These reach a document through its foundation: move its `foundation:` to `@unipress/book@0.5.3` or
+later, `@unipress/data@0.2.1` or `@unipress/business-docs@0.2.1`.
 
 ## After 1.1.23
 

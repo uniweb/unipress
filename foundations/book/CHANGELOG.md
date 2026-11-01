@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.4
+
+### Fixed
+
+- **A link in the contents on the web could lead nowhere**, for a heading with `<…>` in it or an authored
+  `{#id}`. Nothing a document prints changes.
+
 ## 0.5.3
 
 ### Fixed

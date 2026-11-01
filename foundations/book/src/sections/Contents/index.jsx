@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { headingId, Link, useWebsite } from '@uniweb/kit'
+import { Link, useWebsite } from '@uniweb/kit'
+import { chapterSections } from '../../utils/chapter-sections.js'
 import { useDocumentOutput } from '@uniweb/press'
 import { Raw } from '@uniweb/press/typst'
 
@@ -53,14 +54,7 @@ export default function Contents({ content, block }) {
           // Keep going; the chapter entry still lists as a link.
           console.warn('[Contents] loadContent failed for', h.route, err)
         }
-        const block = (page.bodyBlocks || [])[0]
-        const nodes = block?.rawContent?.content || []
-        const sections = nodes
-          .filter((n) => n.type === 'heading' && n.attrs?.level === 2)
-          .map((n) => {
-            const text = headingText(n)
-            return { text, slug: headingId(text) }
-          })
+        const sections = chapterSections((page.bodyBlocks || [])[0])
         result.push({
           title: h.label || h.title || page.title,
           route: h.navigableRoute || h.route,
@@ -145,11 +139,3 @@ function flatten(pages) {
   walk(pages)
   return out
 }
-
-function headingText(node) {
-  return (node.content || [])
-    .filter((c) => c.type === 'text')
-    .map((c) => c.text)
-    .join('')
-}
-
