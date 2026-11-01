@@ -82,7 +82,7 @@ npm i -g @uniweb/unipress               # any system, with Node ≥ 22.12
 On x64 Windows, in PowerShell or Command Prompt, with no Node:
 
 ```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/uniweb/unipress/main/install.ps1 | iex"
+powershell -ExecutionPolicy ByPass -c "irm https://unipress.app/install.ps1 | iex"
 ```
 
 Or download a binary from [the releases page](https://github.com/uniweb/unipress/releases). [The install guide](./docs/install.md) has the details.

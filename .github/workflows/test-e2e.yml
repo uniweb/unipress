@@ -236,6 +236,10 @@ jobs:
           if (-not $failed) { throw 'it did not fail' }
           & "$env:LOCALAPPDATA\Programs\unipress\unipress.exe" --version
 
+      - name: The command in the install guide, through the site's redirect
+        shell: cmd
+        run: powershell -ExecutionPolicy ByPass -c "irm https://unipress.app/install.ps1 | iex"
+
       - name: A new terminal finds it, and it compiles
         shell: powershell
         run: |

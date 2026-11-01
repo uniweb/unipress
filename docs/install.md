@@ -17,7 +17,7 @@ Updates land via `brew upgrade unipress`. If Homebrew stops with `untrusted tap`
 For x64 Windows, in PowerShell or Command Prompt. No Node, no administrator:
 
 ```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/uniweb/unipress/main/install.ps1 | iex"
+powershell -ExecutionPolicy ByPass -c "irm https://unipress.app/install.ps1 | iex"
 ```
 
 It downloads the signed binary from the latest release, checks it against the release's checksum, puts it in `%LOCALAPPDATA%\Programs\unipress` and adds that folder to your PATH. Then open a new terminal. Run it again to update. To remove unipress, delete that folder, and `%LOCALAPPDATA%\unipress` for what it downloads later; the PATH entry left behind does nothing. [The script](https://github.com/uniweb/unipress/blob/main/install.ps1) is short, if you'd like to read it first.

@@ -1,6 +1,6 @@
 # Install unipress on Windows. In PowerShell or Command Prompt:
 #
-#   powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/uniweb/unipress/main/install.ps1 | iex"
+#   powershell -ExecutionPolicy ByPass -c "irm https://unipress.app/install.ps1 | iex"
 #
 # It downloads the signed binary from the latest release, checks it against the release's
 # checksum, puts it in your own folder (no administrator needed) and adds that folder to your
