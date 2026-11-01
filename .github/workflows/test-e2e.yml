@@ -220,6 +220,13 @@ jobs:
           $count = @([Environment]::GetEnvironmentVariable('Path', 'User') -split ';' | Where-Object { $_ -eq $dir }).Count
           if ($count -ne 1) { throw "$dir is on the PATH $count times" }
 
+      - name: The binary it installed is signed, as the install guide says
+        shell: powershell
+        run: |
+          $signature = Get-AuthenticodeSignature "$env:LOCALAPPDATA\Programs\unipress\unipress.exe"
+          Write-Host $signature.SignerCertificate.Subject
+          if ($signature.Status -ne 'Valid') { throw "its signature is $($signature.Status): $($signature.StatusMessage)" }
+
       - name: A version that doesn't exist fails, and leaves what was there
         shell: powershell
         run: |

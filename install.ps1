@@ -6,7 +6,8 @@
 # checksum, puts it in your own folder (no administrator needed) and adds that folder to your
 # PATH. Run it again to update. Set UNIPRESS_VERSION=1.1.23 to install that version instead.
 #
-# To remove it, delete %LOCALAPPDATA%\Programs\unipress.
+# To remove it, delete %LOCALAPPDATA%\Programs\unipress, and %LOCALAPPDATA%\unipress for what it
+# downloads later. The PATH entry left behind does nothing.
 
 & {
   $ErrorActionPreference = 'Stop'
@@ -27,7 +28,7 @@
   New-Item -ItemType Directory -Force -Path $dir | Out-Null
 
   try {
-    Write-Host 'Downloading unipress (about 120 MB)...'
+    Write-Host "Downloading $base/$asset (about 120 MB)..."
     Invoke-WebRequest -UseBasicParsing -Uri "$base/$asset" -OutFile $download
     Invoke-WebRequest -UseBasicParsing -Uri "$base/$asset.sha256" -OutFile $checksum
 
