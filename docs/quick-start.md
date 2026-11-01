@@ -1,5 +1,7 @@
 # Quick start
 
+Point unipress at markdown you already have, or start from a template.
+
 ## Markdown you already have → a PDF
 
 Point it at your folder:

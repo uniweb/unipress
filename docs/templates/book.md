@@ -54,4 +54,4 @@ Drop a markdown file under `content/` and add its name (without its number or `.
 
 ## Foundation reference
 
-`@unipress/book` — see the foundation's README for the full list of section types, layout knobs, and theme variables: [foundations/book/README.md](https://github.com/uniweb/unipress/blob/main/foundations/book/README.md).
+`@unipress/book` — see [the foundation's README](https://github.com/uniweb/unipress/blob/main/foundations/book/README.md) for the full list of section types, layout knobs, and theme variables.

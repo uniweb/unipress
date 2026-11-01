@@ -47,4 +47,4 @@ my-thesis/
 
 ## Foundation reference
 
-`@unipress/book` — see [foundations/book/README.md](https://github.com/uniweb/unipress/blob/main/foundations/book/README.md).
+`@unipress/book` — see [the foundation's README](https://github.com/uniweb/unipress/blob/main/foundations/book/README.md).

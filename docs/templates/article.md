@@ -43,7 +43,7 @@ For chaptered, bindable, prose-driven work, use `book` (trade-6×9) or `monograp
 
 ## `document.yml` fields
 
-Same `book:` shape as the other genres (see [book.md](./book.md)), with these article-specific defaults and knobs:
+Same `book:` shape as the other genres (see [the book guide](./book.md)), with these article-specific defaults and knobs:
 
 | Field                       | `article` default / note                                        |
 |-----------------------------|-----------------------------------------------------------------|
@@ -66,4 +66,4 @@ Cover artwork, title pages, copyright pages, and chapter numbering don't apply t
 
 ## Foundation reference
 
-`@unipress/book` — see the foundation's README: [foundations/book/README.md](https://github.com/uniweb/unipress/blob/main/foundations/book/README.md).
+`@unipress/book` — see [the foundation's README](https://github.com/uniweb/unipress/blob/main/foundations/book/README.md).

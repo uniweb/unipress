@@ -176,7 +176,7 @@ For collections of references that don't all need to ride together — say, a li
 
 ## `document.yml` fields
 
-Same shape as `book` (see [book.md](./book.md)). The defaults differ:
+Same shape as `book` (see [the book guide](./book.md)). The defaults differ:
 
 | Field                                | `monograph` default                                 |
 |--------------------------------------|------------------------------------------------------|
@@ -199,4 +199,4 @@ Same shape as `book` (see [book.md](./book.md)). The defaults differ:
 
 ## Foundation reference
 
-`@unipress/book` — see [foundations/book/README.md](https://github.com/uniweb/unipress/blob/main/foundations/book/README.md) for the full list of foundation knobs and `foundations/book/CHANGELOG.md` for the version history.
+`@unipress/book` — see [the foundation's README](https://github.com/uniweb/unipress/blob/main/foundations/book/README.md) for the full list of foundation knobs and `foundations/book/CHANGELOG.md` for the version history.

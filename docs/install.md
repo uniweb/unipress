@@ -1,5 +1,7 @@
 # Install
 
+Pick whichever fits your system. They all give you the same `unipress` command.
+
 ## Homebrew
 
 For Apple Silicon Macs and x64 Linux. No Node, no manual download:

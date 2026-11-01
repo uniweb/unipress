@@ -79,4 +79,4 @@ For a flat records listing, use `directory` instead.
 
 ## Foundation reference
 
-`@unipress/data` — see the foundation's README: [foundations/data/README.md](https://github.com/uniweb/unipress/blob/main/foundations/data/README.md).
+`@unipress/data` — see [the foundation's README](https://github.com/uniweb/unipress/blob/main/foundations/data/README.md).

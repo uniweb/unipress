@@ -72,4 +72,4 @@ For multi-section aggregate reports (publications-by-year, funding totals, super
 
 ## Foundation reference
 
-`@unipress/data` — see the foundation's README: [foundations/data/README.md](https://github.com/uniweb/unipress/blob/main/foundations/data/README.md).
+`@unipress/data` — see [the foundation's README](https://github.com/uniweb/unipress/blob/main/foundations/data/README.md).

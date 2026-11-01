@@ -33,7 +33,7 @@ For prose-driven content, use `book` (trade-6x9) or `monograph` (royal-octavo, c
 
 ## `document.yml` fields
 
-Same shape as `book` (see [book.md](./book.md)). The differences are defaults:
+Same shape as `book` (see [the book guide](./book.md)). The differences are defaults:
 
 | Field                       | `report` default                                    |
 |-----------------------------|------------------------------------------------------|
@@ -51,4 +51,4 @@ Same shape as `book` (see [book.md](./book.md)). The differences are defaults:
 
 ## Foundation reference
 
-`@unipress/book` — see the foundation's README: [foundations/book/README.md](https://github.com/uniweb/unipress/blob/main/foundations/book/README.md).
+`@unipress/book` — see [the foundation's README](https://github.com/uniweb/unipress/blob/main/foundations/book/README.md).
