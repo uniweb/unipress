@@ -18,8 +18,8 @@
  * The result is a NEW sequence with the marker-bearing paragraph text
  * rewritten.
  *
- * `format(insetBlock)` should return a string suitable for the target
- * format: plain-text + Typst-escapes for the Typst path; could equally
+ * `format(insetBlock)` returns null to leave that marker for a later reader,
+ * or a string suitable for the target format: plain-text + Typst-escapes for the Typst path; could equally
  * be docx-flavoured RTF or anything else for other formats.
  */
 
@@ -27,11 +27,12 @@ const INSET_RE = /<uniweb-inset data-ref-id="([^"]+)"><\/uniweb-inset>/g
 
 function rewriteText(html, block, format) {
   if (!html || !html.includes('<uniweb-inset')) return html
-  return html.replace(INSET_RE, (_, refId) => {
+  return html.replace(INSET_RE, (marker, refId) => {
     const insetBlock = block?.getInset?.(refId)
     if (!insetBlock) return ''
     try {
-      return format(insetBlock) || ''
+      const text = format(insetBlock)
+      return text === null ? marker : text || ''
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('resolve-inline-insets: format() failed for', refId, err)

@@ -20,7 +20,7 @@ import * as nature from 'citestyle/styles/nature'
 import * as science from 'citestyle/styles/science'
 import { resolveInlineInsets } from './resolve-inline-insets.js'
 import { formatInlineInsetAsLatex, formatInlineInsetAsText } from './cite-format.js'
-import { printFootnotes } from './footnotes.jsx'
+import { htmlFootnotes, printFootnotes } from './footnotes.jsx'
 
 const STYLES = {
   apa,
@@ -34,6 +34,22 @@ const STYLES = {
   science,
 }
 const DEFAULT_STYLE = 'chicago-author-date'
+
+/**
+ * A section's content for the HTML path, which Paged.js and EPUB both read: its footnotes numbered,
+ * and each cross-reference as text. An EPUB is one file per section, so a link to an id in another
+ * section points at nothing, and a store rejects the book over it. A citation stays for `<Prose>`.
+ *
+ * @param {object} content
+ * @param {object} block
+ * @returns {{ content: object, notes: string[] }}
+ */
+export function htmlContent(content, block) {
+  const sequence = resolveInlineInsets(content?.sequence || [], block, (inset) =>
+    inset.type === 'Ref' ? formatInlineInsetAsText(inset, block?.website, null) : null,
+  )
+  return htmlFootnotes({ ...content, sequence })
+}
 
 /**
  * @param {Array} sequence - `content.sequence`

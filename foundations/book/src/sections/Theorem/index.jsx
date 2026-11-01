@@ -25,7 +25,7 @@ import { useDocumentOutput } from '@uniweb/press'
 import { Sequence, Raw } from '@uniweb/press/typst'
 import { Prose } from '@uniweb/kit'
 import { getXrefRegistry } from '@uniweb/kit/xref'
-import { printSequences } from '#utils/print-sequences.js'
+import { htmlContent, printSequences } from '#utils/print-sequences.js'
 
 export function buildEnv(env, { content, params, block }) {
     const { sequence } = content || {}
@@ -73,7 +73,7 @@ export function buildEnv(env, { content, params, block }) {
         'html',
         <aside className={`thm thm-${env}`}>
             <span className="thm-label">{capitalize(env)}.</span>
-            <Prose content={content} block={block} />
+            <Prose content={htmlContent(content, block).content} block={block} />
         </aside>,
     )
 

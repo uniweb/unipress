@@ -128,7 +128,9 @@ function collectTemplates() {
         files[rel] = { encoding: 'base64', content: buf.toString('base64') }
         continue
       }
-      let content = readFileSync(abs, 'utf8')
+      // LF, whatever the checkout has. On a Windows runner git hands over CRLF, and a binary built
+      // there carried it into every starter it scaffolds.
+      let content = readFileSync(abs, 'utf8').replace(/\r\n/g, '\n')
       if (rel === 'document.yml.hbs' || rel === 'document.yml') {
         content = rewriteFoundationRef(content, abs)
       }

@@ -11,7 +11,7 @@ import { useDocumentOutput } from '@uniweb/press'
 import { Sequence, Raw } from '@uniweb/press/typst'
 import { Prose, H1 } from '@uniweb/kit'
 import { UnnumberedOpener, proseUnderTitle, typstBody, withoutTitleHeading } from '#utils/chapter-opening.jsx'
-import { printSequences } from '#utils/print-sequences.js'
+import { htmlContent, printSequences } from '#utils/print-sequences.js'
 
 export default function Abstract({ content, params, block }) {
     const { typst, latex } = printSequences(content?.sequence, block)
@@ -43,7 +43,7 @@ export default function Abstract({ content, params, block }) {
         'html',
         <article className="abstract">
             <h1>{heading}</h1>
-            <Prose content={proseUnderTitle(content)} block={block} />
+            <Prose content={proseUnderTitle(htmlContent(content, block).content)} block={block} />
         </article>,
     )
 

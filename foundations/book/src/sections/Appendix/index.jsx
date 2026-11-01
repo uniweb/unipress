@@ -17,7 +17,7 @@ import { Sequence, Raw } from '@uniweb/press/typst'
 import { Prose, H1 } from '@uniweb/kit'
 import { UnnumberedOpener, proseUnderTitle, typstBody, withoutTitleHeading } from '#utils/chapter-opening.jsx'
 import { FootnoteList, htmlFootnotes } from '#utils/footnotes.jsx'
-import { printSequences } from '#utils/print-sequences.js'
+import { htmlContent, printSequences } from '#utils/print-sequences.js'
 
 const APPENDIX_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
@@ -53,6 +53,7 @@ export default function Appendix({ content, params, block }) {
     const title = content?.title || params?.title
     const { typst, latex } = printSequences(content?.sequence, block)
     const { content: withMarks, notes } = htmlFootnotes(content)
+    const printed = htmlContent(content, block)
     const info = classifyAppendix(block)
     const headingText = title
         ? `Appendix ${info.letter} — ${title}`
@@ -92,8 +93,8 @@ export default function Appendix({ content, params, block }) {
         'html',
         <article className="appendix">
             <h1>{headingText}</h1>
-            <Prose content={proseUnderTitle(withMarks)} block={block} />
-            <FootnoteList notes={notes} />
+            <Prose content={proseUnderTitle(printed.content)} block={block} />
+            <FootnoteList notes={printed.notes} />
         </article>,
     )
 

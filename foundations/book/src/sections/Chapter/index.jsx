@@ -3,7 +3,7 @@ import { ChapterOpener, Sequence } from '@uniweb/press/typst'
 import { Prose, H1, H2 } from '@uniweb/kit'
 import { proseUnderTitle, typstBody, withoutTitleHeading } from '#utils/chapter-opening.jsx'
 import { FootnoteList, htmlFootnotes } from '#utils/footnotes.jsx'
-import { printSequences } from '#utils/print-sequences.js'
+import { htmlContent, printSequences } from '#utils/print-sequences.js'
 
 /**
  * Chapter — default section type for book pages.
@@ -28,6 +28,7 @@ export default function Chapter({ content, block, params }) {
 
   const { typst: typstSequence, latex: latexSequence } = printSequences(sequence, block)
   const { content: withMarks, notes } = htmlFootnotes(content)
+  const printed = htmlContent(content, block)
 
   useDocumentOutput(
     block,
@@ -64,8 +65,8 @@ export default function Chapter({ content, block, params }) {
     <article className="chapter">
       {openerTitle ? <h1>{openerTitle}</h1> : null}
       {subtitle ? <p className="subtitle">{subtitle}</p> : null}
-      <Prose content={proseUnderTitle(withMarks)} block={block} />
-      <FootnoteList notes={notes} />
+      <Prose content={proseUnderTitle(printed.content)} block={block} />
+      <FootnoteList notes={printed.notes} />
     </article>,
   )
 

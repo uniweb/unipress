@@ -3,7 +3,7 @@ import { Sequence, Raw } from '@uniweb/press/typst'
 import { Prose, H1 } from '@uniweb/kit'
 import { UnnumberedOpener, proseUnderTitle, typstBody, withoutTitleHeading } from '#utils/chapter-opening.jsx'
 import { FootnoteList, htmlFootnotes } from '#utils/footnotes.jsx'
-import { printSequences } from '#utils/print-sequences.js'
+import { htmlContent, printSequences } from '#utils/print-sequences.js'
 
 /**
  * BackMatter — for acknowledgments, colophon, author note, and other
@@ -19,6 +19,7 @@ export default function BackMatter({ content, block, params }) {
   const title = content?.title || params?.title
   const { typst, latex } = printSequences(content?.sequence, block)
   const { content: withMarks, notes } = htmlFootnotes(content)
+  const printed = htmlContent(content, block)
 
   useDocumentOutput(
     block,
@@ -46,8 +47,8 @@ export default function BackMatter({ content, block, params }) {
     'html',
     <article className="backmatter">
       {title ? <h1>{title}</h1> : null}
-      <Prose content={proseUnderTitle(withMarks)} block={block} />
-      <FootnoteList notes={notes} />
+      <Prose content={proseUnderTitle(printed.content)} block={block} />
+      <FootnoteList notes={printed.notes} />
     </article>,
   )
 
