@@ -173,3 +173,69 @@ jobs:
       - name: The same, on the binary
         shell: bash
         run: node scripts/smoke.js --bin "dist-bin/${{ matrix.artifact }}" --foundations ${{ inputs.foundations || 'local' }}
+
+  # What a Windows user runs, in the PowerShell every Windows machine has. It installs real releases,
+  # so it needs no build: an older version, then an update over it, then a first compile.
+  install-windows:
+    runs-on: windows-latest
+    env:
+      SCRIPT: https://raw.githubusercontent.com/uniweb/unipress/${{ github.sha }}/install.ps1
+    steps:
+      - name: A PATH entry the script has to leave as written
+        shell: powershell
+        run: |
+          $key = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Environment', $true)
+          $path = [string]$key.GetValue('Path', '', [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
+          $key.SetValue('Path', "$path;%USERPROFILE%\keep-me".TrimStart(';'), [Microsoft.Win32.RegistryValueKind]::ExpandString)
+          $key.Close()
+
+      - name: The one-liner, from Command Prompt, for an older version
+        shell: cmd
+        env:
+          UNIPRESS_VERSION: 1.1.21
+        run: powershell -ExecutionPolicy ByPass -c "irm %SCRIPT% | iex"
+
+      - name: It installed that version, on the user's PATH, with no web mark
+        shell: powershell
+        run: |
+          $dir = "$env:LOCALAPPDATA\Programs\unipress"
+          $got = & "$dir\unipress.exe" --version
+          if ($got -ne '1.1.21') { throw "installed $got, not 1.1.21" }
+          $key = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Environment')
+          $path = [string]$key.GetValue('Path', '', [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
+          $key.Close()
+          if (($path -split ';') -notcontains $dir) { throw "$dir is not on the PATH: $path" }
+          if (($path -split ';') -notcontains '%USERPROFILE%\keep-me') { throw "an entry was expanded or lost: $path" }
+          $mark = Get-Item "$dir\unipress.exe" -Stream Zone.Identifier -ErrorAction SilentlyContinue
+          if ($mark) { Write-Host '::warning::the installed binary carries a web mark, so SmartScreen may check it' } else { Write-Host 'no web mark' }
+
+      - name: Running it again updates, and adds no second PATH entry
+        shell: powershell
+        run: |
+          irm $env:SCRIPT | iex
+          $latest = (irm https://api.github.com/repos/uniweb/unipress/releases/latest -Headers @{ Authorization = "Bearer ${{ github.token }}" }).tag_name.TrimStart('v')
+          $got = unipress --version
+          if ($got -ne $latest) { throw "updated to $got, not $latest" }
+          $dir = "$env:LOCALAPPDATA\Programs\unipress"
+          $count = @([Environment]::GetEnvironmentVariable('Path', 'User') -split ';' | Where-Object { $_ -eq $dir }).Count
+          if ($count -ne 1) { throw "$dir is on the PATH $count times" }
+
+      - name: A version that doesn't exist fails, and leaves what was there
+        shell: powershell
+        run: |
+          $env:UNIPRESS_VERSION = '0.0.0'
+          $failed = $false
+          try { irm $env:SCRIPT | iex } catch { $failed = $true; Write-Host "said: $_" }
+          if (-not $failed) { throw 'it did not fail' }
+          & "$env:LOCALAPPDATA\Programs\unipress\unipress.exe" --version
+
+      - name: A new terminal finds it, and it compiles
+        shell: powershell
+        run: |
+          # What a new terminal starts from: the system's PATH and the user's, not this step's.
+          $env:Path = [Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [Environment]::GetEnvironmentVariable('Path', 'User')
+          Set-Location (New-Item -ItemType Directory -Path "$env:RUNNER_TEMP\first-document").FullName
+          unipress create paper --template article --title "First document" --author "Install check" --paper letter --yes
+          unipress compile paper --format pdf --out paper.pdf
+          $head = [Text.Encoding]::ASCII.GetString((Get-Content paper.pdf -Encoding Byte -TotalCount 5))
+          if ($head -ne '%PDF-') { throw "paper.pdf starts with $head" }

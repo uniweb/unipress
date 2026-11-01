@@ -1,5 +1,13 @@
 # Changelog
 
+## After 1.1.23
+
+### Added
+
+- **One line on Windows.** `install.ps1` gets the latest signed binary, checks it, puts it in your own
+  folder and adds that to your PATH, with no administrator and no Node. Run it again to update. CI runs
+  the exact command on real Windows.
+
 ## After 1.1.21
 
 ### Added
