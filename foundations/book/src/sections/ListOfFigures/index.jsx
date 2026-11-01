@@ -13,8 +13,9 @@
  */
 
 import { useDocumentOutput } from '@uniweb/press'
-import { ChapterOpener, Sequence, Raw } from '@uniweb/press/typst'
+import { Sequence, Raw } from '@uniweb/press/typst'
 import { H1 } from '@uniweb/kit'
+import { UnnumberedOpener } from '#utils/chapter-opening.jsx'
 
 export function buildListOfX({ content, params, block }, kind, defaultTitle, latexCmd) {
     const entries = block?.website?.xref?.entries || {}
@@ -37,18 +38,24 @@ export function buildListOfX({ content, params, block }, kind, defaultTitle, lat
     )
 
     // Typst / HTML: enumerate from the registry. Each entry becomes a
-    // line with the labelled counter and the captured caption.
+    // line with the labelled counter and the captured caption. A list with
+    // nothing in it prints nothing on Typst, not an empty page taking up
+    // room in the contents; it stays out of the chapter numbering either way.
     const entryLines = items.map((e) => ({
         type: 'paragraph',
-        text: `Figure ${e.counterText} — ${e.caption || '(no caption)'}`,
+        text: `${capitalize(kind)} ${e.counterText} — ${e.caption || '(no caption)'}`,
     }))
     useDocumentOutput(
         block,
         'typst',
-        <>
-            <ChapterOpener title={heading} />
-            <Sequence data={entryLines} />
-        </>,
+        items.length ? (
+            <>
+                <UnnumberedOpener title={heading} />
+                <Sequence data={entryLines} />
+            </>
+        ) : (
+            <Raw>{''}</Raw>
+        ),
     )
 
     useDocumentOutput(

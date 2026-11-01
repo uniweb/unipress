@@ -1,13 +1,14 @@
 ---
 type: Chapter
-title: "Introduction"
 ---
+
+# Introduction
 
 Approximation algorithms occupy a particular niche in the theory of
 computation: the study of polynomial-time algorithms whose output is
 provably within a guaranteed factor of the optimal solution to a
 problem we cannot solve exactly in polynomial time, assuming
-$\\text{P} \\neq \\text{NP}$. This thesis examines one such problem —
+$\text{P} \neq \text{NP}$. This thesis examines one such problem —
 the asymmetric traveling salesman problem (ATSP) — and presents a new
 approximation algorithm with an improved performance guarantee.
 
@@ -30,7 +31,7 @@ $a$ to city $b$ may cost different from travel from $b$ to $a$. This
 captures real-world routing problems where one-way streets, prevailing
 winds, or directional pricing make round-trip costs asymmetric. The
 asymmetric setting is harder; for many years the best known
-approximation factor was $O(\\log n)$ [@frieze-galbiati-maffioli1982],
+approximation factor was $O(\log n)$ [@frieze-galbiati-maffioli1982],
 and only recently has constant-factor approximation become available
 [@svensson-tarnawski-vegh2018].
 

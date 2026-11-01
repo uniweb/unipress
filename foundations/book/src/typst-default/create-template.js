@@ -44,7 +44,7 @@ export function createTemplate({
   const sections =
     renderFrontCover(cv.front) +
     renderFrontMatterNumbering(st.frontMatterNumbering) +
-    renderTitlePage(st.titlePage, lb) +
+    renderTitlePage(st.titlePage, lb, Boolean(cv.front)) +
     renderCopyrightPage(st.copyrightPage) +
     renderToc(st.toc, st.tocDepth) +
     renderBodySection(st.frontMatterNumbering) +
@@ -218,12 +218,13 @@ function renderFrontMatterNumbering(mode) {
   return ''
 }
 
-function renderTitlePage(enabled, labels) {
+// The break keeps the title page where it has always been behind a cover. With no cover, it would
+// come before anything has been printed, and leave the document's first page blank.
+function renderTitlePage(enabled, labels, afterCover) {
   if (!enabled) return ''
   const byLabel = escapeTypstText(labels.by)
   return `  // ── Title page ──────────────────────────────────────────────────────
-  #pagebreak(to: "even")
-  #page(header: none, footer: none, numbering: none)[
+${afterCover ? '  #pagebreak(to: "even")\n' : ''}  #page(header: none, footer: none, numbering: none)[
     #v(3in)
     #align(center, text(size: 24pt, weight: "bold")[#meta.at("title", default: "")])
     #if meta.at("subtitle", default: "") != "" [

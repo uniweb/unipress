@@ -111,6 +111,6 @@ Defaults live in `src/main.js`'s `vars:` block.
 
 ## See also
 
-- `framework/press/docs/guides/book-publishing.md` — book publishing guide.
-- `framework/press/docs/concepts.md` — Press's modes for combining preview and registration.
-- `framework/unipress/` — the CLI that compiles author-supplied content directories using this foundation.
+- [`@uniweb/press`: book publishing](https://github.com/uniweb/press/blob/main/docs/guides/book-publishing.md) — book publishing guide.
+- [`@uniweb/press`: concepts](https://github.com/uniweb/press/blob/main/docs/concepts.md) — Press's modes for combining preview and registration.
+- [unipress](https://github.com/uniweb/unipress) — the CLI that compiles author-supplied content directories using this foundation.

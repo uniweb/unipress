@@ -125,4 +125,4 @@ Edit `document.yml`:
 - `book.trim:` — `royal-octavo` (default), `crown-octavo`, `trade-6x9`, `trade-7x10`, `a5`.
 - `book.structure.tocDepth:` — bump to 4 for very subdivided arguments.
 
-For the full list of foundation knobs, see `framework/unipress/foundations/book/README.md`.
+For the full list of foundation knobs, see [foundations/book/README.md](https://github.com/uniweb/unipress/blob/main/foundations/book/README.md).

@@ -35,8 +35,9 @@ foundation reference, citation style, structural settings. You'll
 typically only touch the `citationStyle:` field, and only if you
 prefer something other than IEEE.
 
-**`thesis.yml`** holds your institutional / candidate metadata. This
-is where you replace four or five values that are personal to you:
+**The `thesis:` block** in the same file holds your institutional /
+candidate metadata. This is where you replace four or five values that
+are personal to you:
 
 ```yaml
 title: "Your Thesis Title"
@@ -200,9 +201,8 @@ unipress compile . --format latex --out my-thesis.zip
 
 All four outputs should produce files. Open `my-thesis.html` in a
 browser; extract the typst zip and compile via `typst compile main.typ`;
-extract the latex zip and compile via `latexmk -pdf main.tex`. UofT
-is satisfied by either the typst PDF or the latex PDF — pick by
-your advisor's preference.
+extract the latex zip and compile via `latexmk -pdf main.tex`. Which
+of the two PDFs your department accepts is its call.
 
 This template was last validated against SGS formatting guidelines on
 2026-04-26.

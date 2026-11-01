@@ -2,7 +2,8 @@ import { useDocumentOutput } from '@uniweb/press'
 import { Sequence, Raw } from '@uniweb/press/typst'
 import { Prose, H1 } from '@uniweb/kit'
 import { UnnumberedOpener, proseUnderTitle, typstBody, withoutTitleHeading } from '#utils/chapter-opening.jsx'
-import { FootnoteList, htmlFootnotes, printFootnotes } from '#utils/footnotes.jsx'
+import { FootnoteList, htmlFootnotes } from '#utils/footnotes.jsx'
+import { printSequences } from '#utils/print-sequences.js'
 
 /**
  * BackMatter — for acknowledgments, colophon, author note, and other
@@ -16,7 +17,7 @@ import { FootnoteList, htmlFootnotes, printFootnotes } from '#utils/footnotes.js
  */
 export default function BackMatter({ content, block, params }) {
   const title = content?.title || params?.title
-  const sequence = printFootnotes(content?.sequence)
+  const { typst, latex } = printSequences(content?.sequence, block)
   const { content: withMarks, notes } = htmlFootnotes(content)
 
   useDocumentOutput(
@@ -24,7 +25,7 @@ export default function BackMatter({ content, block, params }) {
     'typst',
     <>
       <UnnumberedOpener title={title} />
-      <Sequence data={typstBody(sequence, title, block?.website)} />
+      <Sequence data={typstBody(typst, title, block?.website)} />
     </>,
   )
 
@@ -36,7 +37,7 @@ export default function BackMatter({ content, block, params }) {
       <Raw>
         {`\\chapter*{${safeTitle}}\n\\addcontentsline{toc}{chapter}{${safeTitle}}`}
       </Raw>
-      <Sequence data={withoutTitleHeading(sequence, title)} />
+      <Sequence data={withoutTitleHeading(latex, title)} />
     </>,
   )
 

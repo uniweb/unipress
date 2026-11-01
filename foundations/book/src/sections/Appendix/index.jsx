@@ -16,7 +16,8 @@ import { useDocumentOutput } from '@uniweb/press'
 import { Sequence, Raw } from '@uniweb/press/typst'
 import { Prose, H1 } from '@uniweb/kit'
 import { UnnumberedOpener, proseUnderTitle, typstBody, withoutTitleHeading } from '#utils/chapter-opening.jsx'
-import { FootnoteList, htmlFootnotes, printFootnotes } from '#utils/footnotes.jsx'
+import { FootnoteList, htmlFootnotes } from '#utils/footnotes.jsx'
+import { printSequences } from '#utils/print-sequences.js'
 
 const APPENDIX_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
@@ -50,7 +51,7 @@ function classifyAppendix(block) {
 
 export default function Appendix({ content, params, block }) {
     const title = content?.title || params?.title
-    const sequence = printFootnotes(content?.sequence)
+    const { typst, latex } = printSequences(content?.sequence, block)
     const { content: withMarks, notes } = htmlFootnotes(content)
     const info = classifyAppendix(block)
     const headingText = title
@@ -69,7 +70,7 @@ export default function Appendix({ content, params, block }) {
         <>
             {emitSwitch ? <Raw>{'\\appendix\n'}</Raw> : null}
             <Raw>{`\\chapter{${(title || '').replace(/[\\{}]/g, '')}}`}</Raw>
-            <Sequence data={withoutTitleHeading(sequence, title)} />
+            <Sequence data={withoutTitleHeading(latex, title)} />
         </>,
     )
 
@@ -82,7 +83,7 @@ export default function Appendix({ content, params, block }) {
         'typst',
         <>
             <UnnumberedOpener title={headingText} />
-            <Sequence data={typstBody(sequence, title, block?.website)} />
+            <Sequence data={typstBody(typst, title, block?.website)} />
         </>,
     )
 

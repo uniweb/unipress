@@ -79,8 +79,10 @@ export function buildBookMeta(website) {
  * Foundation stays environment-agnostic; bytes-loading lives in the
  * host that knows its own runtime.
  *
- * A cover that fails to load is not a compile-blocker — the template
- * handles missing covers gracefully.
+ * A cover that fails to load leaves the template with no cover to draw,
+ * which it handles. Whether that stops the build is the host's call:
+ * unipress keeps its own list of what it couldn't find and stops for a
+ * path. A remote address it doesn't fetch ends here, so this says so.
  */
 async function gatherCovers(coversFromConfig, loadAsset) {
     const bundlePaths = {}
@@ -98,8 +100,9 @@ async function gatherCovers(coversFromConfig, loadAsset) {
             const bundlePath = 'covers/' + filenameFrom(src, role)
             bundlePaths[role] = bundlePath
             assets[bundlePath] = bytes
-        } catch {
-            // Skip — log nothing; a missing cover isn't a compile failure.
+        } catch (err) {
+            // eslint-disable-next-line no-console
+            console.warn(`[@unipress/book] the ${role} cover did not load: ${src}\n  ${err?.message ?? err}`)
         }
     }
     return { bundlePaths, assets }
@@ -133,6 +136,21 @@ function resolveTypographyWithCssFallback(typographyFromConfig) {
 }
 
 /**
+ * What a document prints with its own sections, so the template leaves it out. A thesis opens
+ * with its own `TitlePage`, and the template's first page ahead of it was a second title page.
+ * Its `Contents` stands after the abstract, where the template's would stand before the title.
+ */
+function structureItPrintsItself(website) {
+    const types = new Set(
+        (website?.pages || []).flatMap((page) => (page.bodyBlocks || []).map((block) => block.type)),
+    )
+    return {
+        ...(types.has('TitlePage') ? { titlePage: false, copyrightPage: false } : {}),
+        ...(types.has('Contents') ? { toc: false } : {}),
+    }
+}
+
+/**
  * Typst outputs (both the `typst` source-bundle download and the `pdf`
  * aliased compile). The caller can pass `mode` and `endpoint` via
  * compileDocument's rest-options; defaults are sources-mode with no
@@ -161,7 +179,7 @@ export async function buildTypstOptions(website, { mode = 'sources', endpoint, l
             : createTemplate({
                   trim,
                   typography,
-                  structure: bookCfg.structure,
+                  structure: { ...structureItPrintsItself(website), ...bookCfg.structure },
                   labels: bookCfg.labels,
                   language,
                   covers,

@@ -11,9 +11,10 @@ import { useDocumentOutput } from '@uniweb/press'
 import { Sequence, Raw } from '@uniweb/press/typst'
 import { Prose, H1 } from '@uniweb/kit'
 import { UnnumberedOpener, proseUnderTitle, typstBody, withoutTitleHeading } from '#utils/chapter-opening.jsx'
+import { printSequences } from '#utils/print-sequences.js'
 
 export default function Abstract({ content, params, block }) {
-    const { sequence } = content || {}
+    const { typst, latex } = printSequences(content?.sequence, block)
     const heading = params?.title || content?.title || 'Abstract'
 
     useDocumentOutput(
@@ -21,7 +22,7 @@ export default function Abstract({ content, params, block }) {
         'typst',
         <>
             <UnnumberedOpener title={heading} />
-            <Sequence data={typstBody(sequence, content?.title, block?.website)} />
+            <Sequence data={typstBody(typst, content?.title, block?.website)} />
         </>,
     )
 
@@ -33,7 +34,7 @@ export default function Abstract({ content, params, block }) {
         'latex',
         <>
             <Raw>{`\\chapter*{${heading.replace(/[\\{}]/g, '')}}`}</Raw>
-            <Sequence data={withoutTitleHeading(sequence, content?.title)} />
+            <Sequence data={withoutTitleHeading(latex, content?.title)} />
         </>,
     )
 

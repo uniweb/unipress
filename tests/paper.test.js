@@ -106,7 +106,7 @@ describe('checkPaper', () => {
 })
 
 describe('a document.yml written for a bare folder', () => {
-  const base = { name: 'Notes', foundationRef: '@unipress/book@0.5.0', format: 'pdf', contentDir: 'content' }
+  const base = { name: 'Notes', foundationRef: '@unipress/book@0.5.1', format: 'pdf', contentDir: 'content' }
 
   it('states the paper, and no trim beside it', () => {
     const doc = yaml.load(buildDocumentYml({ ...base, paper: 'letter' }))

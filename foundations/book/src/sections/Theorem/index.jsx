@@ -13,9 +13,9 @@
  * theorem counter; definition has its own counter; proof is unnumbered
  * via \\newtheorem*. See latex-default/preamble.js for the declarations.
  *
- * Typst path: emit a styled box with bold "Theorem N. " followed by the
- * body. Counter management on the typst side is delegated to the
- * Typst template (which can reset per chapter to match LaTeX behaviour).
+ * Typst path: emit a styled box with bold "Theorem 3 (Name). " followed by
+ * the body, with the number the xref-registry gave the id: what a `[#thm-x]`
+ * elsewhere prints.
  *
  * HTML path: a styled <aside class="thm thm-theorem"> with the
  * counter rendered by the runtime's <Ref>/xref machinery.
@@ -24,11 +24,22 @@
 import { useDocumentOutput } from '@uniweb/press'
 import { Sequence, Raw } from '@uniweb/press/typst'
 import { Prose } from '@uniweb/kit'
+import { getXrefRegistry } from '@uniweb/kit/xref'
+import { printSequences } from '#utils/print-sequences.js'
 
 export function buildEnv(env, { content, params, block }) {
     const { sequence } = content || {}
-    const id = content?.id || params?.id
+    const id = content?.id || params?.id || block?.stableId
     const optName = params?.name ? `[${escTex(params.name)}]` : ''
+    const { typst, latex } = printSequences(sequence, block)
+    const number = getXrefRegistry(block?.website)?.entries?.[id]?.counterText
+    const typstLabel = [
+        capitalize(env),
+        number,
+        params?.name ? `(${escTypst(params.name)})` : null,
+    ]
+        .filter(Boolean)
+        .join(' ')
 
     const beginLine = `\\begin{${env}}${optName}`
     const labelLine = id ? `\n\\label{${escTex(id)}}` : ''
@@ -37,7 +48,7 @@ export function buildEnv(env, { content, params, block }) {
         'latex',
         <>
             <Raw>{beginLine + labelLine}</Raw>
-            <Sequence data={sequence || []} />
+            <Sequence data={latex} />
             <Raw>{`\\end{${env}}`}</Raw>
         </>,
     )
@@ -50,9 +61,9 @@ export function buildEnv(env, { content, params, block }) {
         'typst',
         <>
             <Raw>
-                {`#block(spacing: 1.2em, breakable: false)[*${capitalize(env)}.* `}
+                {`#block(spacing: 1.2em, breakable: false)[*${typstLabel}.* `}
             </Raw>
-            <Sequence data={sequence || []} />
+            <Sequence data={typst} />
             <Raw>{']'}</Raw>
         </>,
     )
@@ -71,6 +82,10 @@ export function buildEnv(env, { content, params, block }) {
 
 function capitalize(s) {
     return String(s).charAt(0).toUpperCase() + String(s).slice(1)
+}
+
+function escTypst(s) {
+    return String(s).replace(/[\\#*_$@`[\]<>~]/g, (c) => `\\${c}`)
 }
 
 function escTex(s) {

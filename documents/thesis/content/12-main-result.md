@@ -1,8 +1,8 @@
 ---
 type: Chapter
-title: "Main Result"
-id: sec-main-result
 ---
+
+# Main Result {#sec-main-result}
 
 This chapter states the main theorem and gives its proof.
 

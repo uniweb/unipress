@@ -1,8 +1,8 @@
 ---
 type: Chapter
-title: "Conclusion and Future Work"
-id: sec-conclusion
 ---
+
+# Conclusion and Future Work {#sec-conclusion}
 
 We presented a refined analysis of randomised rounding for ATSP that
 improves the leading constant in the approximation factor. The result

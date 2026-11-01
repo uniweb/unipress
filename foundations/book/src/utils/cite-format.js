@@ -11,7 +11,7 @@
 import { getRegistryForStyle, findRecord } from './cite-registry.js'
 import { recordToCsl } from './to-csl.js'
 import { formatCite as pressLatexCite, formatAutoref as pressLatexAutoref } from '@uniweb/press/latex'
-import { getXrefRegistry } from '@uniweb/kit/xref'
+import { getKindMeta, getXrefRegistry, resolveXrefStyle } from '@uniweb/kit/xref'
 
 /**
  * Build a citestyle CiteRef cluster from a Cite inset's params.
@@ -67,24 +67,72 @@ export function formatCite(params, website, style) {
 }
 
 /**
- * Inline-inset text-mode formatter for the Typst substitution pass.
+ * Inline-inset text-mode formatter for the Typst substitution pass: a
+ * citation or a cross-reference, as the text the page prints. The Typst
+ * path doesn't render React subtrees.
  *
- * Given an inset block (any inline inset whose component is `Cite`),
- * returns the cite's plain-text rendering. Non-Cite insets fall through
- * to an empty string — the Typst path doesn't render React subtrees,
- * and the book foundation only knows how to text-format Cite.
+ * A key or an id that resolves to nothing prints as `[?key]`, as `<Ref>`
+ * does on the web, so a typo shows on the page and not as a gap in the
+ * sentence.
  *
- * `style` is the active citestyle compiled style; the caller (Chapter,
- * BackMatter, etc.) picks it once and passes it in so this helper
- * doesn't have to redo style selection per inset.
+ * `style` is the active citestyle compiled style; the caller picks it
+ * once and passes it in so this helper doesn't have to redo style
+ * selection per inset.
  */
-export function formatCiteInsetAsText(insetBlock, website, style) {
-  if (!insetBlock) return ''
-  if (insetBlock.type !== 'Cite') return ''
+export function formatInlineInsetAsText(insetBlock, website, style) {
+  if (insetBlock?.type === 'Cite') return formatCiteInsetAsText(insetBlock, website, style)
+  if (insetBlock?.type === 'Ref') return formatRefInsetAsText(insetBlock, website)
+  return ''
+}
+
+function formatCiteInsetAsText(insetBlock, website, style) {
   const params = insetBlock.properties || insetBlock.params || {}
   const formatted = formatCite(params, website, style)
-  if (!formatted) return ''
-  return formatted.text || ''
+  return formatted?.text || `[?${params.key ?? ''}]`
+}
+
+// "Figure 2", "Figures 2 and 3", "Figures 1, 2, and 3".
+function joinProse(items) {
+  if (items.length <= 1) return items.join('')
+  if (items.length === 2) return items.join(' and ')
+  return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`
+}
+
+function formatRefInsetAsText(insetBlock, website) {
+  const params = insetBlock.properties || insetBlock.params || {}
+  const ids = String(params.key || '')
+    .split(';')
+    .map((k) => k.trim().replace(/^#/, ''))
+    .filter(Boolean)
+  const entries = getXrefRegistry(website)?.entries || {}
+  const style = resolveXrefStyle(website?.config?.book?.xrefStyle || 'humanities', website?.config)
+
+  const parts = []
+  const seen = new Map()
+  for (const id of ids) {
+    const entry = entries[id]
+    if (!entry) {
+      parts.push({ missing: `[?${id}]` })
+      continue
+    }
+    let group = seen.get(entry.kind)
+    if (!group) {
+      group = { kind: entry.kind, counters: [] }
+      seen.set(entry.kind, group)
+      parts.push(group)
+    }
+    group.counters.push(entry.counterText)
+  }
+
+  return parts
+    .map((part) => {
+      if (part.missing) return part.missing
+      const meta = getKindMeta(style, part.kind)
+      const label = (part.counters.length > 1 ? meta?.labelPlural || meta?.label : meta?.label) || ''
+      const counters = joinProse(part.counters)
+      return label ? `${label}${meta?.sep ?? ' '}${counters}` : counters
+    })
+    .join(', ')
 }
 
 /**

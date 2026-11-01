@@ -1,7 +1,7 @@
 /**
  * ChapterNav — web-only navigation bar at the bottom of every page.
  *
- * press-book's BookLayout is deliberately minimal (PDF-first foundation),
+ * The book foundation's BookLayout is deliberately minimal (PDF-first foundation),
  * but a flat web book still needs some way to move between chapters
  * without typing URLs. This component computes the current page's
  * position in the reading order (from website.getPageHierarchy) and

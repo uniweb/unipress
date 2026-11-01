@@ -97,8 +97,8 @@ import { foundationUrl } from './registry-base.js'
 const publicUrl = (name, version) => foundationUrl(name, version)
 
 const BOOK_FOUNDATION = {
-  ref: '@unipress/book@0.5.0',
-  source: { url: publicUrl('book', '0.5.0') },
+  ref: '@unipress/book@0.5.1',
+  source: { url: publicUrl('book', '0.5.1') },
 }
 
 const DATA_FOUNDATION = {
@@ -142,7 +142,7 @@ export const FOUNDATIONS = [
     name: 'Monograph',
     description:
       'Scholarly long-form work. Same foundation as `book` with ' +
-      'footnote-heavy starter content and academic-typography defaults.',
+      'citation-ready starter content and academic-typography defaults.',
     outputs: ['pdf', 'typst', 'pagedjs', 'epub'],
     foundation: BOOK_FOUNDATION,
     scaffold: 'monograph',

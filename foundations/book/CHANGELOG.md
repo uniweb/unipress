@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.1
+
+### Fixed
+
+- **A document with no cover opened on a blank page.**
+- **Citations and cross-references printed nothing** in a theorem, a proof, an abstract, an appendix
+  or back matter, on Typst and LaTeX: only a chapter substituted them. Every section now does.
+- **`[#id]` printed nothing on Typst.** It prints the number, as `<Ref>` does on the web, and an id
+  or a citation key that resolves to nothing prints as `[?key]`.
+- **A theorem printed "Theorem."** on Typst, with no number or name. It now prints "Theorem 1 (Name)."
+- **A list of figures took a chapter number**, and on Typst an empty one took a page. A list of
+  tables printed each entry as a figure.
+- **A document with its own `TitlePage` got the template's too**, ahead of it. A document with a
+  `Contents` section now gets the contents where it stands, on Typst and LaTeX.
+- **A cover that didn't load** was skipped in silence. It's now said, and a host may stop the build.
+
 ## 0.5.0
 
 ### Added

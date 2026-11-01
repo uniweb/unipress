@@ -1,21 +1,32 @@
 import { useEffect, useState } from 'react'
 import { Link, useWebsite } from '@uniweb/kit'
+import { useDocumentOutput } from '@uniweb/press'
+import { Raw } from '@uniweb/press/typst'
 
 /**
- * Contents — a web-only table of contents that lists every book page in
- * reading order, with nested links to each chapter's level-2 headings.
+ * Contents — the table of contents, where the document places it.
  *
- * The PDF already emits its own `#outline()` TOC from the Typst template,
- * so this section does not register a Press fragment. It exists purely
- * to give the web book a browseable ToC.
+ * On the web it lists every book page in reading order, with nested links
+ * to each chapter's level-2 headings. In print it hands over to the
+ * typesetter, which knows the page numbers. A book with no such section
+ * gets its contents from the Typst template, before the first chapter; one
+ * with this section, a thesis above all, gets them here, after its abstract.
  *
  * Opt-in: add a markdown file with `type: Contents` and include it in
- * the site's `pages:` reading order (typically right after the cover).
+ * the site's `pages:` reading order.
  */
-export default function Contents({ content }) {
+export default function Contents({ content, block }) {
   const { website } = useWebsite()
   const [entries, setEntries] = useState([])
   const [loading, setLoading] = useState(true)
+  const depth = block?.website?.config?.book?.structure?.tocDepth ?? 2
+
+  useDocumentOutput(
+    block,
+    'typst',
+    <Raw>{`#pagebreak(weak: true)\n#set outline.entry(fill: repeat([.], gap: 0.25em))\n#outline(indent: auto, depth: ${Number(depth) || 2})`}</Raw>,
+  )
+  useDocumentOutput(block, 'latex', <Raw>{'\\tableofcontents'}</Raw>)
 
   useEffect(() => {
     let cancelled = false

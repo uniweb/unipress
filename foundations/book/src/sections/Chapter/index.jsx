@@ -1,32 +1,9 @@
 import { useDocumentOutput } from '@uniweb/press'
 import { ChapterOpener, Sequence } from '@uniweb/press/typst'
-import { Prose, H1, H2, useWebsite } from '@uniweb/kit'
-import * as apa from 'citestyle/styles/apa'
-import * as mla from 'citestyle/styles/mla'
-import * as chicagoAuthorDate from 'citestyle/styles/chicago-author-date'
-import * as ieee from 'citestyle/styles/ieee'
-import * as vancouver from 'citestyle/styles/vancouver'
-import * as harvard from 'citestyle/styles/harvard'
-import * as ama from 'citestyle/styles/ama'
-import * as nature from 'citestyle/styles/nature'
-import * as science from 'citestyle/styles/science'
-import { resolveInlineInsets } from '#utils/resolve-inline-insets.js'
-import { formatCiteInsetAsText, formatInlineInsetAsLatex } from '#utils/cite-format.js'
+import { Prose, H1, H2 } from '@uniweb/kit'
 import { proseUnderTitle, typstBody, withoutTitleHeading } from '#utils/chapter-opening.jsx'
-import { FootnoteList, htmlFootnotes, printFootnotes } from '#utils/footnotes.jsx'
-
-const STYLES = {
-  apa,
-  mla,
-  'chicago-author-date': chicagoAuthorDate,
-  ieee,
-  vancouver,
-  harvard,
-  ama,
-  nature,
-  science,
-}
-const DEFAULT_STYLE = 'chicago-author-date'
+import { FootnoteList, htmlFootnotes } from '#utils/footnotes.jsx'
+import { printSequences } from '#utils/print-sequences.js'
 
 /**
  * Chapter — default section type for book pages.
@@ -49,35 +26,7 @@ export default function Chapter({ content, block, params }) {
   const pageInfo = classifyPage(block?.page)
   const openerTitle = formatTitle(title, pageInfo)
 
-  // Inline cites in chapter prose: kit's Prose renders them inline at
-  // marker positions in HTML; Press's Sequence reads each paragraph's
-  // `text` field as a flat string and has no concept of inline insets.
-  // Substitute the cite text into the paragraph string before handing
-  // the sequence to Sequence.
-  //
-  // The Typst path receives the registry-formatted text (e.g. "(Darwin
-  // 1859)") because the typst output bundles only the .typ source — no
-  // citation engine is downstream of the bundle. The LaTeX path
-  // receives `\cite{darwin1859}` so biblatex (configured in the
-  // preamble — see latex-default/preamble.js + buildLatexOptions's
-  // bibresource block) can format consistently with the
-  // \printbibliography back-matter at PDF compile time.
-  const styleName = block?.website?.config?.book?.citationStyle || DEFAULT_STYLE
-  const style = STYLES[styleName] || STYLES[DEFAULT_STYLE]
-  const typstSequence = printFootnotes(
-    resolveInlineInsets(
-      sequence || [],
-      block,
-      (insetBlock) => formatCiteInsetAsText(insetBlock, block?.website, style),
-    ),
-  )
-  const latexSequence = printFootnotes(
-    resolveInlineInsets(
-      sequence || [],
-      block,
-      (insetBlock) => formatInlineInsetAsLatex(insetBlock, block?.website),
-    ),
-  )
+  const { typst: typstSequence, latex: latexSequence } = printSequences(sequence, block)
   const { content: withMarks, notes } = htmlFootnotes(content)
 
   useDocumentOutput(
