@@ -97,8 +97,8 @@ import { foundationUrl } from './registry-base.js'
 const publicUrl = (name, version) => foundationUrl(name, version)
 
 const BOOK_FOUNDATION = {
-  ref: '@unipress/book@0.5.1',
-  source: { url: publicUrl('book', '0.5.1') },
+  ref: '@unipress/book@0.5.2',
+  source: { url: publicUrl('book', '0.5.2') },
 }
 
 const DATA_FOUNDATION = {

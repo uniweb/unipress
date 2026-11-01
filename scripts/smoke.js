@@ -285,6 +285,8 @@ if (thesis) {
   check('its math is math', body.includes('#mitex') && !body.includes('\\$'))
   check('its references print', !/described in ,/.test(body) && !/preliminaries in  /.test(body))
   check('a citation in a theorem prints', !/established in \./.test(body))
+  check('the first citation prints under a numbered style', /NP-hard \[\d+\], \[\d+\],/.test(body))
+  check('every citation finds its record', !body.includes('[?'))
   const at = (text) => body.indexOf(text)
   check('it opens on its own title page', at('#page(numbering: none)') !== -1 && !/Title page/.test(bundle.get('template.typ')()))
   check('its contents follow the abstract', at('title: "Abstract"') !== -1 && at('title: "Abstract"') < at('#outline('))

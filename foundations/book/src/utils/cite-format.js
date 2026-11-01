@@ -53,10 +53,13 @@ function buildCluster(params, website) {
  */
 export function formatCite(params, website, style) {
   if (!website || !style) return null
-  const cluster = buildCluster(params, website)
-  if (cluster.length === 0) return null
+  // The registry first: making it numbers the bibliography's records, and the cluster copies them.
+  // ⛔ Until 0.5.2 the cluster came first, so under a numbered style the document's first citation
+  // had no number, and printed as nothing.
   const registry = getRegistryForStyle(website, style)
   if (!registry) return null
+  const cluster = buildCluster(params, website)
+  if (cluster.length === 0) return null
   try {
     return registry.cite(cluster)
   } catch (err) {

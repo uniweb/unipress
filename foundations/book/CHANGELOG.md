@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.2
+
+### Fixed
+
+- **The first citation in a document printed nothing on Typst** under a numbered style, such as
+  `ieee`, the thesis default. `[@a; @b]` left a stray comma in the sentence, and `[@a]` printed as
+  `[?@a]`, as if its record were missing.
+
 ## 0.5.1
 
 ### Fixed

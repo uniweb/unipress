@@ -8,6 +8,13 @@
   folder and adds that to your PATH, with no administrator and no Node. Run it again to update. CI runs
   the exact command on real Windows.
 
+### Fixed
+
+- **The first citation in a document printed nothing in a PDF** under a numbered style, such as
+  `ieee`, the thesis default. `[@a; @b]` left a stray comma in the sentence, and `[@a]` printed as
+  `[?@a]`, as if its record were missing. A document already pinned to `@unipress/book@0.5.1` gets
+  this by moving its `foundation:` to `@unipress/book@0.5.2`.
+
 ## After 1.1.21
 
 ### Added

@@ -57,7 +57,7 @@ with `paths: { pages: . }`. It's an ordinary config file; edit it freely.
 To write one by hand instead:
 
 ```yaml
-foundation: "@unipress/book@0.5.1"
+foundation: "@unipress/book@0.5.2"
 format: pdf
 paper: letter
 paths:
@@ -178,7 +178,7 @@ the file might come out at the wrong size. A document that pins an older bundled
 foundation gets the version to pin in the message:
 
 ```yaml
-foundation: '@unipress/book@0.5.1'
+foundation: '@unipress/book@0.5.2'
 ```
 
 A foundation of your own declares it as `paper: true` on the output
@@ -198,7 +198,7 @@ when documents and websites came to share one vocabulary. Four edits bring it ac
    `path: collections/…` line under it.
 3. In each page's frontmatter or `page.yml`, change `data: <name>` to `query: <name>`,
    and `collection: <name>` to `query: <name>`.
-4. Point `foundation:` at the current version: `@unipress/book@0.5.1`,
+4. Point `foundation:` at the current version: `@unipress/book@0.5.2`,
    `@unipress/data@0.2.0` or `@unipress/business-docs@0.2.0`.
 
 `unipress list-templates` shows the versions this unipress pins.
