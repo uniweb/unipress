@@ -8,8 +8,7 @@
  * in one place.
  */
 
-import { getRegistryForStyle, findRecord } from './cite-registry.js'
-import { recordToCsl } from './to-csl.js'
+import { citedItem, getRegistryForStyle, findRecord } from './cite-registry.js'
 import { formatCite as pressLatexCite, formatAutoref as pressLatexAutoref } from '@uniweb/press/latex'
 import { getKindMeta, getXrefRegistry, resolveXrefStyle } from '@uniweb/kit/xref'
 
@@ -22,7 +21,7 @@ import { getKindMeta, getXrefRegistry, resolveXrefStyle } from '@uniweb/kit/xref
  * the website's bibliography are dropped. Returns an empty array when
  * no keys resolve.
  */
-function buildCluster(params, website) {
+function buildCluster(params, website, registry) {
   const { key, page, locator, label = 'page' } = params || {}
   const keys = String(key || '')
     .split(';')
@@ -35,8 +34,8 @@ function buildCluster(params, website) {
       const rec = findRecord(website, k)
       if (!rec) return null
       const ref = { id: k }
-      const csl = recordToCsl(rec)
-      if (csl) ref.item = csl
+      const item = citedItem(registry, rec)
+      if (item) ref.item = item
       if (page || locator) {
         ref.locator = String(page || locator)
         ref.label = label
@@ -53,12 +52,11 @@ function buildCluster(params, website) {
  */
 export function formatCite(params, website, style) {
   if (!website || !style) return null
-  // The registry first: making it numbers the bibliography's records, and the cluster copies them.
-  // ⛔ Until 0.5.2 the cluster came first, so under a numbered style the document's first citation
-  // had no number, and printed as nothing.
+  // ⛔ Until 0.5.2 the cluster copied the records before the registry numbered them, so under a
+  // numbered style the document's first citation had no number, and printed as nothing.
   const registry = getRegistryForStyle(website, style)
   if (!registry) return null
-  const cluster = buildCluster(params, website)
+  const cluster = buildCluster(params, website, registry)
   if (cluster.length === 0) return null
   try {
     return registry.cite(cluster)

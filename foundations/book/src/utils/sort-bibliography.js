@@ -1,21 +1,17 @@
 /**
  * Sort bibliography records before formatting.
  *
- * The downstream citestyle path also sorts: `formatAll` and
- * `getBibliography()` apply the style's compiled comparator (alphabetical
- * for APA / MLA / Chicago author-date / Harvard; insertion order for
- * numbered styles like IEEE / Vancouver / Nature). This helper feeds the
- * pre-sort, which matters in two cases:
+ * citestyle sorts too: an author-date style (APA / MLA / Chicago author-date /
+ * Harvard) has a compiled comparator, which decides its order. So this helper
+ * matters for what a style leaves open, under a numbered style like IEEE,
+ * Vancouver or Nature, which has none:
  *
- *   1. Numbered styles (`citation-number` collapse) preserve insertion
- *      order — so the order they receive items in is the order the
- *      bibliography lists them. `sortBy: 'author'` here flips that to
- *      alphabetical for the rare report that wants a numbered list of
- *      sources sorted by author.
+ *   1. The document's own list runs in order of first citation, so `[1]` is the
+ *      first source a reader meets. This orders the records nothing cites,
+ *      which come after those.
  *
- *   2. The `formatAll` no-registry path passes the comparator the items
- *      in pre-sort order, which becomes a tiebreaker for entries the
- *      style sees as equivalent (same year + same author).
+ *   2. A list of its own, such as further reading, runs in this order: nothing
+ *      cites into it.
  *
  * Sort modes:
  *   - 'author' (default): last name asc, then year asc.

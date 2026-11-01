@@ -121,7 +121,7 @@ For trade-paperback fiction or non-fiction prose, use `book` instead.
 Edit `document.yml`:
 
 - `book.citationStyle:` — pick from the nine styles above.
-- `book.bibliography.sortBy:` — `author` (default), `year`, or `collection-order`.
+- `book.bibliography.sortBy:` — `author` (default), `year`, or `collection-order`. For what the style and the citations leave open: under a numbered style, the sources nothing cites, and a list of a section's own.
 - `book.typography.bodyFont`, `book.typography.headingFont` — EB Garamond, whose files are in `fonts/` under the SIL Open Font License. Put another face's files there to use it.
 - `book.trim:` — `royal-octavo` (default), `crown-octavo`, `trade-6x9`, `trade-7x10`, `a5`.
 - `book.structure.tocDepth:` — bump to 4 for very subdivided arguments.

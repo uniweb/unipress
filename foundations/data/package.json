@@ -1,6 +1,6 @@
 {
   "name": "@unipress/data",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Data foundation for Uniweb. Aggregates structured records (members, publications, funding, supervisions) and emits Excel workbooks and Word reports. Drives @uniweb/unipress's data-report and directory templates.",
   "type": "module",
   "private": true,

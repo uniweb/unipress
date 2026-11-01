@@ -26,8 +26,7 @@ import * as harvard from 'citestyle/styles/harvard'
 import * as ama from 'citestyle/styles/ama'
 import * as nature from 'citestyle/styles/nature'
 import * as science from 'citestyle/styles/science'
-import { getRegistryForStyle, findRecord } from '../../utils/cite-registry.js'
-import { recordToCsl } from '../../utils/to-csl.js'
+import { citedItem, getRegistryForStyle, findRecord } from '../../utils/cite-registry.js'
 
 const STYLES = {
   apa,
@@ -94,11 +93,10 @@ export default function Cite({ params, block }) {
     .map((rec, i) => {
       if (!rec) return null
       const ref = { id: keys[i] }
-      // Pre-resolve the item so the registry doesn't need to look it up
-      // by id again. Idempotent — the registry's addItems was already
-      // called with the bibliography records by getRegistryForStyle.
-      const csl = recordToCsl(rec)
-      if (csl) ref.item = csl
+      // As the registry holds it, entered here the first time it is cited:
+      // under a numbered style, that is what gives it its number.
+      const item = citedItem(registry, rec)
+      if (item) ref.item = item
       if (page || locator) {
         ref.locator = String(page || locator)
         ref.label = label

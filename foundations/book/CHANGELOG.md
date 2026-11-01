@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.5.3
+
+### Fixed
+
+- **A numbered style numbered its sources by file name.** `ieee`, `vancouver`, `ama`, `nature` and
+  `science` number a source where the text first cites it, so a thesis that opened at `[8], [6]` opens
+  at `[1], [2]`, and the list follows. On Typst, Paged.js and EPUB; LaTeX already did, through biblatex.
+  `book.bibliography.sortBy` now orders what no citation decides: the sources nothing cites, and a list
+  of a section's own.
+- **A second `Bibliography` section printed the document's list**, whatever it asked for. Each prints
+  its own, as the monograph guide says.
+- **The first citation of an author's two works from one year lost its letter** under an author-date
+  style: `(Smith, 2020)` at first, then `(Smith, 2020a)`.
+- **A space between two marks disappeared** on Typst and LaTeX: `**bold** *italic*` printed `bolditalic`,
+  a numbered reference `[1]R. M. Karp`, and a report in the list `Technical Report388`. From `@uniweb/press`.
+- **Inline code printed as plain text** on Typst and LaTeX. It prints as code. From `@uniweb/press`.
+
 ## 0.5.2
 
 ### Fixed

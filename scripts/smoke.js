@@ -274,6 +274,17 @@ if (report) {
   check('with no cover, it opens on its title page and not a blank one', !template.slice(0, template.indexOf('#v(3in)')).includes('pagebreak(to:'))
 }
 
+if (article) {
+  process.stdout.write('\narticle, its marks\n')
+  const created = run(['create', 'article-marks', '--template', 'article', '--title', 'Smoke article', '--author', 'A. Tester', '--yes'])
+  check('an article scaffolds', created.status === 0, whatItSaid(created.text))
+  const file = join(work, 'article-marks', 'content', '01-introduction.md')
+  writeFileSync(file, `${readFileSync(file, 'utf8')}\n\nTwo marks: **bold** *italic*, and \`inline code\`.\n`)
+  const typst = readZip(compile(article, 'article-marks', 'typst').file).get('content.typ')()
+  check('two marks keep the space between them', typst.includes('#strong[bold] #emph[italic]'))
+  check('inline code prints as code', typst.includes('\`inline code\`'))
+}
+
 const thesis = catalog.find((e) => e.id === 'thesis')
 if (thesis) {
   process.stdout.write('\nthesis, read\n')
@@ -285,7 +296,8 @@ if (thesis) {
   check('its math is math', body.includes('#mitex') && !body.includes('\\$'))
   check('its references print', !/described in ,/.test(body) && !/preliminaries in  /.test(body))
   check('a citation in a theorem prints', !/established in \./.test(body))
-  check('the first citation prints under a numbered style', /NP-hard \[\d+\], \[\d+\],/.test(body))
+  check('its sources are numbered in the order it first cites them', body.includes('NP-hard [1], [2],'))
+  check('and listed by those numbers, with a space after each', body.includes('[1] R. M. Karp') && body.includes('[2] M. R. Garey'))
   check('every citation finds its record', !body.includes('[?'))
   const at = (text) => body.indexOf(text)
   check('it opens on its own title page', at('#page(numbering: none)') !== -1 && !/Title page/.test(bundle.get('template.typ')()))

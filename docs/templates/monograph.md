@@ -58,9 +58,9 @@ Set `book.citationStyle:` in `document.yml`. Nine styles ship statically wired �
 | `nature`               | ¹                  | Nature journals                                 |
 | `science`              | (1)                | Science journals                                |
 
-Numbered styles (IEEE, Vancouver, Nature, Science, AMA) reuse the same numbering across inline cites and the back-matter list — `[1]` inline matches `[1]` in the back-matter.
+Numbered styles (IEEE, Vancouver, Nature, Science, AMA) number a source where the text first cites it, and reuse that number across inline cites and the back-matter list — the first source a reader meets is `[1]`, inline and in the back-matter.
 
-Optional sort: `book.bibliography.sortBy:` — `author` (default), `year`, or `collection-order`.
+Optional sort: `book.bibliography.sortBy:` — `author` (default), `year`, or `collection-order`. It orders what the style and the citations leave open: under a numbered style, the sources nothing cites, which come after those that are, and a list of a section's own. An author-date style keeps its own order.
 
 ### Author bibliography entries
 
@@ -170,7 +170,7 @@ query: bibliography
 ---
 ```
 
-`query: bibliography` fetches the query of that name declared under `queries:` in `document.yml`, and the section receives its records as `content.data.bibliography`. For numbered styles the entries appear in citation-encounter order; for author-date styles they're alphabetical by author then year.
+`query: bibliography` fetches the query of that name declared under `queries:` in `document.yml`, and the section receives its records as `content.data.bibliography`. For numbered styles the entries appear in order of first citation; for author-date styles they're alphabetical by author then year.
 
 For collections of references that don't all need to ride together — say, a list of "further reading" separate from the main bibliography — declare a second query in `document.yml` and bind it to a second `Bibliography` section with `fetch: { query: <other-name>, as: bibliography }` and an optional `style: <override>`.
 

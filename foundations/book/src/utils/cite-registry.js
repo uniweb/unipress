@@ -6,12 +6,12 @@
  *      by the Bibliography section as a side effect of rendering (TF10a.1)
  *      via setBibliography(). Read by Cite insets and the Typst back-matter
  *      generator (TF10a.3) via getBibliography() / findRecord().
- *   2. Own one citestyle registry instance per active style so numbered
- *      styles (IEEE / Vancouver / Nature / Science / AMA) keep document-
- *      wide ordering — the same key cited twice gets the same number
- *      both times. Author-date styles (APA / MLA / Chicago author-date /
- *      Harvard) don't need ordering for the inline form, but using the
- *      registry uniformly keeps the foundation code simple.
+ *   2. Own one citestyle registry instance per active style, so numbered
+ *      styles (IEEE / Vancouver / Nature / Science / AMA) number a document's
+ *      records in the order it first cites them, and the same key cited twice
+ *      gets the same number both times. Author-date styles (APA / MLA / Chicago
+ *      author-date / Harvard) don't need that for the inline form, but using
+ *      the registry uniformly keeps the foundation code simple.
  *
  * Per-website (not module-global): compileSubtree and serial unipress
  * compiles can run multiple websites in the same Node process. A book
@@ -31,7 +31,7 @@
  */
 
 import { createRegistry } from 'citestyle'
-import { recordsToCsl } from './to-csl.js'
+import { recordToCsl, recordsToCsl } from './to-csl.js'
 
 const STORE = new WeakMap()
 const DEFAULT_COLLECTION = 'bibliography'
@@ -102,15 +102,6 @@ export function findRecord(website, key) {
 }
 
 /**
- * The Cite component already pre-resolves items on each cite ref (so
- * `addItems` can be skipped for cites passing through `item:`). When
- * registry-driven sorting is needed (Bibliography back-matter in
- * citation-encounter order, year-suffix disambiguation across the
- * document, name-disambiguation), getBibliography() is the seed and
- * `addItems` runs once per registry creation.
- */
-
-/**
  * Get (or lazily create) the citestyle registry for the given style.
  *
  * createRegistry is bound to a style at construction time. We keep one
@@ -118,10 +109,13 @@ export function findRecord(website, key) {
  * active style, so this typically caches one entry; the per-style
  * indirection is just for the rare cross-style document.
  *
- * On first access for a style, the registry is seeded with addItems(
- * getBibliography(website)) so the registry's id-resolution finds every
- * record without the foundation having to thread item objects on every
- * cite() call.
+ * A style that sorts its own list is seeded with the whole bibliography,
+ * since telling two of one author's works from one year apart takes all of
+ * them. A numbered style has no order of its own, and its registry numbers
+ * what it is given in the order it is given, so it starts empty and a record
+ * comes in when it is first cited (`citedItem`). ⛔ Until 0.5.3 it was seeded
+ * too, so a thesis numbered its references by file name, and opened at
+ * `[8], [6]`.
  */
 export function getRegistryForStyle(website, style) {
   if (!website || !style) return null
@@ -129,13 +123,56 @@ export function getRegistryForStyle(website, style) {
   const styleId = style?.meta?.id || style?.default?.meta?.id || 'default'
   let reg = s.registriesByStyle.get(styleId)
   if (!reg) {
-    // citestyle styles can be either ESM module objects (with `.default`
-    // = the compiled style) or the compiled style directly. Try both.
-    const compiled = style?.bibliography || style?.citation ? style : style?.default || style
+    const compiled = compiledStyle(style)
     reg = createRegistry(compiled)
-    const items = getBibliography(website)
-    if (items.length > 0) reg.addItems(items)
+    if (compiled.bibliographySort) {
+      const items = getBibliography(website)
+      if (items.length > 0) reg.addItems(items)
+    }
     s.registriesByStyle.set(styleId, reg)
   }
   return reg
+}
+
+// citestyle styles can be either ESM module objects (with `.default`
+// = the compiled style) or the compiled style directly. Try both.
+function compiledStyle(style) {
+  return style?.bibliography || style?.citation ? style : style?.default || style
+}
+
+/**
+ * A record as this registry holds it, which is the copy that carries its number
+ * and what tells it apart from another of its author's. Entering it here, the
+ * first time it is cited, is what numbers it in the order a reader meets it.
+ */
+export function citedItem(registry, record) {
+  const csl = recordToCsl(record)
+  if (!csl) return null
+  const held = registry.getItem(csl.id)
+  if (held) return held
+  registry.addItems([csl])
+  return csl
+}
+
+/**
+ * The entries a Bibliography section prints for its records.
+ *
+ * The document's own list goes through the registry its citations went through,
+ * so `[1]` inline is `[1]` here. What no citation brought in comes after what did,
+ * in the order the section gives. A list of anything else ("further reading") is
+ * its own: nothing cites into it, so it takes a registry of its own.
+ * ⛔ Until 0.5.3 every section printed the document's list, whatever it asked for.
+ */
+export function bibliographyEntries(website, style, items) {
+  if (!website || !style || items.length === 0) return []
+  const main = getBibliography(website)
+  const isMain = main.length === items.length && items.every((item) => main.some((record) => String(record.id) === item.id))
+  if (!isMain) {
+    const own = createRegistry(compiledStyle(style))
+    own.addItems(items)
+    return own.getBibliography()
+  }
+  const registry = getRegistryForStyle(website, style)
+  registry.addItems(items.filter((item) => !registry.getItem(item.id)))
+  return registry.getBibliography()
 }

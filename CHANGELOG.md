@@ -1,5 +1,21 @@
 # Changelog
 
+## After 1.1.24
+
+### Fixed
+
+- **A numbered style numbered its sources by file name.** `ieee`, `vancouver`, `ama`, `nature` and
+  `science` now number a source where the text first cites it, in a PDF, Paged.js and EPUB as biblatex
+  already did, so a thesis that opened at `[8], [6]` opens at `[1], [2]`.
+- **A second `Bibliography` section printed the document's list**, whatever it asked for. Each prints
+  its own.
+- **A space between two marks disappeared** in a PDF and in LaTeX: `**bold** *italic*` printed
+  `bolditalic`, and a numbered reference `[1]R. M. Karp`.
+- **Inline code printed as plain text** in a PDF and in LaTeX. It prints as code.
+
+These reach a document through its foundation: move its `foundation:` to `@unipress/book@0.5.3`,
+`@unipress/data@0.2.1` or `@unipress/business-docs@0.2.1`.
+
 ## After 1.1.23
 
 ### Added

@@ -12,12 +12,11 @@
  * on `website.config.recordsByQuery.<name>` so insets that render
  * before this section can bootstrap their own copy.
  *
- * Rendering goes through the same per-website citestyle registry the
- * `Cite` inset uses (`cite-registry.js`). That keeps numbered-style
- * back-matter ordering (IEEE, Vancouver, Nature, Science, AMA)
- * consistent with the inline cites — the same key cited inline as
- * `[1]` lands as `[1]` in the bibliography. For author-date styles the
- * registry's natural sort is alphabetical, also what these styles
+ * The document's own list goes through the same per-website citestyle
+ * registry the `Cite` inset uses (`cite-registry.js`), so a numbered style
+ * (IEEE, Vancouver, Nature, Science, AMA) lists what the text cites in the
+ * order it first cites it: `[1]` inline lands as `[1]` here. For author-date
+ * styles the registry's natural sort is alphabetical, also what these styles
  * expect.
  *
  * Synchronous on purpose. The SSR pipeline used by `unipress compile`
@@ -48,7 +47,7 @@ import * as nature from 'citestyle/styles/nature'
 import * as science from 'citestyle/styles/science'
 import { recordsToCsl } from '../../utils/to-csl.js'
 import { sortBibliography } from '../../utils/sort-bibliography.js'
-import { setBibliography, getRegistryForStyle } from '../../utils/cite-registry.js'
+import { setBibliography, bibliographyEntries } from '../../utils/cite-registry.js'
 
 const STYLES = {
   apa,
@@ -95,11 +94,10 @@ export default function Bibliography({ content, params, block }) {
     return Array.isArray(v) ? v : []
   }, [content?.data])
 
-  // Pre-sort the records (author / year / collection-order). For numbered
-  // styles, the registry assigns citation numbers in addItems insertion
-  // order — so this pre-sort decides what `[1]` means when the style
-  // does NOT impose a comparator of its own. Author-date styles use
-  // their compiled comparator, which makes this a tiebreaker only.
+  // Pre-sort the records (author / year / collection-order), for what the
+  // style and the citations leave open: under a numbered style, the records
+  // nothing cites, and a list of its own. Author-date styles use their
+  // compiled comparator.
   const sorted = useMemo(
     () => sortBibliography(records, sortBy),
     [records, sortBy],
@@ -117,16 +115,9 @@ export default function Bibliography({ content, params, block }) {
     if (website) setBibliography(website, cslItems)
   }, [website, cslItems])
 
-  // Use the same registry instance Cite uses so the back-matter list
-  // and the inline cites share numbering. createRegistry was called
-  // either by an earlier Cite render (which seeded with bootstrap-loaded
-  // records) or by us here on first read.
   const entries = useMemo(() => {
-    if (!website || cslItems.length === 0) return []
-    const registry = getRegistryForStyle(website, style)
-    if (!registry) return []
     try {
-      return registry.getBibliography()
+      return bibliographyEntries(website, style, cslItems)
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('Bibliography: getBibliography failed', err)
