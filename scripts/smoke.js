@@ -216,6 +216,33 @@ if (book) {
   const created = run(['create', 'book-plain', '--template', 'book', '--title', 'Smoke book', '--author', 'A. Tester', '--yes'])
   check('a book scaffolds with no paper named', created.status === 0, whatItSaid(created.text))
   check('and keeps its trim', /^\s*trim: trade-6x9$/m.test(readFileSync(join(work, 'book-plain/document.yml'), 'utf8')))
+
+  // As printed, from where it says to stand.
+  const next = /next: cd (\S+)\n\s+unipress (.+)/.exec(created.text)
+  const nextStep = next
+    ? run([...next[2].trim().split(/\s+/), ...(localFoundations ? ['--foundation', foundationDir(book)] : [])], { cwd: join(work, next[1]) })
+    : { status: null, text: created.text }
+  check('the next step it prints works', nextStep.status === 0, whatItSaid(nextStep.text))
+  check('a compile says what happened, and no more', /^wrote /.test(nextStep.text) && !/^\[/m.test(nextStep.text), nextStep.text.slice(0, 200))
+  const inspected = run(['inspect', 'book-plain', '--summary', '--no-orchestrate'])
+  check('inspect writes JSON', (() => { try { return Boolean(JSON.parse(inspected.text)) } catch { return false } })(), inspected.text.slice(0, 120))
+
+  const yml = join(work, 'book-plain/document.yml')
+  const asScaffolded = readFileSync(yml, 'utf8')
+  writeFileSync(yml, asScaffolded.replace(/front: .*/, 'front: /assets/front.jpg'))
+  const rooted = compile(book, 'book-plain', 'typst')
+  check('a cover named from the top of the folder is found', rooted.status === 0 && readZip(rooted.file).has('covers/front.jpg'), whatItSaid(rooted.text))
+  writeFileSync(yml, asScaffolded.replace(/front: .*/, 'front: assets/nope.jpg'))
+  const noCover = compile(book, 'book-plain', 'typst')
+  check('a cover that is not there stops the build, by name', noCover.status === 1 && /assets\/nope\.jpg/.test(noCover.text), whatItSaid(noCover.text))
+  writeFileSync(yml, asScaffolded)
+
+  const named = join(work, 'out/named.epub')
+  const byName = run(['compile', 'book-plain', '--out', named, ...(localFoundations ? ['--foundation', foundationDir(book)] : [])])
+  check('--out o.epub builds an EPUB', byName.status === 0 && KIND_OF.epub(readFileSync(named)), whatItSaid(byName.text))
+  const mismatch = run(['compile', 'book-plain', '--format', 'pagedjs', '--out', join(work, 'out/mismatch.pdf')])
+  check('--format pagedjs --out o.pdf is refused', mismatch.status === 1 && /writes pagedjs/.test(mismatch.text), mismatch.text)
+
   const pagedjs = compile(book, 'book-plain', 'pagedjs')
   check('the same trim in every format', PAGE_OF.pagedjs(pagedjs.file) === '6in 9in', PAGE_OF.pagedjs(pagedjs.file))
 
@@ -243,6 +270,26 @@ if (report) {
   check('and LaTeX', readZip(latex.file).get('content.tex')().includes('\\begin{tabular}'))
   const pagedjs = compile(report, 'report-plain', 'pagedjs')
   check('and Paged.js', readFileSync(pagedjs.file, 'utf8').includes('<table'))
+  const template = readZip(typst.file).get('template.typ')()
+  check('with no cover, it opens on its title page and not a blank one', !template.slice(0, template.indexOf('#v(3in)')).includes('pagebreak(to:'))
+}
+
+const thesis = catalog.find((e) => e.id === 'thesis')
+if (thesis) {
+  process.stdout.write('\nthesis, read\n')
+  const created = run(['create', 'thesis-plain', '--template', 'thesis', '--title', 'Smoke thesis', '--author', 'A. Tester', '--yes'])
+  check('a thesis scaffolds', created.status === 0, whatItSaid(created.text))
+  const typst = compile(thesis, 'thesis-plain', 'typst')
+  const bundle = readZip(typst.file)
+  const body = bundle.get('content.typ')()
+  check('its math is math', body.includes('#mitex') && !body.includes('\\$'))
+  check('its references print', !/described in ,/.test(body) && !/preliminaries in  /.test(body))
+  check('a citation in a theorem prints', !/established in \./.test(body))
+  const at = (text) => body.indexOf(text)
+  check('it opens on its own title page', at('#page(numbering: none)') !== -1 && !/Title page/.test(bundle.get('template.typ')()))
+  check('its contents follow the abstract', at('title: "Abstract"') !== -1 && at('title: "Abstract"') < at('#outline('))
+  check('its chapters are in the order it lists', at('title: "Main Result"') !== -1 && at('title: "Main Result"') < at('*Theorem'))
+  check('a list of figures with no figures takes no chapter number', !body.includes('title: "List of Figures")'))
 }
 
 // ── A folder of markdown, no project ───────────────────────────────────────

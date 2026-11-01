@@ -153,10 +153,10 @@ export async function createCommand({ dir, template, title, author, paper, force
   log('')
   log(`✓ ready`)
   log(`  next: cd ${dir}`)
-  const formats = Array.isArray(entry.outputs) && entry.outputs.length > 0
-    ? entry.outputs.join(' | ')
-    : 'pdf'
-  log(`        unipress compile --format <${formats}>`)
+  log(`        unipress compile .`)
+  if (Array.isArray(entry.outputs) && entry.outputs.length > 1) {
+    log(`  or any of its formats: unipress compile . --format <${entry.outputs.join(' | ')}>`)
+  }
   log('')
   const foundationUrl = entry.foundation?.source?.url ?? entry.source?.url
   const foundationRef = entry.foundation?.ref

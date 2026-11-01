@@ -30,6 +30,8 @@
 // is run (source, npm install, or the bun --compile binary). See
 // runtime-externals.js for the full rationale.
 
+import { existsSync } from 'node:fs'
+import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { readFile } from 'node:fs/promises'
 import { initPrerender } from '@uniweb/runtime/ssr'
@@ -83,11 +85,12 @@ export async function loadAndInit({ content, resolvedPath, extensions = [], onPr
 //   2. Asset manifest hit (`website.assets[src]`) — the resolved entry
 //      carries an absolute filesystem path the framework's content
 //      collector populated. Read bytes via fs.
-//   3. Absolute filesystem path on disk → read directly.
+//   3. A root-relative path → from the document's own folder if it's
+//      there, as `/assets/front.jpg` is on a website. Else from the disk.
 //   4. Otherwise: fail loudly. We don't fall back to fetch because
 //      unipress runs offline-by-default and a missing manifest entry
 //      almost always means a misspelled path in document.yml.
-function createNodeLoadAsset(website) {
+function createNodeLoadAsset(website, sitePath) {
   return async function loadAsset(src) {
     if (!src || typeof src !== 'string') return null
 
@@ -104,7 +107,12 @@ function createNodeLoadAsset(website) {
     }
 
     const entry = website?.assets?.[src]
-    const path = entry?.resolved || (src.startsWith('/') ? src : null)
+    const places = [
+      entry?.resolved,
+      src.startsWith('/') && sitePath ? join(sitePath, src) : null,
+      src.startsWith('/') ? src : null,
+    ].filter(Boolean)
+    const path = places.find((place) => existsSync(place)) ?? places[0]
     if (!path) {
       throw new CompileError(
         `loadAsset: cannot resolve '${src}' in Node compile context\n` +
@@ -140,9 +148,29 @@ export async function compileDocumentWithFoundation(foundation, website, options
       `(@uniweb/build@57498ef or later re-exports compileDocument alongside compileSubtree)`
     )
   }
+  const { sitePath, ...hostHints } = options
+  // What a compile asked for and couldn't find. A foundation may treat a failed load as nothing to
+  // draw, which is how a misspelled cover used to leave a book with no cover and exit 0. So the
+  // host keeps its own list. A remote address isn't on it: that failure is how Press knows to fetch.
+  const missing = new Set()
+  const load = createNodeLoadAsset(website, sitePath)
+  const loadAsset = async (src) => {
+    try {
+      return await load(src)
+    } catch (err) {
+      if (!/^[a-z][a-z0-9+.-]*:/i.test(src)) missing.add(src)
+      throw err
+    }
+  }
   try {
-    const loadAsset = createNodeLoadAsset(website)
-    return await foundation.compileDocument(website, { ...options, foundation, loadAsset })
+    const blob = await foundation.compileDocument(website, { ...hostHints, foundation, loadAsset })
+    if (missing.size) {
+      throw new CompileError(
+        `the document names a file that is not there: ${[...missing].join(', ')}\n` +
+        `hint: check the path in your markdown, or in document.yml for a cover`
+      )
+    }
+    return blob
   } catch (err) {
     // Wrap Press's errors in CompileError so the CLI's top-level handler
     // surfaces them with consistent formatting.

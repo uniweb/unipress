@@ -230,6 +230,25 @@ function fromTheBuild(err) {
   )
 }
 
+// The build narrates for a website's developer: what it found, what it processed, the colours a
+// theme left to defaults. An author reads a black-and-white PDF, and `inspect` writes JSON to the
+// same stdout. So while it works here, what it says in passing goes where progress goes, and what
+// it warns about an author's own files stays where they'll see it.
+const THEME_DEFAULT = /^\[theme\] No (primary|neutral) color specified/
+
+async function withBuildNarration(work, onProgress = () => {}) {
+  const { log, warn } = console
+  const narrate = (...args) => onProgress(args.join(' '))
+  console.log = narrate
+  console.warn = (...args) => (THEME_DEFAULT.test(String(args[0])) ? narrate(...args) : warn.apply(console, args))
+  try {
+    return await work()
+  } finally {
+    console.log = log
+    console.warn = warn
+  }
+}
+
 export async function loadContent(dir, options = {}) {
   const sitePath = resolve(dir)
 
@@ -265,13 +284,15 @@ export async function loadContent(dir, options = {}) {
   // be named freely (book.yml, print.yml) and still build as a document.
   const profile = basename(configFile).startsWith('site') ? 'site' : 'document'
 
+  const narrated = (work) => withBuildNarration(work, options.onProgress)
+
   let content
   try {
-    content = await collectSiteContent(sitePath, {
+    content = await narrated(() => collectSiteContent(sitePath, {
       configFile,
       profile,
       foundationPath: options.foundationPath
-    })
+    }))
   } catch (err) {
     // js-yaml throws YAMLException with .mark.line/.column. Wrap it in
     // DocumentYmlError so the CLI reports it with a location hint
@@ -291,7 +312,7 @@ export async function loadContent(dir, options = {}) {
   }
 
   try {
-    await resolveLocalQueries(content, sitePath)
+    await narrated(() => resolveLocalQueries(content, sitePath))
   } catch (err) {
     throw fromTheBuild(err)
   }

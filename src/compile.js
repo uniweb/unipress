@@ -35,6 +35,7 @@ import { writeBlobToFile } from './sinks/blob.js'
 import { writePdfViaTypst } from './sinks/typst.js'
 import { DocumentYmlError, CompileError } from './errors.js'
 import { checkPaper, normalizePaper } from './paper.js'
+import { checkOutPathFormat, formatOfOutPath } from './output-format.js'
 
 // Sink selection. `pdf` is special-cased because the Press output (via
 // the typst adapter) is a source-bundle zip, not a PDF — unipress
@@ -59,7 +60,8 @@ export async function compile({
 } = {}) {
   onProgress('loading content...')
   const { content, sitePath, configFile } = await loadContent(dir, {
-    configFile: documentConfig
+    configFile: documentConfig,
+    onProgress: (msg) => onProgress(`  ${msg}`)
   })
   onProgress(`  ${content.pages.length} page(s) from ${sitePath} (${configFile})`)
 
@@ -88,8 +90,15 @@ export async function compile({
   })
   if (configPath) onProgress(`  config: ${configPath}`)
 
-  // Precedence chain: CLI > unipress.config.js > document.yml > defaults.
-  const format = cliFormat ?? config.format ?? content.config?.format ?? null
+  // Precedence chain: CLI > unipress.config.js > document.yml > defaults. A flag or setting that
+  // names a file names its format too, at that level: `--out o.pdf` is a request for a PDF.
+  const format =
+    cliFormat ??
+    formatOfOutPath(cliOutPath) ??
+    config.format ??
+    formatOfOutPath(config.out) ??
+    content.config?.format ??
+    null
   if (!format) {
     const hints = ['pass --format <fmt>']
     if (configPath) hints.push(`set format: in ${configPath}`)
@@ -98,6 +107,7 @@ export async function compile({
       `no format specified — ${hints.join(' or ')}`
     )
   }
+  checkOutPathFormat(cliOutPath ?? config.out, format)
 
   const foundationRef = cliFoundationRef ?? config.foundation ?? null
   const typstBinaryPath = cliTypstBinaryPath ?? config.typst?.binary ?? null
@@ -182,6 +192,7 @@ export async function compile({
   onProgress(`compiling to ${format}${outputSpec.via ? ` (via ${outputSpec.via})` : ''}...`)
   const blob = await compileDocumentWithFoundation(foundation, website, {
     format,
+    sitePath,
     ...hostHints
   })
   onProgress(`  blob: ${blob.size} bytes, type=${blob.type || '(none)'}`)
@@ -205,6 +216,6 @@ export async function compile({
     pressFormat: outputSpec.via ?? format,
     pageCount: website.pages.length,
     foundation: foundationInfo,
-    notes
+    notes: [...notes, ...(result.warnings ?? [])]
   }
 }
