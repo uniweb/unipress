@@ -292,6 +292,16 @@ if (thesis) {
   check('a list of figures with no figures takes no chapter number', !body.includes('title: "List of Figures")'))
 }
 
+const monograph = catalog.find((e) => e.id === 'monograph')
+if (monograph && !values['no-pdf']) {
+  process.stdout.write('\nmonograph, the typeface it ships\n')
+  const created = run(['create', 'monograph-plain', '--template', 'monograph', '--title', 'Smoke monograph', '--author', 'A. Tester', '--yes'])
+  check('it brings its font and the license', existsSync(join(work, 'monograph-plain/fonts/EBGaramond-Regular.ttf')) && existsSync(join(work, 'monograph-plain/fonts/OFL.txt')), whatItSaid(created.text))
+  const pdf = compile(monograph, 'monograph-plain', 'pdf')
+  check('the PDF is set in it, on any machine', pdf.status === 0 && readFileSync(pdf.file, 'latin1').includes('EBGaramond'), whatItSaid(pdf.text))
+  check('and says nothing of a missing font', !/have the font/.test(pdf.text), pdf.text)
+}
+
 // ── A folder of markdown, no project ───────────────────────────────────────
 if (article) {
   process.stdout.write('\na bare folder of markdown\n')

@@ -17,6 +17,8 @@ The content-directory-level config. Fields unipress reads:
 
 `site.yml` is also accepted as a fallback for compatibility with existing Uniweb site directories.
 
+A `fonts/` folder beside `document.yml` is where a PDF looks for its fonts first, so the document prints the same on any machine ([Size and layout](./publishing/size-and-layout.md#typography)).
+
 ### Several cuts of one manuscript
 
 Keep more than one top-level config beside your content and pick one per build with

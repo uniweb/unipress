@@ -12,6 +12,7 @@ unipress compile . --format epub --out my-monograph.epub
 ```
 monograph/
 ├── document.yml              pinned to @unipress/book; royal-octavo, EB Garamond
+├── fonts/                    EB Garamond and its license, so the PDF is the same on any machine
 ├── records/
 │   └── bibliography/
 │       └── refs.bib          BibTeX records — one .bib file, every @entry is one record
@@ -121,7 +122,7 @@ Edit `document.yml`:
 
 - `book.citationStyle:` — pick from the nine styles above.
 - `book.bibliography.sortBy:` — `author` (default), `year`, or `collection-order`.
-- `book.typography.bodyFont`, `book.typography.headingFont` — the EB Garamond fallback chain.
+- `book.typography.bodyFont`, `book.typography.headingFont` — EB Garamond, whose files are in `fonts/` under the SIL Open Font License. Put another face's files there to use it.
 - `book.trim:` — `royal-octavo` (default), `crown-octavo`, `trade-6x9`, `trade-7x10`, `a5`.
 - `book.structure.tocDepth:` — bump to 4 for very subdivided arguments.
 

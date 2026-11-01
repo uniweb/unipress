@@ -25,7 +25,8 @@
 // verbose output is consistent across the pipeline (load, resolve,
 // init, compile, sink).
 
-import { basename, resolve } from 'node:path'
+import { existsSync } from 'node:fs'
+import { basename, join, resolve } from 'node:path'
 import { loadContent } from './content-loader.js'
 import { detectBareContent } from './materialize.js'
 import { resolveFoundation } from './foundation-loader.js'
@@ -204,6 +205,8 @@ export async function compile({
         typstBinaryPath,
         typstVersion,
         keepTemp,
+        // A document's own fonts travel with it, so one folder prints the same on any machine.
+        fontPaths: existsSync(join(sitePath, 'fonts')) ? [join(sitePath, 'fonts')] : [],
         onProgress: (msg) => onProgress(`  ${msg}`)
       })
     : await writeBlobToFile(blob, finalOutPath)

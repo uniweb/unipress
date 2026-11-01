@@ -5,7 +5,8 @@ title: Preface
 
 # Preface
 
-A monograph is a sustained, single-author argument on a focused topic — historically the form scholars use when an article is not enough and a textbook is too much. This template scaffolds one: royal-octavo trim, classical body typography (EB Garamond by default, falling back to Garamond and Georgia), section numbering three levels deep, roman-numeralled front matter, and a working citation system.
+A monograph is a sustained, single-author argument on a focused topic — historically the form scholars use when an article is not enough and a textbook is too much. This template scaffolds one: royal-octavo trim, classical body typography (EB Garamond,
+which comes with it, in fonts/), section numbering three levels deep, roman-numeralled front matter, and a working citation system.
 
 Replace this preface with your own. The `BackMatter` section type skips chapter numbering, so the "Preface" heading above renders without a "Chapter N" label. Acknowledgments, dedications, and a list of abbreviations all use the same section type.
 

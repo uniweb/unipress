@@ -2,6 +2,12 @@
 
 ## After 1.1.21
 
+### Added
+
+- **The monograph template ships EB Garamond**, under the SIL Open Font License, in the `fonts/`
+  folder it scaffolds. A book told to use it used whatever the machine had: Georgia, or Typst's
+  default. So a PDF now finds fonts in a document's own `fonts/` folder first, for any template.
+
 ### Fixed
 
 - **`create` printed a next step that failed.** It now prints `unipress compile .`, and the
@@ -20,6 +26,8 @@
 - **The thesis template printed broken output** on the Typst path: math as raw LaTeX, references
   and citations as gaps in the sentence, a second title page ahead of its own, its contents before
   its title page, and an empty list of figures as chapter 1.
+- **A heading's anchor dropped accented letters**, so `Été` was `t`, and a heading in a script
+  with no a-z had none. It keeps a letter in any language now.
 - **`[^b]: Word.` became a link**, and so did a note that was only a URL.
 - **A formula wrapped onto a second line** printed as raw LaTeX.
 - **Four starters listed their files in `content:` by names that match no page**, so moving an

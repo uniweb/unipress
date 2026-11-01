@@ -1,6 +1,6 @@
 # Monograph
 
-A scholarly monograph — sustained, single-author argument on a focused topic with a working citation system. Royal-octavo trim, classical typography (EB Garamond by default with Garamond and Georgia fall-backs), three-deep TOC, roman-numeralled front matter, inline `[@key]` cites, and a back-matter bibliography formatted by [citestyle](https://github.com/uniweb/csl) in any of nine styles. Same `@unipress/book` foundation as the `book` and `report` templates, configured for academic press conventions.
+A scholarly monograph — sustained, single-author argument on a focused topic with a working citation system. Royal-octavo trim, classical typography (EB Garamond, which comes with it), three-deep TOC, roman-numeralled front matter, inline `[@key]` cites, and a back-matter bibliography formatted by [citestyle](https://github.com/uniweb/csl) in any of nine styles. Same `@unipress/book` foundation as the `book` and `report` templates, configured for academic press conventions.
 
 ## Scaffold
 
@@ -17,6 +17,7 @@ The starter ships a small Victorian-naturalist bibliography (nine entries — Da
 ```
 my-monograph/
 ├── document.yml              pinned to @unipress/book@<version>; royal-octavo, EB Garamond
+├── fonts/                    EB Garamond and its license (SIL OFL), so the PDF is the same on any machine
 ├── records/
 │   └── bibliography/
 │       └── refs.bib          BibTeX file — every @entry is one record
@@ -32,7 +33,7 @@ my-monograph/
 
 - You need cited bibliographic references in your prose.
 - You want section numbering deeper than two levels (default `tocDepth: 3`).
-- You want classical book typography (EB Garamond, where it's installed) rather than the foundation's default sans/serif fall-back.
+- You want classical book typography (EB Garamond) rather than the foundation's default sans/serif fall-back.
 - You want a slightly larger page (royal-octavo, 6.14×9.21in) common in academic hardcovers.
 
 For trade-paperback fiction or non-fiction prose, use `book` instead. For a technical report with tables and code, use `report`.
@@ -180,8 +181,8 @@ Same shape as `book` (see [book.md](./book.md)). The defaults differ:
 | Field                                | `monograph` default                                 |
 |--------------------------------------|------------------------------------------------------|
 | `book.trim`                          | `royal-octavo`                                       |
-| `book.typography.bodyFont`           | `["EB Garamond", "Garamond", "Georgia"]`             |
-| `book.typography.headingFont`        | `["EB Garamond", "Garamond", "Georgia"]`             |
+| `book.typography.bodyFont`           | `["EB Garamond"]`, from `fonts/`                     |
+| `book.typography.headingFont`        | `["EB Garamond"]`, from `fonts/`                     |
 | `book.typography.bodySize`           | `10.5pt`                                             |
 | `book.typography.leading`            | `0.68em`                                             |
 | `book.structure.tocDepth`            | `3`                                                  |

@@ -153,10 +153,14 @@ book:
     headingFont: ["EB Garamond", "Georgia"]
 ```
 
-- **Fonts are tried in order**; the first one installed on the machine running the
-  compile is used, and unipress embeds it in the PDF. Leave them unset to use the
-  compiler's clean built-in defaults. If you name a font, make sure it's installed
-  where you build.
+- **Fonts are tried in order**; the first one found is used, and unipress embeds it in
+  the PDF. It looks in a `fonts/` folder beside your `document.yml` first, then on the
+  machine, and says when a font you named isn't there. Put the font files (`.ttf` or
+  `.otf`) in `fonts/` and the book prints the same wherever you build it. Check that
+  the font's license lets you. Leave these unset to use the compiler's clean built-in
+  defaults. This is for the PDF: a Typst source bundle takes
+  `typst compile --font-path ../fonts main.typ`, and Paged.js HTML and EPUB don't carry
+  the font.
 - **Body size and leading** are the levers for page count and comfort. 10.5–11 pt
   with roomy leading reads well in a 6×9.
 - For a classical look with these choices preconfigured, scaffold the **monograph**

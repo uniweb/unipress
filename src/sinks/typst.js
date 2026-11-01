@@ -50,7 +50,7 @@ export function fontWarnings(stderr) {
   ]
 }
 
-export async function writePdfViaTypst(blob, outPath, { typstBinaryPath = null, typstVersion = null, keepTemp = false, onProgress = () => {} } = {}) {
+export async function writePdfViaTypst(blob, outPath, { typstBinaryPath = null, typstVersion = null, keepTemp = false, fontPaths = [], onProgress = () => {} } = {}) {
   const bytes = Buffer.from(await blob.arrayBuffer())
 
   const workDir = await mkdtemp(join(tmpdir(), 'unipress-typst-'))
@@ -80,7 +80,7 @@ export async function writePdfViaTypst(blob, outPath, { typstBinaryPath = null, 
     await mkdir(dirname(outPath), { recursive: true })
 
     onProgress(`running typst compile...`)
-    const { stderr } = await runCapture(binary, ['compile', mainTyp, outPath], {
+    const { stderr } = await runCapture(binary, ['compile', mainTyp, outPath, ...fontPaths.flatMap((dir) => ['--font-path', dir])], {
       onFail: (code, stderr) => new TypstBinaryError(
         describeMissingFile(stderr, workDir) ??
         `typst exited with code ${code}${keepTemp ? ` (temp dir kept at ${workDir})` : ''}\n` +
