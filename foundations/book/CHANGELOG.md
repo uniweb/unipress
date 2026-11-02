@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.5
+
+### Fixed
+
+- **A picture with a number for its width ran off the page.** `{width=1600}` is a size on a screen, the
+  file's own pixels as often as not, and it was read as 1600 points. The page decides now. A length with
+  a unit, such as `{width=50%}` or `{width=10cm}`, is still print's.
+
 ## 0.5.4
 
 ### Fixed
