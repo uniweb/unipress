@@ -10,6 +10,15 @@ import { UnipressError } from './errors.js'
 // compiled binary's virtual filesystem (/$bunfs) doesn't hold it.
 import pkg from '../package.json' with { type: 'json' }
 
+// A reader that goes away stops the output, never the work. `unipress create x | head -3` closes the
+// pipe after three lines, and the next line raises EPIPE. Unheard, that ended the process with part
+// of a project: the shell reported head's success, and the same command again refused the folder.
+for (const stream of [process.stdout, process.stderr]) {
+  stream.on('error', (err) => {
+    if (err.code !== 'EPIPE') throw err
+  })
+}
+
 const HELP = `unipress ${pkg.version}
 
 Compile a content directory into a document using a Uniweb foundation.

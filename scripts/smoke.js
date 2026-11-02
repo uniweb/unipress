@@ -19,8 +19,8 @@
  * Exits 1 when anything failed, naming it.
  */
 
-import { spawnSync } from 'node:child_process'
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { spawn, spawnSync } from 'node:child_process'
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -335,6 +335,29 @@ if (article) {
     check('states the paper in it', /^paper: letter$/m.test(yml))
     check('leaves the README out of it', !/readme/i.test(yml.split('content:')[1] ?? ''))
   }
+}
+
+// ── A reader that goes away ────────────────────────────────────────────────
+// `| head -1`, which is how an agent trims what it reads. A binary's streams are Bun's, not Node's,
+// so passing under Node says nothing about one.
+if (catalog.some((e) => e.id === 'thesis')) {
+  process.stdout.write('\ncreate, with a reader that goes away\n')
+  const args = ['--template', 'thesis', '--title', 'T', '--author', 'A', '--yes']
+  run(['create', 'reader-stayed', ...args])
+  const [bin, ...lead] = command
+  const left = await new Promise((done, fail) => {
+    const child = spawn(bin, [...lead, 'create', 'reader-left', ...args], { cwd: work, stdio: ['ignore', 'pipe', 'pipe'] })
+    let said = ''
+    child.stderr.setEncoding('utf8').on('data', (chunk) => { said += chunk })
+    child.stdout.once('data', () => child.stdout.destroy())
+    child.on('error', fail)
+    child.on('close', (status) => done({ status, said }))
+  })
+  const filesIn = (dir) => (existsSync(join(work, dir)) ? readdirSync(join(work, dir), { recursive: true }).sort() : [])
+  check('exits 0, saying nothing', left.status === 0 && left.said === '', `exit ${left.status}: ${left.said.slice(0, 300)}`)
+  const made = filesIn('reader-left').length
+  const whole = filesIn('reader-stayed').length
+  check('makes the whole project', whole > 0 && made === whole, `${made} of ${whole} entries`)
 }
 
 // ── EPUBCheck, when there is one to hand ───────────────────────────────────

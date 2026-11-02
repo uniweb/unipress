@@ -6,8 +6,8 @@
  * exit 0 with the question still open and nothing on disk. Only an exit code and a folder show that.
  */
 
-import { spawnSync } from 'node:child_process'
-import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { spawn, spawnSync } from 'node:child_process'
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -72,6 +72,39 @@ describe('unipress create with no terminal', () => {
     const r = create(['unknown', '--template', 'no-such-template'])
     expect(r.status).toBe(1)
     expect(existsSync(join(work, 'unknown'))).toBe(false)
+  })
+})
+
+// Closes the read end after the first thing the CLI says, as `| head -1` does.
+function createWhileTheReaderLeaves(args) {
+  return new Promise((done, fail) => {
+    const child = spawn(process.execPath, [CLI, 'create', ...args], { cwd: work, stdio: ['ignore', 'pipe', 'pipe'] })
+    let stderr = ''
+    child.stderr.setEncoding('utf8').on('data', (chunk) => { stderr += chunk })
+    child.stdout.once('data', () => child.stdout.destroy())
+    child.on('error', fail)
+    child.on('close', (status) => done({ status, stderr }))
+  })
+}
+
+describe('unipress create when its reader goes away', () => {
+  const filesIn = (dir) => readdirSync(join(work, dir), { recursive: true }).sort()
+
+  it('still makes the whole project, and exits 0', async () => {
+    const args = ['--template', 'thesis', '--title', 'T', '--author', 'A']
+    expect(create(['stayed', ...args]).status).toBe(0)
+    const r = await createWhileTheReaderLeaves(['left', ...args])
+    expect(r.stderr).toBe('')
+    expect(r.status).toBe(0)
+    expect(filesIn('left')).toEqual(filesIn('stayed'))
+  })
+
+  it('still fails when the work fails', async () => {
+    mkdirSync(join(work, 'taken'))
+    writeFileSync(join(work, 'taken/mine.txt'), 'mine')
+    const r = await createWhileTheReaderLeaves(['taken', '--template', 'thesis'])
+    expect(r.status).toBe(1)
+    expect(filesIn('taken')).toEqual(['mine.txt'])
   })
 })
 

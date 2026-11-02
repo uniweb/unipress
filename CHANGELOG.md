@@ -1,5 +1,14 @@
 # Changelog
 
+## After 1.1.29
+
+### Fixed
+
+- **A reader that went away ended the command.** `unipress create x | head -3` left part of a project
+  and a stack trace, the shell reported success, and the same command again refused the folder as not
+  empty. Now the output stops and the work goes on: every file is written, and the exit code is the
+  command's own.
+
 ## After 1.1.28
 
 ### Fixed
