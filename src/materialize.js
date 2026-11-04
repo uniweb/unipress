@@ -13,13 +13,16 @@
 // the list we emit is a convenience manifest (and the trailing `...`
 // keeps it forgiving), so faithful-but-not-identical is fine. The rules
 // copied here: skip non-.md, `_`-prefixed (drafts), `@`-prefixed (nested
-// child sections), and README.md; sort by numeric prefix; strip the
-// numeric prefix to form the stable name used for ordering. Source of
+// child sections), and README.md. The numeric prefix is not copied: its rule
+// — a number then a dash, or a name that is only a number — is the build's
+// own (`parseNumericPrefix`, `@uniweb/build/content`), so a chapter is named
+// and ordered here exactly as the collector names and orders it. Source of
 // truth: framework/build/src/site/content-collector.js
-// (isMarkdownFile / isChildSection / parseNumericPrefix / compareFilenames).
+// (isMarkdownFile / isChildSection / compareFilenames).
 
 import { existsSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import { join, parse } from 'node:path'
+import { parseNumericPrefix, compareByNumericPrefix } from '@uniweb/build/content'
 import { CONFIG_FILE_NAMES } from './document-yml.js'
 
 // A markdown file that becomes a chapter/page (not a draft, nested child,
@@ -32,28 +35,10 @@ function isChapterFile(filename) {
   return true
 }
 
-function parseNumericPrefix(name) {
-  const match = name.match(/^(\d+(?:\.\d+)*)-?(.*)$/)
-  if (match) return { prefix: match[1], name: match[2] || match[1] }
-  return { prefix: null, name }
-}
-
 // Sort by numeric prefix (dots are sub-levels: 1, 1.5, 2), unprefixed
-// names last in locale order.
+// names last in locale order — the build's comparison, on each file's stem.
 function compareFilenames(a, b) {
-  const { prefix: pa } = parseNumericPrefix(parse(a).name)
-  const { prefix: pb } = parseNumericPrefix(parse(b).name)
-  if (!pa && !pb) return a.localeCompare(b)
-  if (!pa) return 1
-  if (!pb) return -1
-  const partsA = pa.split('.').map(Number)
-  const partsB = pb.split('.').map(Number)
-  for (let i = 0; i < Math.max(partsA.length, partsB.length); i++) {
-    const numA = partsA[i] ?? 0
-    const numB = partsB[i] ?? 0
-    if (numA !== numB) return numA - numB
-  }
-  return 0
+  return compareByNumericPrefix(parse(a).name, parse(b).name)
 }
 
 function stableName(fileBase) {

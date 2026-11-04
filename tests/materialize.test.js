@@ -31,6 +31,14 @@ describe('detectBareContent', () => {
     expect(bare.chapters).toEqual(['intro', 'second', 'later', 'appendix'])
   })
 
+  it('⭐ a number orders a chapter only where a dash follows it, as the collector reads it — `3d-printing` is a name', () => {
+    write('1-intro.md')
+    write('2.5-setup.md')
+    write('3d-printing.md')
+    write('2-next.md')
+    expect(detectBareContent(dir).chapters).toEqual(['intro', 'next', 'setup', '3d-printing'])
+  })
+
   it('excludes README.md, drafts (_), and nested child sections (@)', () => {
     write('README.md')
     write('readme.md') // case-insensitive
